@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%= htmlWebpackPlugin.options.rubyInjectVendorCode %>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover, height=device-height"
+    />
+    <meta name="HandheldFriendly" content="true">
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+<body>
+    <div class="screen screen--one show">
+        <div class="main">
+            <div class="logo">
+                <img src="../images/avatar.png" alt=""/>
+                <h2>Word Bakers asks for your consent to use your personal data to:</h2>
+            </div>
+            <div class="content">
+
+                <div class="content__list">
+                    <div class="content__item">
+                        <div class="icn icn-user"></div>
+                        <h4>Select personalised ads</h4>
+                    </div>
+                    <div class="content__item">
+                        <div class="icn icn-content"></div>
+                        <h4>Personalised content</h4>
+                    </div>
+                    <div class="content__item">
+                        <div class="icn icn-device"></div>
+                        <h4>Store and/or access information on a device</h4>
+                    </div>
+                </div>
+
+                <div class="vendorList"></div>
+
+                <div class="collapsable">
+                    <div class="collapsable-title">
+                        <i class="icn icn-arrow"></i>
+                        <h4>Learn more</h4>
+                    </div>
+                    <div class="collapsable-body">
+                        <div class="help-block">
+                            <div class="help-block__item"><a href="#">How can I change my choice?</a></div>
+                            <div class="help-block__item"><a href="#">What if I don’t consent?</a></div>
+                            <div class="help-block__item"><a href="#">How does legitimate interest work?</a></div>
+                            <div class="help-block__item"><a href="#">Do I have to consent to everything?</a></div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>Your personal data will be processed and information from your device (cookies, unique identifiers, and other device data) may be stored by, accessed by and shared with
+                    <a href="#">third party vendors</a>, or used specifically by this site or app.</p>
+                <p> Some vendors may process your personal data on the basis of legitimate interest, which you can object to by managing your options below. Look for a link at the bottom of this page or in our privacy policy where you can withdraw consent.</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="buttons-list">
+                <button type="button" class="button button-primary">Consent</button>
+                <button type="button" class="button button-primary">Do not consent</button>
+                <button id="manageOptions" type="button" class="button button-link">Manage Options</button>
+            </div>
+        </div>
+    </div>
+    <div class="screen screen--two">
+        <div class="back-block 1 backScreen">
+            <i class="icn icn-back"></i>
+            <span>Data preferences</span>
+        </div>
+
+        <div class="main">
+            <div class="logo">
+                <img src="" alt=""/>
+                <h2>Manage your data</h2>
+            </div>
+            <div class="content">
+                <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
+
+                <div class="content__separate-label">
+                    <p>TCF vendors</p>
+                    <i class="icn icn--sm icn-help"></i>
+                </div>
+
+                <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
+
+                <div class="content__separate-label">
+                    <p>Site or app</p>
+                </div>
+
+                <div class="preferences">
+                    <div class="preferences__item">
+                        <h3>Store and/or access information on a device</h3>
+                        <p>Cookies, device identifiers, or other information can be stored or accessed on your device for the
+                            purposes presented to you.</p>
+                        <div><a href="#" class="preferences__link">View details</a></div>
+                        <label class="switch-control">
+                            Consent
+                            <input type="checkbox">
+                            <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                        </label>
+                    </div>
+                    <div class="preferences__item">
+                        <div class="preferences__title">
+                            <h3>Select personalised ads</h3>
+                            <i class="icn icn--sm icn-help"></i>
+                        </div>
+                        <p>Personalised ads can be shown to you based on a profile about you.</p>
+                        <div><a href="#" class="preferences__link">View details</a></div>
+                        <label class="switch-control">
+                            Consent
+                            <input type="checkbox">
+                            <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="buttons-list">
+                    <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="buttons-list">
+                <button id="requestStatus" type="button" class="button button-primary">Confirm Choices</button>
+                <button id="updValue" type="button" class="button button-primary">Accept all</button>
+            </div>
+        </div>
+    </div>
+    <div class="screen screen--three">
+        <div class="back-block 2 backScreen">
+            <i class="icn icn-back"></i>
+            <span>Vendor preferences</span>
+        </div>
+
+        <div class="main">
+            <div class="logo">
+                <h2>Confirm our vendors</h2>
+            </div>
+            <div class="content">
+                <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
+
+                <div class="content__separate-label">
+                    <p>TCF vendors</p>
+                    <i class="icn icn--sm icn-help"></i>
+                </div>
+
+                <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
+
+                <div class="content__separate-label">
+                    <p>Site or app</p>
+                </div>
+
+                <div class="preferences">
+                    <div class="preferences__item">
+                        <h3>Name</h3>
+                        <p>Cookies, device identifiers, or other information can be stored or accessed on your device for the
+                            purposes presented to you.</p>
+                        <div class="preferences__list-link">
+                            <a href="#" class="preferences__link">View details</a>
+                            <a href="#" class="preferences__link">Storage details</a>
+                            <a href="#" class="preferences__link">
+                                Privacy Policy
+                                <i class="icn icn--sm icn-privacy-policy"></i>
+                            </a>
+                        </div>
+                        <label class="switch-control">
+                            Consent
+                            <input type="checkbox">
+                            <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                        </label>
+                        <label class="switch-control">
+                            <div class="switch-control__label">
+                                <span>Legitimate interest</span> <i class="icn icn--sm icn-help"></i>
+                            </div>
+                            <input type="checkbox">
+                            <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                        </label>
+                    </div>
+                    <div class="preferences__item">
+                        <div class="preferences__title">
+                            <h3>Name 2</h3>
+                            <i class="icn icn--sm icn-help"></i>
+                        </div>
+                        <p>Cookies, device identifiers, or other information can be stored or accessed on your device for the
+                            purposes presented to you.</p>
+                        <div class="preferences__list-link">
+                            <a href="#" class="preferences__link">View details</a>
+                            <a href="#" class="preferences__link">Storage details</a>
+                            <a href="#" class="preferences__link">
+                                Privacy Policy
+                                <i class="icn icn--sm icn-privacy-policy"></i>
+                            </a>
+                        </div>
+                        <label class="switch-control">
+                            Consent
+                            <input type="checkbox">
+                            <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="buttons-list">
+                <button type="button" class="button button-primary">Confirm Choices</button>
+                <button type="button" class="button button-primary">Accept all</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let displayScreens = {
+        screen: document.getElementsByClassName('screen'),
+        screenOne: document.getElementsByClassName('screen--one')[0],
+        screenTwo: document.getElementsByClassName('screen--two')[0],
+        screenThree: document.getElementsByClassName('screen--three')[0],
+
+        // remove class show
+        initControls: function () {
+            document.getElementById('manageOptions').addEventListener('click', this.showScreenTwo.bind(this), true);
+            document.getElementById('vendorPreferences').addEventListener('click', this.showScreenThree.bind(this), true);
+            Array(...document.getElementsByClassName('backScreen')).forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
+            this.attachCollapsible();
+        },
+        hideAllScreens: function () {
+            Array(...this.screen).forEach(item => item.classList.remove("show"));
+            this.scrollToTop();
+        },
+        showScreenTwo: function () {
+            this.hideAllScreens();
+            this.screenTwo.classList.add('show');
+        },
+        showScreenThree: function () {
+            this.hideAllScreens();
+            this.screenThree.classList.add('show');
+        },
+        backToPreviousScreen: function () {
+            let parent = this.parentElement;
+            let previous = parent.previousElementSibling;
+            parent.classList.remove('show');
+            previous.classList.add('show');
+            displayScreens.scrollToTop();
+        },
+        scrollToTop: function () {
+            window.scrollTo(0, 0);
+        },
+        attachCollapsible: function () {
+            const timeouts = new Map();
+            Array.from(document.querySelectorAll('.collapsable')).forEach(el => el.querySelector('.collapsable-body').style.height = '0px');
+            Array.from(document.querySelectorAll('.collapsable .collapsable-title')).forEach(el => {
+                el.addEventListener('click', function (e) {
+                    const rootEl = e.target.closest('.collapsable');
+                    const textEl = e.target.closest('.collapsable').querySelector('.collapsable-body');
+                    clearTimeout(timeouts.get(textEl));
+                    if (rootEl.classList.contains('expanded')) {
+                        textEl.style.height = textEl.clientHeight + 'px';
+                        timeouts.set(textEl, setTimeout(() => {
+                            textEl.style.height = '0px';
+                            rootEl.classList.remove('expanded');
+                        }));
+                    } else {
+                        textEl.style.height = '0px';
+                        textEl.style.height = textEl.scrollHeight + 'px';
+                        rootEl.classList.add('expanded');
+                        timeouts.set(textEl, setTimeout(() => textEl.style.removeProperty('height'), 200));
+                    }
+                });
+            });
+        },
+        createCollapsible: function (title, body) {
+            return `<div class="collapsable">
+                <div class="collapsable-title">${title}</div>
+                <div class="collapsable-body">${body}</div>
+            </div>`;
+        }
+    }
+    displayScreens.initControls();
+</script>
+</html>

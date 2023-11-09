@@ -1,0 +1,43 @@
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin textEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin flex($aitems, $jcontent) {
+  display: flex;
+  align-items: $aitems;
+  justify-content: $jcontent;
+}
+
+@mixin flexCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin absoluteCenter {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+@mixin fullBlockFixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin animateOpacity($opacity, $visibility) {
+  opacity: $opacity;
+  visibility: $visibility;
+  transition: opacity .3s, visibility .3s;
+}

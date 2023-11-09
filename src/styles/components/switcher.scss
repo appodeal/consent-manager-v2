@@ -1,0 +1,60 @@
+$width: 34px;
+$height: 20px;
+$padding: 0;
+$inactive-background: var(--gray);
+$active-background: var(--blue-light);
+$peg-background-inactive: var(--white);
+$peg-background-active: var(--blue);
+
+.switch-control {
+  @include flex(center, space-between);
+  cursor: pointer;
+  margin-bottom: 14px;
+
+  &__label {
+    @include flex(center, flex-start);
+
+    span {
+      margin-right: calc(var(--gap) / 4);
+    }
+  }
+
+  > input {
+    display: none;
+  }
+
+  > .track {
+    display: block;
+    width: $width;
+    height: $height - 6px;
+    background: $inactive-background;
+    border-radius: $height;
+    position: relative;
+  }
+
+  > .track,
+  > .track > .peg {
+    transition: left 0.5s, background-color .3s ease 0s;
+  }
+
+  > .track > .peg {
+    display: block;
+    position: absolute;
+    top: $padding - 2px;
+    left: $padding;
+    width: $height - ($padding + 2px);
+    height: $height - ($padding + 2px);
+    background: $peg-background-inactive;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .52);
+  }
+
+  > :checked + .track {
+    background-color: $active-background;
+  }
+
+  > :checked + .track > .peg {
+    left: $width / 2;
+    background: $peg-background-active;
+  }
+}

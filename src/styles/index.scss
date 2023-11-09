@@ -1,0 +1,14 @@
+@import "variables/font";
+@import "variables/mixins";
+@import 'variables/_variables';
+
+// default styles
+@import "base-styles";
+@import 'icons';
+
+// components
+@import "components/collapsible";
+@import 'components/buttons';
+@import 'components/footer';
+@import 'components/preferences';
+@import 'components/switcher';

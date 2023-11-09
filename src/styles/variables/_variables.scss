@@ -1,0 +1,56 @@
+:root {
+  --gap: 16px;
+
+  --black: #000;
+  --white: #fff;
+  --blue: #027BFF;
+  --blue-light: rgba(2, 123, 255, .4);
+  --gray: #E6EBF2;
+  --gray-medium: rgba(0, 0, 0, 0.87);
+  --gray-light: rgba(0, 0, 0, 0.6);
+
+  --font-size: 12px;
+  --line-height: 18px;
+  --font-color: var(--black);
+
+  --font-family-base: Helvetica, Arial, Lucida, sans-serif;
+  --font-family-regular: 'Roboto-Regular', var(--font-family-base);
+  --font-family-medium: 'Roboto-Medium', var(--font-family-base);
+  --font-family-bold: 'Roboto-Bold', var(--font-family-base);
+
+  --title-color: #1C1B1F;
+
+  --buttons-gap: 10px;
+  --button-background: var(--white);
+  --button-background-hover: var(--blue-dark);
+  --button-text-color: var(--blue-dark);
+  --button-text-color-hover: var(--white);
+  --button-font-size: 0.9rem;
+  --button-padding: 0 10px;
+
+  // primary button
+  --primary-button-border-color: var(--blue);
+  --primary-button-border-color-hover: var(--blue);
+  --primary-button-background: var(--blue);
+  --primary-button-background-hover: var(--white);
+  --primary-button-text-color: var(--white);
+  --primary-button-text-color-hover: var(--blue);
+
+  // link button
+  --link-button-border-color: var(--white);
+  --link-button-border-color-hover: var(--blue);
+  --link-button-background: var(--white);
+  --link-button-background-hover: var(--blue);
+  --link-button-text-color: var(--blue);
+  --link-button-text-color-hover: var(--white);
+
+  // link in content
+  --link-text-color: var(--blue);
+  --link-text-decoration: none;
+  --link-text-decoration-hover: underline;
+  --link-separator: #D9D9D9;
+
+  --footer-height: 195px;
+
+  --transition-time: .2s;
+}
