@@ -39,5 +39,5 @@
 @mixin animateOpacity($opacity, $visibility) {
   opacity: $opacity;
   visibility: $visibility;
-  transition: opacity .3s, visibility .3s;
+  transition: opacity .3s .2s, visibility .3s;
 }

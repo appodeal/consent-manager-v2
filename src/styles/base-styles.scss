@@ -14,6 +14,11 @@ body {
   margin: 0;
   background: var(--white);
   color: var(--font-color);
+  @include animateOpacity(0, hidden);
+
+  &.show {
+    @include animateOpacity(1, visible)
+  }
 }
 
 a, a:visited {
@@ -80,6 +85,7 @@ h4 {
   left: 0;
   right: 0;
   background-color: var(--white);
+  z-index: 1;
 
   .icn {
     min-width: 24px;
@@ -101,6 +107,7 @@ h4 {
     flex: 0 0 auto;
     max-height: 40px;
     margin-bottom: 10px;
+    border-radius: 12px;
 
     &[src=""] {
       display: none;
