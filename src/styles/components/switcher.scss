@@ -11,6 +11,10 @@ $peg-background-active: var(--blue);
   cursor: pointer;
   margin-bottom: 14px;
 
+  & > .switch-control {
+    margin-bottom: 0;
+  }
+
   &__label {
     @include flex(center, flex-start);
 
@@ -56,5 +60,13 @@ $peg-background-active: var(--blue);
   > :checked + .track > .peg {
     left: $width / 2;
     background: $peg-background-active;
+  }
+
+  .icn-help {
+    margin-left: 4px;
+  }
+
+  .dialog__title {
+    font-style: normal;
   }
 }

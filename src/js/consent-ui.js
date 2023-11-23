@@ -1,4 +1,61 @@
 import {state} from './state';
+import {buildConsent} from './libraries/consent-framework-v1';
+import {buildConsentV2, decodeConsent} from "./libraries/consent-framework-v2";
+
+
+//  ---------- build consent for IAB_TCF_V1.1 ----------
+export function onSave () {
+    if (state.consentDialogVersion === 'AcceptVendors') {
+        const apdIds = Array.from(document.querySelectorAll('.vendorList input:checked')).map(function (x) {return Number(x.name);});
+
+        let nextStatus = 'PARTLY_PERSONALIZED';
+        if (Object.values(state.appodealsVendorList.vendors).length === apdIds.length) {
+            nextStatus = 'PERSONALIZED';
+        } else if (apdIds.length === 0) {
+            nextStatus = 'NON_PERSONALIZED';
+        }
+
+        return save(nextStatus, apdIds);
+    } else {
+        return save('PERSONALIZED', Object.values(state.appodealsVendorList.vendors).map(v => v.apdId));
+    }
+}
+function save (nextStatus, apdIds) {
+    const nextAcceptedVendors = Object.values(state.appodealsVendorList.vendors)
+        .filter(vendor => apdIds.includes(vendor.apdId))
+        .map(vendor => ({apdId: vendor.apdId, status: vendor.status}));
+
+    const nextIab = Object.assign(
+        {},
+        state.currentConsent.iab,
+        buildConsent(
+            state.appodealsVendorList,
+            Object.values(state.appodealsVendorList.purposes).map(p => p.id),
+            nextAcceptedVendors.map(v => v.apdId)
+        )
+    );
+
+    //  !!! возможно тут стоит пересмотреть обьект. Не все указанные ключи нужны основываясь на новый результат
+    return Object.assign(
+        {},
+        state.currentConsent,
+        {
+            vendorListVersion: state.appodealsVendorList.apdVendorListVersion,
+            status: nextStatus,
+            acceptedVendors: nextAcceptedVendors,
+            iab: nextIab
+        }
+    );
+
+    ConsentManager.send(JSON.stringify(nextConsent));
+    setTimeout(() => ConsentManager.closeWebView());
+}
+//  ----------------------------------------------------
+
+export function normalizeId(x) {
+    const id = x.id.split('_');
+    return Number(id[id.length - 1]);
+}
 
 export const displayScreens = {
     screen: document.getElementsByClassName('screen'),
@@ -19,12 +76,14 @@ export const displayScreens = {
         const confirmChoices = Array(...document.getElementsByClassName('confirmChoices'));
         const acceptAll = Array(...document.getElementsByClassName('acceptAll'));
 
-        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
-        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
+        const checkboxSwitcher = Array(...document.getElementsByClassName('checkboxSwitcher'));
+
+        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher);
+        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher);
 
         this.attachCollapsible();
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
@@ -35,8 +94,10 @@ export const displayScreens = {
 
         confirmChoices.forEach(item => item.removeEventListener('click', this.confirmChoicesFn, true));
         acceptAll.forEach(item => item.removeEventListener('click', this.acceptAllFn, true));
+
+        checkboxSwitcher.forEach(item => item.removeEventListener('click', this.switcherFn, true));
     },
-    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
+    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
         manageOptions.addEventListener('click', this.showScreenTwo.bind(this), true);
         vendorPreferences.addEventListener('click', this.showScreenThree.bind(this), true);
         backScreenList.forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
@@ -47,6 +108,8 @@ export const displayScreens = {
 
         confirmChoices.forEach(item => item.addEventListener('click', this.confirmChoicesFn.bind(this, item), true));
         acceptAll.forEach(item => item.addEventListener('click', this.acceptAllFn.bind(this, item), true));
+
+        checkboxSwitcher.forEach(item => item.addEventListener('click', this.switcherFn.bind(this, item), true));
     },
     hideAllScreens: function () {
         Array(...this.screen).forEach(item => item.classList.remove("show"));
@@ -109,36 +172,155 @@ export const displayScreens = {
     closeDialog: function (dialog) {
         dialog.close();
     },
+    switcherFn: function (item) {
+
+    },
     consentFn: function () {
         console.log('consent');
     },
     doNotConsentFn: function () {
         console.log('do not consent');
+        buildConsentV2(state.decodedIABConsentObj)
     },
     confirmChoicesFn: function () {
         console.log('confirm Choices');
+        let decodedIAB = state.decodedIABConsentObj;
+
+        // ---------- select checked purposes ----------------
+        [
+            ...document.querySelectorAll('.purposeList .checkboxSwitcher'),
+            ...document.querySelectorAll('.specialPurposeList .checkboxSwitcher')
+        ].forEach(el => {
+            let id = normalizeId(el);
+            if (el.id.includes('purposeLegitimate')) {
+                if (el.checked && !decodedIAB.purposeLegitimateInterests.has(id)) {
+                    decodedIAB.purposeLegitimateInterests.add(id);
+                    return;
+                }
+
+                if (!el.checked && decodedIAB.purposeLegitimateInterests.has(id)) {
+                    decodedIAB.purposeLegitimateInterests.delete(id);
+                }
+            } else {
+                if (el.checked && !decodedIAB.purposeConsents.has(id)) {
+                    decodedIAB.purposeConsents.add(id);
+                    return;
+                }
+
+                if (!el.checked && decodedIAB.purposeConsents.has(id)) {
+                    decodedIAB.purposeConsents.delete(id);
+                }
+            }
+        });
+
+
+        // ---------- select checked features ----------------
+        [
+            ...document.querySelectorAll('.featuresList .checkboxSwitcher'),
+            ...document.querySelectorAll('.specialFeaturesList .checkboxSwitcher')
+        ].forEach(el => {
+            let id = normalizeId(el);
+            if (decodedIAB.specialFeatureOptins.has(id)) {
+                return;
+            }
+
+            if (el.checked) {
+                decodedIAB.specialFeatureOptins.add(id);
+            } else {
+                decodedIAB.specialFeatureOptins.delete(id);
+            }
+        });
+
+
+        // ---------- select checked vendors ----------------
+        Array.from(document.querySelectorAll('.vendorList .checkboxSwitcher')).forEach(el => {
+            let id = normalizeId(el);
+            if (el.id.includes('vendorLegitimate')) {
+                if (decodedIAB.vendorLegitimateInterests.has(id)) {
+                    return;
+                }
+
+                if (el.checked) {
+                    decodedIAB.vendorLegitimateInterests.add(id);
+                } else {
+                    decodedIAB.vendorLegitimateInterests.delete(id);
+                }
+            } else {
+                if (decodedIAB.vendorConsents.has(id)) {
+                    return;
+                }
+
+                if (el.checked) {
+                    decodedIAB.vendorConsents.add(id);
+                } else {
+                    decodedIAB.vendorConsents.delete(id);
+                }
+            }
+        });
     },
     acceptAllFn: function () {
         console.log('accept All');
+
+        // ---------- select all purposes ----------------
+        state.decodedIABConsentObj.purposeConsents.clear();
+        state.decodedIABConsentObj.purposeLegitimateInterests.clear();
+        [
+            ...document.querySelectorAll('.purposeList .checkboxSwitcher'),
+            ...document.querySelectorAll('.specialPurposeList .checkboxSwitcher')
+        ].forEach(el => {
+            if (el.id.includes('purposeLegitimate')) {
+                state.decodedIABConsentObj.purposeLegitimateInterests.add(normalizeId(el))
+            } else {
+                state.decodedIABConsentObj.purposeConsents.add(normalizeId(el))
+            }
+
+            el.checked = true;
+        });
+
+
+        // ---------- select all features ----------------
+        state.decodedIABConsentObj.specialFeatureOptins.clear();
+        [
+            ...document.querySelectorAll('.featuresList .checkboxSwitcher'),
+            ...document.querySelectorAll('.specialFeaturesList .checkboxSwitcher')
+        ].forEach(el => {
+            state.decodedIABConsentObj.purposeConsents.add(normalizeId(el))
+            el.checked = true;
+        });
+
+
+        // ---------- select all vendors ----------------
+        state.decodedIABConsentObj.vendorConsents.clear();
+        state.decodedIABConsentObj.vendorLegitimateInterests.clear();
+        Array.from(document.querySelectorAll('.vendorList .checkboxSwitcher')).forEach(el => {
+            if (el.id.includes('vendorLegitimate')) {
+                state.decodedIABConsentObj.vendorLegitimateInterests.add(normalizeId(el))
+            } else {
+                state.decodedIABConsentObj.vendorConsents.add(normalizeId(el))
+            }
+
+            el.checked = true;
+        });
+    },
+    hideCmp: function () {
+        window.cmp.resolveShowPromise(true);
     }
 }
 
-export function renderVendors() {
-    let {appodealsVendorList} = state;
-
-    appodealsVendorList = {
-        ...appodealsVendorList,
-        purposes: Object.values(appodealsVendorList.purposes),
-        specialPurposes: Object.values(appodealsVendorList.specialPurposes),
-        features: Object.values(appodealsVendorList.features),
-        specialFeatures: Object.values(appodealsVendorList.specialFeatures),
-        vendors: Object.values(appodealsVendorList.vendors),
+export function renderVendors(vendorList) {
+    vendorList = {
+        ...vendorList,
+        purposes: Object.values(vendorList.purposes),
+        specialPurposes: Object.values(vendorList.specialPurposes),
+        features: Object.values(vendorList.features),
+        specialFeatures: Object.values(vendorList.specialFeatures),
+        vendors: Object.values(vendorList.vendors),
     }
 
     const purposeMap = {};
-    appodealsVendorList.purposes.forEach(purpose => purposeMap[purpose.id] = purpose);
+    vendorList.purposes.forEach(purpose => purposeMap[purpose.id] = purpose);
     const featuresMap = {};
-    appodealsVendorList.features.forEach(feature => featuresMap[feature.id] = feature);
+    vendorList.features.forEach(feature => featuresMap[feature.id] = feature);
 
     function vendorStorageDisclosure(vendor) {
         if (!vendor.deviceStorageDisclosureUrl) {
@@ -174,16 +356,11 @@ export function renderVendors() {
         return ``;
     }
 
-    let combinePurposesAndFeaturesWithSpecial = [
-        ...appodealsVendorList.purposes,
-        ...appodealsVendorList.specialPurposes,
-        ...appodealsVendorList.features,
-        ...appodealsVendorList.specialFeatures,
-    ]
 
-    buildPurposesList(combinePurposesAndFeaturesWithSpecial);
+    buildListConsentFirstPage(vendorList)
 
-    document.querySelector('.vendorList').innerHTML = appodealsVendorList
+
+    const htmlVendorList = vendorList
         .vendors
         .map(vendor =>
             createPreferences(
@@ -207,24 +384,21 @@ export function renderVendors() {
                             ${vendorStorageDisclosure(vendor)}
                             ${vendorPolicyUrl(vendor)}
                         </div>
-                        
-                        ${vendor.features.length ? `<label class="switch-control" for="${vendor.id}">
+                        ${vendor.features.length ? `<label class="switch-control" for="${'vendor_' + vendor.id}">
                             Consent
-                            <input type="checkbox" 
-                                   id="${vendor.id}"
-                                   name="${vendor.id}"  
-                                   ${state.currentConsent.acceptedVendors.find(el => {
-                                       return el.apdId === vendor.id;
-                                   }) ? 'checked' : ''}>
+                            <input type="checkbox"
+                                   class="checkboxSwitcher"
+                                   id="${'vendor_' + vendor.id}"
+                                   name="${'vendor_' + vendor.id}"
+                            />
                             <span class="track">
                                 <span class="peg"></span>
                             </span>
                         </label>` : ''}
-                        
-                        ${vendor.legIntPurposes.length ? `<label class="switch-control">
+                        ${vendor.legIntPurposes.length ? `<div class="switch-control">
                             <div class="switch-control__label">
                                 Legitimate interest
-                                <!--<i class="icn dialog&#45;&#45;open icn-help">
+                                <i class="icn dialog--open icn-help">
                                     <dialog class="dialog">
                                         <h4 class="dialog__title">How does legitimate interest work?</h4>
                                         <div class="dialog__content">
@@ -232,22 +406,30 @@ export function renderVendors() {
                                         </div>
                                         <button class="button button-primary-inverted dialog__btn">Close</button>
                                     </dialog>
-                                </i>-->
+                                </i>
                             </div>
-                            <input type="checkbox"
-                                   id="${vendor.id}"
-                                   name="${vendor.id}"  
-                                   ${state.currentConsent.acceptedVendors.find(el => {
-                                       return el.apdId === vendor.id;
-                                   }) ? 'checked' : ''}>
-                            <span class="track">
-                                <span class="peg"></span>
-                            </span>
-                        </label>` : ''}
+                            <label class="switch-control" for="${'vendorLegitimate_' + vendor.id}">
+                                <input type="checkbox"
+                                       class="checkboxSwitcher"
+                                       id="${'vendorLegitimate_' + vendor.id}"
+                                       name="${'vendorLegitimate_' + vendor.id}"
+                                />
+                                <span class="track">
+                                    <span class="peg"></span>
+                                </span>
+                            </label>
+                        </div>` : ''}
             `)
         )
         .join('');
 
+
+    const vendorListTag = document.querySelector('.vendorList');
+    if (vendorListTag.childNodes.length > 0) {
+        vendorListTag.innerHTML += htmlVendorList;
+    } else {
+        vendorListTag.innerHTML = htmlVendorList;
+    }
 
     displayScreens.initControls();
 
@@ -257,9 +439,35 @@ export function renderVendors() {
         }
 
         return `<ul class="dialog__list">${vendor[key].map(p => {
-            return `<li>${appodealsVendorList[key].find(item => item.id === p).name}</li>`
+            return `<li>${vendorList[key].find(item => item.id === p).name}</li>`
         }).join('')}</ul>`
     }
+}
+
+function buildListConsentFirstPage(vendorList) {
+    buildPurposesList(
+        '.purposeList',
+        vendorList.purposes,
+        'purpose'
+    );
+
+    buildPurposesList(
+        '.specialPurposeList',
+        vendorList.specialPurposes,
+        'specialPurpose'
+    );
+
+    buildPurposesList(
+        '.featuresList',
+        vendorList.features,
+        'features'
+    );
+
+    buildPurposesList(
+        '.specialFeaturesList',
+        vendorList.specialFeatures,
+        'specialFeatures'
+    );
 }
 
 function getDaysFromSeconds(seconds) {
@@ -267,34 +475,70 @@ function getDaysFromSeconds(seconds) {
     return day > 0 ? day + (day === 1 ? " (day)" : " (days)") : "";
 }
 
-function buildPurposesList(list) {
+function buildPurposesList(selector, list, type) {
     if (list.length === 0) {
         return '';
     }
 
-    document.querySelector('.purposeList').innerHTML = list
-        .map(purpose =>
+    document.querySelector(selector).innerHTML = list
+        .map(item =>
             createPreferences(
-                `${purpose.name}`,
-                `<p>${purpose.description}</p>
-                      <label class="switch-control" for="${purpose.id}">
+                createTitlePreferences(
+                    item.name,
+                    ``
+                ),
+                `<p>${item.description}</p>
+                      <label class="switch-control" for="${type + '_' + item.id}">
                           Consent
-                          <input type="checkbox" 
-                                 id="${purpose.id}"
-                                 name="${purpose.id}">
+                          <input type="checkbox"
+                                 class="checkboxSwitcher"
+                                 id="${type + '_' + item.id}"
+                                 name="${type + '_' + item.id}">
                           <span class="track">
                               <span class="peg"></span>
                           </span>
-                      </label>`
+                      </label>
+
+                      ${true ? `<div class="switch-control">
+                          <div class="switch-control__label">
+                              Legitimate interest
+                              <i class="icn dialog--open icn-help">
+                                  <dialog class="dialog">
+                                      <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                      <div class="dialog__content">
+                                          <span>Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
+                                      </div>
+                                      <button class="button button-primary-inverted dialog__btn">Close</button>
+                                  </dialog>
+                              </i>
+                          </div>
+                          <label class="switch-control" for="${type + 'Legitimate_' + item.id}">
+                              <input type="checkbox"
+                                     class="checkboxSwitcher"
+                                     id="${type + 'Legitimate_' + item.id}"
+                                     name="${type + 'Legitimate_' + item.id}"
+                              />
+                              <span class="track">
+                                  <span class="peg"></span>
+                              </span>
+                          </label>
+                      </div>` : ''}`
             )
         ).join('');
 }
 
-export function createPreferences (title, body) {
+export function createPreferences(title, body) {
     return `<div class="preferences__item">
-                <h3>${title}</h3>
+                ${title}
                 ${body}
             </div>`;
+}
+
+export function createTitlePreferences(title, dialogBody) {
+    return `<h3>
+                ${title}
+                ${dialogBody ? `<i class="icn dialog--open icn-help"><dialog class="dialog">${dialogBody}</dialog></i>` : ''}
+            </h3>`;
 }
 
 export function renderLogo(base64img) {
@@ -311,5 +555,51 @@ export function renderAppName(appName) {
     app.innerText = appName;
 }
 
+export function checkSelectedVendors() {
+    // checked purpose consent
+    state.decodedIABConsentObj.purposeConsents.forEach(id => {
+        document.getElementById('purpose_' + id).checked = true;
+    });
+
+    // checked purpose legitimate
+    state.decodedIABConsentObj.purposeLegitimateInterests.forEach(id => {
+        const selector = document.getElementById('purposeLegitimate_' + id);
+        if (!selector) {
+            return;
+        }
+
+        selector.checked = true;
+    });
+
+    // checked specialFeatures
+    state.decodedIABConsentObj.specialFeatureOptins.forEach(id => {
+        const selector = document.getElementById('specialFeatures_' + id);
+        if (!selector) {
+            return;
+        }
+
+        selector.checked = true;
+    });
+
+    // checked consent
+    state.decodedIABConsentObj.vendorConsents.forEach(id => {
+        const selector = document.getElementById('vendor_' + id);
+        if (!selector) {
+            return;
+        }
+
+        selector.checked = true;
+    });
+
+    // checked legitimate
+    state.decodedIABConsentObj.vendorLegitimateInterests.forEach(id => {
+        const selector = document.getElementById('vendorLegitimate_' + id);
+        if (!selector) {
+            return;
+        }
+
+        selector.checked = true;
+    });
+}
 
 
