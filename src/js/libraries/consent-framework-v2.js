@@ -11,8 +11,6 @@ export function decodeConsent(consentString) {
         policyVersion: myTcModel.policyVersion_,
         consentLanguage: myTcModel.consentLanguage_,
         purposeOneTreatment: myTcModel.purposeOneTreatment_,
-        useNonStandardTexts: myTcModel.useNonStandardTexts,
-        // tcString: myTcModel,
 
         vendorConsents: myTcModel.vendorConsents.set_,
         vendorLegitimateInterests: myTcModel.vendorLegitimateInterests.set_,
@@ -20,19 +18,33 @@ export function decodeConsent(consentString) {
         purposeConsents: myTcModel.purposeConsents.set_,
         purposeLegitimateInterests: myTcModel.purposeLegitimateInterests.set_,
 
-        specialFeatureOptins: myTcModel.specialFeatureOptins.set_,
-        publisherRestrictions: myTcModel.publisherRestrictions,
-        publisherConsents: myTcModel.publisherConsents,
-        publisherLegitimateInterests: myTcModel.publisherLegitimateInterests,
-        publisherCustomConsents: myTcModel.publisherCustomConsents,
-        publisherCustomLegitimateInterests: myTcModel.publisherCustomLegitimateInterests
+        specialFeatureOptins: myTcModel.specialFeatureOptins.set_
     };
 }
 
-export function buildConsentV2 (oldConsent) {
-    const tcModel = new TCModel(new GVL(state.appodealsVendorList));
+export function encodeConsent (consent) {
+    const gvl = new GVL(consent);
+    const tcModel = new TCModel(gvl);
 
-    tcModel.gvl.readyPromise.then(() => {
+    tcModel.cmpId = state.decodedIABConsentObj.cmpId;
+    tcModel.cmpVersion = state.decodedIABConsentObj.cmpVersion;
 
+    return tcModel.gvl.readyPromise.then(() => {
+        console.log(tcModel, '----------oldConsent2----------', consent, '---------------', );
+        return TCString.encode(tcModel);
+    });
+}
+
+
+export function selectAll(vendors) {
+    const gvl = new GVL(vendors);
+    const tcModel = new TCModel(gvl);
+
+    tcModel.cmpId = state.decodedIABConsentObj.cmpId;
+    tcModel.cmpVersion = state.decodedIABConsentObj.cmpVersion;
+
+    return tcModel.gvl.readyPromise.then(() => {
+        tcModel.setAll();
+        return TCString.encode(tcModel);
     });
 }

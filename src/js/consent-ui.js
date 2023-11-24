@@ -1,6 +1,6 @@
 import {state} from './state';
 import {buildConsent} from './libraries/consent-framework-v1';
-import {buildConsentV2, decodeConsent} from "./libraries/consent-framework-v2";
+import {selectAll} from "./libraries/consent-framework-v2";
 
 
 //  ---------- build consent for IAB_TCF_V1.1 ----------
@@ -76,14 +76,12 @@ export const displayScreens = {
         const confirmChoices = Array(...document.getElementsByClassName('confirmChoices'));
         const acceptAll = Array(...document.getElementsByClassName('acceptAll'));
 
-        const checkboxSwitcher = Array(...document.getElementsByClassName('checkboxSwitcher'));
-
-        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher);
-        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher);
+        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
+        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
 
         this.attachCollapsible();
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
@@ -94,8 +92,6 @@ export const displayScreens = {
 
         confirmChoices.forEach(item => item.removeEventListener('click', this.confirmChoicesFn, true));
         acceptAll.forEach(item => item.removeEventListener('click', this.acceptAllFn, true));
-
-        checkboxSwitcher.forEach(item => item.removeEventListener('click', this.switcherFn, true));
     },
     addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
         manageOptions.addEventListener('click', this.showScreenTwo.bind(this), true);
@@ -108,8 +104,6 @@ export const displayScreens = {
 
         confirmChoices.forEach(item => item.addEventListener('click', this.confirmChoicesFn.bind(this, item), true));
         acceptAll.forEach(item => item.addEventListener('click', this.acceptAllFn.bind(this, item), true));
-
-        checkboxSwitcher.forEach(item => item.addEventListener('click', this.switcherFn.bind(this, item), true));
     },
     hideAllScreens: function () {
         Array(...this.screen).forEach(item => item.classList.remove("show"));
@@ -172,15 +166,11 @@ export const displayScreens = {
     closeDialog: function (dialog) {
         dialog.close();
     },
-    switcherFn: function (item) {
-
-    },
     consentFn: function () {
         console.log('consent');
     },
     doNotConsentFn: function () {
         console.log('do not consent');
-        buildConsentV2(state.decodedIABConsentObj)
     },
     confirmChoicesFn: function () {
         console.log('confirm Choices');
@@ -277,30 +267,10 @@ export const displayScreens = {
             el.checked = true;
         });
 
-
-        // ---------- select all features ----------------
-        state.decodedIABConsentObj.specialFeatureOptins.clear();
-        [
-            ...document.querySelectorAll('.featuresList .checkboxSwitcher'),
-            ...document.querySelectorAll('.specialFeaturesList .checkboxSwitcher')
-        ].forEach(el => {
-            state.decodedIABConsentObj.purposeConsents.add(normalizeId(el))
+        Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
             el.checked = true;
         });
-
-
-        // ---------- select all vendors ----------------
-        state.decodedIABConsentObj.vendorConsents.clear();
-        state.decodedIABConsentObj.vendorLegitimateInterests.clear();
-        Array.from(document.querySelectorAll('.vendorList .checkboxSwitcher')).forEach(el => {
-            if (el.id.includes('vendorLegitimate')) {
-                state.decodedIABConsentObj.vendorLegitimateInterests.add(normalizeId(el))
-            } else {
-                state.decodedIABConsentObj.vendorConsents.add(normalizeId(el))
-            }
-
-            el.checked = true;
-        });
+        selectAll(state.iabVendorList);
     },
     hideCmp: function () {
         window.cmp.resolveShowPromise(true);
@@ -555,14 +525,14 @@ export function renderAppName(appName) {
     app.innerText = appName;
 }
 
-export function checkSelectedVendors() {
+export function checkSelectedVendors(decodedConsentObj) {
     // checked purpose consent
-    state.decodedIABConsentObj.purposeConsents.forEach(id => {
+    decodedConsentObj.purposeConsents.forEach(id => {
         document.getElementById('purpose_' + id).checked = true;
     });
 
     // checked purpose legitimate
-    state.decodedIABConsentObj.purposeLegitimateInterests.forEach(id => {
+    decodedConsentObj.purposeLegitimateInterests.forEach(id => {
         const selector = document.getElementById('purposeLegitimate_' + id);
         if (!selector) {
             return;
@@ -572,7 +542,7 @@ export function checkSelectedVendors() {
     });
 
     // checked specialFeatures
-    state.decodedIABConsentObj.specialFeatureOptins.forEach(id => {
+    decodedConsentObj.specialFeatureOptins.forEach(id => {
         const selector = document.getElementById('specialFeatures_' + id);
         if (!selector) {
             return;
@@ -582,7 +552,7 @@ export function checkSelectedVendors() {
     });
 
     // checked consent
-    state.decodedIABConsentObj.vendorConsents.forEach(id => {
+    decodedConsentObj.vendorConsents.forEach(id => {
         const selector = document.getElementById('vendor_' + id);
         if (!selector) {
             return;
@@ -591,8 +561,12 @@ export function checkSelectedVendors() {
         selector.checked = true;
     });
 
+
+    // тут кажись нужно добавить проверку на наличие целей и фич и если этот
+    // вендор выбрать, значит цели и фичи тоже нужно чекнуть и их
+
     // checked legitimate
-    state.decodedIABConsentObj.vendorLegitimateInterests.forEach(id => {
+    decodedConsentObj.vendorLegitimateInterests.forEach(id => {
         const selector = document.getElementById('vendorLegitimate_' + id);
         if (!selector) {
             return;
