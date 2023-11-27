@@ -1,12 +1,14 @@
 import {state} from './state';
 import {buildConsent} from './libraries/consent-framework-v1';
-import {selectAll} from "./libraries/consent-framework-v2";
+import {selectAll, selectChoices} from "./libraries/consent-framework-v2";
 
 
 //  ---------- build consent for IAB_TCF_V1.1 ----------
-export function onSave () {
+export function onSave() {
     if (state.consentDialogVersion === 'AcceptVendors') {
-        const apdIds = Array.from(document.querySelectorAll('.vendorList input:checked')).map(function (x) {return Number(x.name);});
+        const apdIds = Array.from(document.querySelectorAll('.vendorList input:checked')).map(function (x) {
+            return Number(x.name);
+        });
 
         let nextStatus = 'PARTLY_PERSONALIZED';
         if (Object.values(state.appodealsVendorList.vendors).length === apdIds.length) {
@@ -20,7 +22,7 @@ export function onSave () {
         return save('PERSONALIZED', Object.values(state.appodealsVendorList.vendors).map(v => v.apdId));
     }
 }
-function save (nextStatus, apdIds) {
+function save(nextStatus, apdIds) {
     const nextAcceptedVendors = Object.values(state.appodealsVendorList.vendors)
         .filter(vendor => apdIds.includes(vendor.apdId))
         .map(vendor => ({apdId: vendor.apdId, status: vendor.status}));
@@ -81,7 +83,7 @@ export const displayScreens = {
 
         this.attachCollapsible();
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
@@ -168,109 +170,53 @@ export const displayScreens = {
     },
     consentFn: function () {
         console.log('consent');
+        this.acceptAllFn();
     },
     doNotConsentFn: function () {
         console.log('do not consent');
     },
     confirmChoicesFn: function () {
         console.log('confirm Choices');
-        let decodedIAB = state.decodedIABConsentObj;
-
-        // ---------- select checked purposes ----------------
-        [
-            ...document.querySelectorAll('.purposeList .checkboxSwitcher'),
-            ...document.querySelectorAll('.specialPurposeList .checkboxSwitcher')
-        ].forEach(el => {
-            let id = normalizeId(el);
-            if (el.id.includes('purposeLegitimate')) {
-                if (el.checked && !decodedIAB.purposeLegitimateInterests.has(id)) {
-                    decodedIAB.purposeLegitimateInterests.add(id);
-                    return;
-                }
-
-                if (!el.checked && decodedIAB.purposeLegitimateInterests.has(id)) {
-                    decodedIAB.purposeLegitimateInterests.delete(id);
-                }
-            } else {
-                if (el.checked && !decodedIAB.purposeConsents.has(id)) {
-                    decodedIAB.purposeConsents.add(id);
-                    return;
-                }
-
-                if (!el.checked && decodedIAB.purposeConsents.has(id)) {
-                    decodedIAB.purposeConsents.delete(id);
-                }
-            }
-        });
-
-
-        // ---------- select checked features ----------------
-        [
-            ...document.querySelectorAll('.featuresList .checkboxSwitcher'),
-            ...document.querySelectorAll('.specialFeaturesList .checkboxSwitcher')
-        ].forEach(el => {
-            let id = normalizeId(el);
-            if (decodedIAB.specialFeatureOptins.has(id)) {
-                return;
-            }
-
-            if (el.checked) {
-                decodedIAB.specialFeatureOptins.add(id);
-            } else {
-                decodedIAB.specialFeatureOptins.delete(id);
-            }
-        });
-
-
-        // ---------- select checked vendors ----------------
-        Array.from(document.querySelectorAll('.vendorList .checkboxSwitcher')).forEach(el => {
-            let id = normalizeId(el);
-            if (el.id.includes('vendorLegitimate')) {
-                if (decodedIAB.vendorLegitimateInterests.has(id)) {
-                    return;
-                }
-
-                if (el.checked) {
-                    decodedIAB.vendorLegitimateInterests.add(id);
-                } else {
-                    decodedIAB.vendorLegitimateInterests.delete(id);
-                }
-            } else {
-                if (decodedIAB.vendorConsents.has(id)) {
-                    return;
-                }
-
-                if (el.checked) {
-                    decodedIAB.vendorConsents.add(id);
-                } else {
-                    decodedIAB.vendorConsents.delete(id);
-                }
-            }
+        const selectedItems = this.buildChecked();
+        [...state.allVendorList.keys()].forEach(async tcf => {
+            await selectChoices(
+                tcf,
+                state.allVendorList.get(tcf),
+                selectedItems
+            )
         });
     },
     acceptAllFn: function () {
         console.log('accept All');
 
-        // ---------- select all purposes ----------------
-        state.decodedIABConsentObj.purposeConsents.clear();
-        state.decodedIABConsentObj.purposeLegitimateInterests.clear();
-        [
-            ...document.querySelectorAll('.purposeList .checkboxSwitcher'),
-            ...document.querySelectorAll('.specialPurposeList .checkboxSwitcher')
-        ].forEach(el => {
-            if (el.id.includes('purposeLegitimate')) {
-                state.decodedIABConsentObj.purposeLegitimateInterests.add(normalizeId(el))
-            } else {
-                state.decodedIABConsentObj.purposeConsents.add(normalizeId(el))
-            }
+        if (!state.allVendorList.size) {
+            return;
+        }
 
-            el.checked = true;
-        });
+        Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {el.checked = true});
 
-        Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
-            el.checked = true;
+        // new Set('IAB_TCF_V2.2', state.vendor)
+        [...state.allVendorList.keys()].forEach(async tcf => {
+            await selectAll(tcf, state.allVendorList.get(tcf));
         });
-        selectAll(state.iabVendorList);
+    },
+    buildChecked: function () {
+        const vendors = document.querySelectorAll('.vendorList .checkboxSwitcher');
+        const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
+        const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
+        const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
+        const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
+
+        return {
+            vendors: this.findChecked(vendors, 'vendor_'),
+            vendorLegitimate: this.findChecked(vendorLegitimate, 'vendorLegitimate_'),
+            purposes: this.findChecked(purposes, 'purpose_'),
+            purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
+            specialFeatures: this.findChecked(specialFeature, 'specialFeatures_'),
+        }
+    },
+    findChecked: function (list, nameId) {
+        return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? normalizeId(v) : '').filter(Boolean)
     },
     hideCmp: function () {
         window.cmp.resolveShowPromise(true);
@@ -280,11 +226,11 @@ export const displayScreens = {
 export function renderVendors(vendorList) {
     vendorList = {
         ...vendorList,
-        purposes: Object.values(vendorList.purposes),
-        specialPurposes: Object.values(vendorList.specialPurposes),
-        features: Object.values(vendorList.features),
-        specialFeatures: Object.values(vendorList.specialFeatures),
-        vendors: Object.values(vendorList.vendors),
+        purposes: vendorList ? Object.values(vendorList.purposes) : [],
+        specialPurposes: vendorList ? Object.values(vendorList.specialPurposes) : [],
+        features: vendorList ? Object.values(vendorList.features) : [],
+        specialFeatures: vendorList ? Object.values(vendorList.specialFeatures) : [],
+        vendors: vendorList ? Object.values(vendorList.vendors) : [],
     }
 
     const purposeMap = {};

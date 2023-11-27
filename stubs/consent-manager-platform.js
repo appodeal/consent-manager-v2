@@ -1,14 +1,12 @@
 import {state} from "../src/js/state";
 import {
     checkSelectedVendors,
-    onSave,
     renderAppName,
     renderLogo,
     renderVendors
 } from "../src/js/consent-ui";
-import {decodeConsent, encodeConsent, selectAll} from "../src/js/libraries/consent-framework-v2";
-import {buildGooglePrivacyConsent} from "../src/js/libraries/builds/google-privacy";
-import {buildApdPrivacyV2Consent} from "../src/js/libraries/builds/apd-privacy-v2";
+import {decodeIABTCFConsent} from "../src/js/libraries/builds/iab";
+import {decodeGooglePrivacyConsent} from "../src/js/libraries/builds/google-privacy";
 
 export class ConsentManagerPlatform {
     resolveShowPromise;
@@ -48,6 +46,7 @@ export class ConsentManagerPlatform {
             }, 1000);
         });
     };
+
     setConsent(tcf, consent) {
         // Present consent on page
         try {
@@ -62,53 +61,33 @@ export class ConsentManagerPlatform {
 
         switch (tcf) {
             case 'IAB_TCF_V2.2':
+                state.allVendorList.set(tcf, state.iabVendorList);
+                state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent.IABTCF_TCString));
+
                 renderVendors(state.iabVendorList);
-                checkSelectedVendors(state.decodedIABConsentObj);
+                checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
                 break;
             case 'GOOGLE_PRIVACY':
+                state.allVendorList.set(tcf, state.googleVendorList);
+                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_AddtlConsent));
+
                 renderVendors(state.googleVendorList);
-                state.allVendorList.set('GOOGLE_PRIVACY', state.googleVendorList);
-                checkSelectedVendors();
+                checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
                 break;
             case 'APD_PRIVACY_V2':
+                state.allVendorList.set(tcf, state.appodealsVendorList);
+                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_ApdPrivacyConsent));
+
                 renderVendors(state.appodealsVendorList);
-                state.allVendorList.set('APD_PRIVACY_V2', state.appodealsVendorList);
-                checkSelectedVendors();
+                checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
                 break;
         }
 
     }
 
     onUpdateConsent(tcf, consent) {
-        switch (tcf) {
-            case 'IAB_TCF_V2.2':
-
-                break;
-            case 'GOOGLE_PRIVACY':
-
-                break;
-            case 'APD_PRIVACY_V2':
-
-                break;
-        }
+        console.log(`Version: ${tcf} Consent: ${consent}`);
     };
-
-    buildConsentString(tcf, consent) {
-        switch (tcf) {
-            case 'IAB_TCF_V1.1':
-                this.onUpdateConsent('IAB_TCF_V1.1', onSave());
-                break;
-            case 'IAB_TCF_V2.2':
-                this.onUpdateConsent('IAB_TCF_V2.2', buildConsentV2(consent));
-                break;
-            case 'GOOGLE_PRIVACY':
-                this.onUpdateConsent('GOOGLE_PRIVACY', buildGooglePrivacyConsent(consent, state.googleVendorList));
-                break;
-            case 'APD_PRIVACY_V2':
-                this.onUpdateConsent('APD_PRIVACY_V2', buildApdPrivacyV2Consent(state.appodealsVendorList));
-                break;
-        }
-    }
 
     show() {
         if (this.authorizationStatusIOS === 'NOT_DETERMINED') {
@@ -117,14 +96,6 @@ export class ConsentManagerPlatform {
                 this.rejectStatusPromise = rej;
             });
         }
-
-        if (!state.allConsentList.size) {
-            return;
-        }
-
-        [...state.allConsentList.keys()].forEach(name => {
-            this.buildConsentString(name, state.allConsentList.get(name));
-        })
 
         return new Promise((resolve, reject) => {
             this.resolveShowPromise = resolve;
