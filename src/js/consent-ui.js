@@ -37,7 +37,6 @@ function save(nextStatus, apdIds) {
         )
     );
 
-    //  !!! возможно тут стоит пересмотреть обьект. Не все указанные ключи нужны основываясь на новый результат
     return Object.assign(
         {},
         state.currentConsent,
@@ -217,7 +216,9 @@ export const displayScreens = {
         const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
 
         return {
-            vendors: this.findChecked(vendors, 'vendor_'),
+            vendorsIab: this.findChecked(vendors, 'vendor_'),
+            vendorsGoogle: this.findChecked(vendors, 'vendorGoogle_'),
+            vendorsApd: this.findChecked(vendors, 'vendorApd_'),
             vendorLegitimate: this.findChecked(vendorLegitimate, 'vendorLegitimate_'),
             purposes: this.findChecked(purposes, 'purpose_'),
             purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
@@ -238,6 +239,7 @@ function checkHasOwnProp(vendorList, prop) {
 
 function saveVendorsAndRender(tcf, vendorList) {
     state.allVendorList.set(tcf, vendorList);
+    console.log('Display all vendors list:', state.allVendorList);
     renderVendors(tcf, vendorList);
 }
 
@@ -350,14 +352,20 @@ export function renderVendors(tcf, vList) {
     }
 }
 
+function getSubNameVendorId(tcf) {
+    return tcf === 'GOOGLE_PRIVACY' ? 'vendorGoogle_' : tcf === 'APD_PRIVACY_V2' ? 'vendorApd_' : 'vendor_';
+}
+
 function buildConsentSwitcher(tcf, vendor) {
+    const subNameId = getSubNameVendorId(tcf);
+
     if (tcf !== 'IAB_TCF_V2.2') {
-        return `<label class="switch-control" for="${'vendor_' + vendor.id}">
+        return `<label class="switch-control" for="${subNameId + vendor.id}">
                     Consent
                     <input type="checkbox"
                            class="checkboxSwitcher"
-                           id="${'vendor_' + vendor.id}"
-                           name="${'vendor_' + vendor.id}"
+                           id="${subNameId + vendor.id}"
+                           name="${subNameId + vendor.id}"
                     />
                     <span class="track">
                         <span class="peg"></span>
@@ -366,12 +374,12 @@ function buildConsentSwitcher(tcf, vendor) {
     }
 
     return vendor.features && vendor.features.length
-        ? `<label class="switch-control" for="${'vendor_' + vendor.id}">
+        ? `<label class="switch-control" for="${subNameId + vendor.id}">
                 Consent
                 <input type="checkbox"
                        class="checkboxSwitcher"
-                       id="${'vendor_' + vendor.id}"
-                       name="${'vendor_' + vendor.id}"
+                       id="${subNameId + vendor.id}"
+                       name="${subNameId + vendor.id}"
                 />
                 <span class="track">
                     <span class="peg"></span>
@@ -523,7 +531,7 @@ export function renderAppName(appName) {
     app.innerText = appName;
 }
 
-export function checkSelectedVendors(decodedConsentObj) {
+export function checkSelectedVendors(tcf, decodedConsentObj) {
     if (!decodedConsentObj) {
         return;
     }
@@ -555,7 +563,19 @@ export function checkSelectedVendors(decodedConsentObj) {
 
     // checked consent
     decodedConsentObj.vendorConsents.forEach(id => {
-        const selector = document.getElementById('vendor_' + id);
+        let selector;
+        switch (tcf) {
+            case 'GOOGLE_PRIVACY':
+                selector = document.getElementById('vendorGoogle_' + id);
+                break;
+            case 'APD_PRIVACY_V2':
+                selector = document.getElementById('vendorApd_' + id);
+                break;
+            default:
+                selector = document.getElementById('vendor_' + id);
+                break;
+        }
+
         if (!selector) {
             return;
         }

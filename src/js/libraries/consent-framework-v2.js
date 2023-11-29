@@ -19,7 +19,7 @@ export async function selectChoices(tcf, vendorList, selected) {
             tcModel.cmpVersion = state.currentVersion;
 
             await tcModel.gvl.readyPromise.then(() => {
-                tcModel.vendorConsents.set(getIdFromElem(selected.vendors));
+                tcModel.vendorConsents.set(getIdFromElem(selected.vendorsIab));
                 tcModel.vendorLegitimateInterests.set(getIdFromElem(selected.vendorLegitimate));
                 tcModel.purposeConsents.set(getIdFromElem(selected.purposes));
                 tcModel.purposeLegitimateInterests.set(getIdFromElem(selected.purposeLegitimate));
@@ -30,16 +30,25 @@ export async function selectChoices(tcf, vendorList, selected) {
 
             break;
         case 'GOOGLE_PRIVACY':
-            const getSelectedIds = [].concat(getIdFromElem(selected.vendors));
-            const vendors = Object.values(vendorList);
-            const selectedIdsFromCurrentVendor = vendors
+            const getSelectedIds = [].concat(getIdFromElem(selected.vendorsGoogle));
+            const vendorsGoogle = Object.values(vendorList);
+            const selectedIdsFromCurrentVendor = vendorsGoogle
                 .map(v => getSelectedIds.find(id => v.id === id))
                 .filter(Boolean);
 
             window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(selectedIdsFromCurrentVendor));
             break;
         case 'APD_PRIVACY_V2':
-            // window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(vendorList));
+            const selectedIds = [].concat(getIdFromElem(selected.vendorsApd));
+            const vendorsApd = Object.values(vendorList);
+            const selectedStatusesFromCurrentVendor = vendorsApd
+                .map(v => {
+                    const idx = selectedIds.findIndex(id => v.id === id);
+                    return idx > -1 ? v.status : null
+                })
+                .filter(Boolean);
+
+            window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(selectedStatusesFromCurrentVendor));
             break;
     }
 }
@@ -71,7 +80,8 @@ export async function selectAll(tcf, vendorList) {
             window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(vendorIds));
             break;
         case 'APD_PRIVACY_V2':
-            // window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(vendorList));
+            const statuses = Object.values(vendorList).map(v => v.status);
+            window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(statuses));
             break;
     }
 }

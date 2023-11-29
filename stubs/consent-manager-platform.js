@@ -6,6 +6,7 @@ import {
 } from "../src/js/consent-ui";
 import {decodeIABTCFConsent} from "../src/js/libraries/builds/iab";
 import {decodeGooglePrivacyConsent} from "../src/js/libraries/builds/google-privacy";
+import {decodeApdPrivacyV2Consent} from "../src/js/libraries/builds/apd-privacy-v2";
 
 export class ConsentManagerPlatform {
     resolveShowPromise;
@@ -56,15 +57,15 @@ export class ConsentManagerPlatform {
         switch (tcf) {
             case 'IAB_TCF_V2.2':
                 state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent.IABTCF_TCString));
-                checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
+                checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case 'GOOGLE_PRIVACY':
-                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent));
-                checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
+                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_AddtlConsent));
+                checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case 'APD_PRIVACY_V2':
-                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_ApdPrivacyConsent));
-                checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
+                state.decodedPreviouslyVendor.set(tcf, decodeApdPrivacyV2Consent(consent.IABTCF_ApdPrivacyConsent));
+                checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
         }
 
