@@ -2,6 +2,7 @@ import './js/polyfills';
 import './styles/index.scss';
 import {state} from './js/state';
 import {ConsentManagerPlatform} from "../stubs/consent-manager-platform";
+import {displayScreens} from "./js/consent-ui";
 
 
 let isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -11,6 +12,8 @@ if (isiOS) {
 }
 
 window.cmp = new ConsentManagerPlatform();
+displayScreens.renderAllVendors();
+displayScreens.initControls();
 
 const params = new URLSearchParams(document.location.search);
 

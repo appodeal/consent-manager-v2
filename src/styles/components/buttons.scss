@@ -38,6 +38,7 @@
     color: var(--link-button-text-color);
     background: var(--link-button-background);
     border: 2px solid var(--link-button-border-color);
+    transition: none;
 
     &:hover, &:active {
       color: var(--link-button-text-color-hover);

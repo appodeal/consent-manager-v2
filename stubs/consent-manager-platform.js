@@ -2,8 +2,7 @@ import {state} from "../src/js/state";
 import {
     checkSelectedVendors,
     renderAppName,
-    renderLogo,
-    renderVendors
+    renderLogo
 } from "../src/js/consent-ui";
 import {decodeIABTCFConsent} from "../src/js/libraries/builds/iab";
 import {decodeGooglePrivacyConsent} from "../src/js/libraries/builds/google-privacy";
@@ -17,9 +16,10 @@ export class ConsentManagerPlatform {
 
     authorizationStatusIOS;
 
-    setApp(appName, icon) {
+    setApp(appName, version, icon) {
+        state.currentVersion = Number(version);
         renderLogo(icon)
-        renderAppName(appName, icon);
+        renderAppName(appName);
     }
 
     setAuthorizationStatusIOS(authorizationStatus) {
@@ -39,13 +39,7 @@ export class ConsentManagerPlatform {
         }
     }
 
-    onRequestAuthorizationStatusIOS() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(3);
-            }, 1000);
-        });
-    };
+    onRequestAuthorizationStatusIOS() {};
 
     setConsent(tcf, consent) {
         // Present consent on page
@@ -61,24 +55,15 @@ export class ConsentManagerPlatform {
 
         switch (tcf) {
             case 'IAB_TCF_V2.2':
-                state.allVendorList.set(tcf, state.iabVendorList);
                 state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent.IABTCF_TCString));
-
-                renderVendors(state.iabVendorList);
                 checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
                 break;
             case 'GOOGLE_PRIVACY':
-                state.allVendorList.set(tcf, state.googleVendorList);
-                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_AddtlConsent));
-
-                renderVendors(state.googleVendorList);
+                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent));
                 checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
                 break;
             case 'APD_PRIVACY_V2':
-                state.allVendorList.set(tcf, state.appodealsVendorList);
                 state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_ApdPrivacyConsent));
-
-                renderVendors(state.appodealsVendorList);
                 checkSelectedVendors(state.decodedPreviouslyVendor.get(tcf));
                 break;
         }
@@ -86,10 +71,10 @@ export class ConsentManagerPlatform {
     }
 
     onUpdateConsent(tcf, consent) {
-        console.log(`Version: ${tcf} Consent: ${consent}`);
+        console.log('Version:', tcf, 'Consent:', consent);
     };
 
-    show() {
+    async show() {
         if (this.authorizationStatusIOS === 'NOT_DETERMINED') {
             this.onRequestAuthorizationStatusIOS().then((res, rej) => {
                 this.rejectStatusPromise = res;
@@ -100,6 +85,17 @@ export class ConsentManagerPlatform {
         return new Promise((resolve, reject) => {
             this.resolveShowPromise = resolve;
             this.rejectShowPromise = reject;
+        }).then(isFinished => {
+            console.log('Finished interactions with form:', isFinished);
+
+            const body = document.body;
+            if (isFinished) {
+                body.classList.remove('show');
+                body.setAttribute('style', 'display: none');
+            } else {
+                body.removeAttribute('style');
+                body.classList.add('show');
+            }
         });
-    };
+    }
 }

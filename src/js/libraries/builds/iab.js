@@ -1,6 +1,10 @@
 import {TCString} from "../mjs";
 
 export function decodeIABTCFConsent(consentString) {
+    if (!consentString) {
+        return;
+    }
+
     const myTcModel = new TCString.decode(consentString);
 
     return {

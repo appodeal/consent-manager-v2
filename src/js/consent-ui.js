@@ -55,7 +55,7 @@ function save(nextStatus, apdIds) {
 //  ----------------------------------------------------
 
 export function normalizeId(x) {
-    const id = x.id.split('_');
+    const id = x.split('_');
     return Number(id[id.length - 1]);
 }
 
@@ -78,12 +78,12 @@ export const displayScreens = {
         const confirmChoices = Array(...document.getElementsByClassName('confirmChoices'));
         const acceptAll = Array(...document.getElementsByClassName('acceptAll'));
 
+        this.attachCollapsible();
+
         this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
         this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
-
-        this.attachCollapsible();
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
@@ -95,7 +95,7 @@ export const displayScreens = {
         confirmChoices.forEach(item => item.removeEventListener('click', this.confirmChoicesFn, true));
         acceptAll.forEach(item => item.removeEventListener('click', this.acceptAllFn, true));
     },
-    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, checkboxSwitcher) {
+    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
         manageOptions.addEventListener('click', this.showScreenTwo.bind(this), true);
         vendorPreferences.addEventListener('click', this.showScreenThree.bind(this), true);
         backScreenList.forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
@@ -152,6 +152,11 @@ export const displayScreens = {
             });
         });
     },
+    renderAllVendors: function () {
+        saveVendorsAndRender('IAB_TCF_V2.2', state.iabVendorList);
+        saveVendorsAndRender('GOOGLE_PRIVACY', state.googleVendorList);
+        saveVendorsAndRender('APD_PRIVACY_V2', state.appodealsVendorList);
+    },
     createCollapsible: function (title, body) {
         return `<div class="collapsable">
                 <div class="collapsable-title">${title}</div>
@@ -174,6 +179,7 @@ export const displayScreens = {
     },
     doNotConsentFn: function () {
         console.log('do not consent');
+        this.confirmChoicesFn();
     },
     confirmChoicesFn: function () {
         console.log('confirm Choices');
@@ -185,6 +191,7 @@ export const displayScreens = {
                 selectedItems
             )
         });
+        this.hideCmp();
     },
     acceptAllFn: function () {
         console.log('accept All');
@@ -195,10 +202,12 @@ export const displayScreens = {
 
         Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {el.checked = true});
 
-        // new Set('IAB_TCF_V2.2', state.vendor)
+        // for example: new Set('IAB_TCF_V2.2', state.vendor)
         [...state.allVendorList.keys()].forEach(async tcf => {
             await selectAll(tcf, state.allVendorList.get(tcf));
         });
+
+        this.hideCmp();
     },
     buildChecked: function () {
         const vendors = document.querySelectorAll('.vendorList .checkboxSwitcher');
@@ -216,22 +225,37 @@ export const displayScreens = {
         }
     },
     findChecked: function (list, nameId) {
-        return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? normalizeId(v) : '').filter(Boolean)
+        return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
     },
     hideCmp: function () {
         window.cmp.resolveShowPromise(true);
     }
 }
 
-export function renderVendors(vendorList) {
-    vendorList = {
-        ...vendorList,
-        purposes: vendorList ? Object.values(vendorList.purposes) : [],
-        specialPurposes: vendorList ? Object.values(vendorList.specialPurposes) : [],
-        features: vendorList ? Object.values(vendorList.features) : [],
-        specialFeatures: vendorList ? Object.values(vendorList.specialFeatures) : [],
-        vendors: vendorList ? Object.values(vendorList.vendors) : [],
-    }
+function checkHasOwnProp(vendorList, prop) {
+    return vendorList && vendorList.hasOwnProperty(prop) ? Object.values(vendorList[prop]) : [];
+}
+
+function saveVendorsAndRender(tcf, vendorList) {
+    state.allVendorList.set(tcf, vendorList);
+    renderVendors(tcf, vendorList);
+}
+
+export function renderVendors(tcf, vList) {
+    const vendorList = checkHasOwnProp(vList, 'vendors').length ? {
+        ...vList,
+        purposes: checkHasOwnProp(vList, 'purposes'),
+        specialPurposes: checkHasOwnProp(vList, 'specialPurposes'),
+        features: checkHasOwnProp(vList, 'features'),
+        specialFeatures: checkHasOwnProp(vList, 'specialFeatures'),
+        vendors: checkHasOwnProp(vList, 'vendors'),
+    } : {
+        purposes: [],
+        specialPurposes: [],
+        features: [],
+        specialFeatures: [],
+        vendors: Object.values(vList),
+    };
 
     const purposeMap = {};
     vendorList.purposes.forEach(purpose => purposeMap[purpose.id] = purpose);
@@ -300,41 +324,9 @@ export function renderVendors(vendorList) {
                             ${vendorStorageDisclosure(vendor)}
                             ${vendorPolicyUrl(vendor)}
                         </div>
-                        ${vendor.features.length ? `<label class="switch-control" for="${'vendor_' + vendor.id}">
-                            Consent
-                            <input type="checkbox"
-                                   class="checkboxSwitcher"
-                                   id="${'vendor_' + vendor.id}"
-                                   name="${'vendor_' + vendor.id}"
-                            />
-                            <span class="track">
-                                <span class="peg"></span>
-                            </span>
-                        </label>` : ''}
-                        ${vendor.legIntPurposes.length ? `<div class="switch-control">
-                            <div class="switch-control__label">
-                                Legitimate interest
-                                <i class="icn dialog--open icn-help">
-                                    <dialog class="dialog">
-                                        <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                        <div class="dialog__content">
-                                            <span>Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
-                                        </div>
-                                        <button class="button button-primary-inverted dialog__btn">Close</button>
-                                    </dialog>
-                                </i>
-                            </div>
-                            <label class="switch-control" for="${'vendorLegitimate_' + vendor.id}">
-                                <input type="checkbox"
-                                       class="checkboxSwitcher"
-                                       id="${'vendorLegitimate_' + vendor.id}"
-                                       name="${'vendorLegitimate_' + vendor.id}"
-                                />
-                                <span class="track">
-                                    <span class="peg"></span>
-                                </span>
-                            </label>
-                        </div>` : ''}
+                        
+                       ${buildConsentSwitcher(tcf, vendor)}
+                       ${buildLegIntPurposesSwitcher(tcf, vendor)}
             `)
         )
         .join('');
@@ -347,10 +339,8 @@ export function renderVendors(vendorList) {
         vendorListTag.innerHTML = htmlVendorList;
     }
 
-    displayScreens.initControls();
-
     function buildConsentNamesList(vendor, key) {
-        if (!vendor[key].length) {
+        if (!vendor.hasOwnProperty(key) || !vendor[key].length) {
             return '';
         }
 
@@ -358,6 +348,68 @@ export function renderVendors(vendorList) {
             return `<li>${vendorList[key].find(item => item.id === p).name}</li>`
         }).join('')}</ul>`
     }
+}
+
+function buildConsentSwitcher(tcf, vendor) {
+    if (tcf !== 'IAB_TCF_V2.2') {
+        return `<label class="switch-control" for="${'vendor_' + vendor.id}">
+                    Consent
+                    <input type="checkbox"
+                           class="checkboxSwitcher"
+                           id="${'vendor_' + vendor.id}"
+                           name="${'vendor_' + vendor.id}"
+                    />
+                    <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                </label>`;
+    }
+
+    return vendor.features && vendor.features.length
+        ? `<label class="switch-control" for="${'vendor_' + vendor.id}">
+                Consent
+                <input type="checkbox"
+                       class="checkboxSwitcher"
+                       id="${'vendor_' + vendor.id}"
+                       name="${'vendor_' + vendor.id}"
+                />
+                <span class="track">
+                    <span class="peg"></span>
+                </span>
+            </label>`
+        : '';
+}
+function buildLegIntPurposesSwitcher(tcf, vendor) {
+    if (tcf !== 'IAB_TCF_V2.2') {
+        return '';
+    }
+
+    return vendor.legIntPurposes && vendor.legIntPurposes.length
+        ? `<div class="switch-control">
+                <div class="switch-control__label">
+                    Legitimate interest
+                    <i class="icn dialog--open icn-help">
+                        <dialog class="dialog">
+                            <h4 class="dialog__title">How does legitimate interest work?</h4>
+                            <div class="dialog__content">
+                                <span>Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
+                            </div>
+                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                        </dialog>
+                    </i>
+                </div>
+                <label class="switch-control" for="${'vendorLegitimate_' + vendor.id}">
+                    <input type="checkbox"
+                           class="checkboxSwitcher"
+                           id="${'vendorLegitimate_' + vendor.id}"
+                           name="${'vendorLegitimate_' + vendor.id}"
+                    />
+                    <span class="track">
+                        <span class="peg"></span>
+                    </span>
+                </label>
+            </div>`
+        : '';
 }
 
 function buildListConsentFirstPage(vendorList) {
@@ -472,6 +524,10 @@ export function renderAppName(appName) {
 }
 
 export function checkSelectedVendors(decodedConsentObj) {
+    if (!decodedConsentObj) {
+        return;
+    }
+
     // checked purpose consent
     decodedConsentObj.purposeConsents.forEach(id => {
         document.getElementById('purpose_' + id).checked = true;
@@ -506,10 +562,6 @@ export function checkSelectedVendors(decodedConsentObj) {
 
         selector.checked = true;
     });
-
-
-    // тут кажись нужно добавить проверку на наличие целей и фич и если этот
-    // вендор выбрать, значит цели и фичи тоже нужно чекнуть и их
 
     // checked legitimate
     decodedConsentObj.vendorLegitimateInterests.forEach(id => {
