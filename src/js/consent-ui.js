@@ -228,7 +228,7 @@ export const displayScreens = {
         return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
     },
     hideCmp: function () {
-        window.cmp.resolveShowPromise(true);
+        // window.cmp.resolveShowPromise = true;
     }
 }
 

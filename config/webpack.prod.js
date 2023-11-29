@@ -1,4 +1,4 @@
-process.env.RUBy_INJECT_VENDORS_CODE = '' +
+process.env.RUBY_INJECT_VENDORS_CODE = '' +
     '<script>' +
         'window.iabVendorList = <%= @iab_vendors.html_safe %>;' +
         'window.googleVendorList = <%= @google_vendors.html_safe %>;' +
