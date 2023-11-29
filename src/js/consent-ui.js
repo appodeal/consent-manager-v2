@@ -254,7 +254,7 @@ export function renderVendors(tcf, vList) {
         specialPurposes: [],
         features: [],
         specialFeatures: [],
-        vendors: Object.values(vList),
+        vendors: vList ? Object.values(vList) : [],
     };
 
     const purposeMap = {};

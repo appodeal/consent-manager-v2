@@ -34,7 +34,7 @@ module.exports = merge(common, {
         open: true,
         compress: true,
         hot: true,
-        host: '192.168.1.60', //your ip address
+        // host: '192.168.1.60', // For example. Uncomment this line if you need to test your layout on a mobile device.
         port: 8080,
         disableHostCheck: true,
     },

@@ -96,6 +96,8 @@ export class ConsentManagerPlatform {
                 body.removeAttribute('style');
                 body.classList.add('show');
             }
+
+            return isFinished;
         });
     }
 }
