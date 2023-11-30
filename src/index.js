@@ -11,9 +11,13 @@ if (isiOS) {
     document.body.classList.add('ios');
 }
 
-window.cmp = new ConsentManagerPlatform();
-displayScreens.renderAllVendors();
-displayScreens.initControls();
+document.addEventListener('readystatechange', e => {
+    if(document.readyState === "complete"){
+        window.cmp = new ConsentManagerPlatform();
+        displayScreens.renderAllVendors();
+        displayScreens.initControls();
+    }
+});
 
 const params = new URLSearchParams(document.location.search);
 
