@@ -1,8 +1,14 @@
 .button {
+  @include mediaLandscape {
+    --gap: 8px;
+  }
+
+  --gap: 10px;
+
   cursor: pointer;
   max-width: 330px;
   text-align: center;
-  padding: 10px 24px;
+  padding: var(--gap) calc(var(--gap) * 2);
   margin-bottom: 16px;
   border-radius: 100px;
   letter-spacing: 0.1em;

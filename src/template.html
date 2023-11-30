@@ -12,144 +12,146 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body class="show">
-    <div class="screen screen--one show">
-        <div class="main">
-            <div class="logo">
-                <img src="" alt="" />
-                <h2></h2>
-            </div>
-            <div class="content">
-                <div class="content__list">
-                    <div class="content__item">
-                        <div class="icn icn-user"></div>
-                        <h4>Select personalised ads</h4>
-                    </div>
-                    <div class="content__item">
-                        <div class="icn icn-content"></div>
-                        <h4>Personalised content</h4>
-                    </div>
-                    <div class="content__item">
-                        <div class="icn icn-device"></div>
-                        <h4>Store and/or access information on a device</h4>
-                    </div>
+    <div class="screen__list">
+        <div class="screen screen--one show">
+            <div class="main">
+                <div class="logo">
+                    <img src="" alt="" />
+                    <h2></h2>
                 </div>
-
-                <div class="collapsable">
-                    <div class="collapsable-title">
-                        <i class="icn icn-arrow"></i>
-                        <h4>Learn more</h4>
-                    </div>
-                    <div class="collapsable-body">
-                        <div class="help-block">
-                            <div class="help-block__item"><a href="#">How can I change my choice?</a></div>
-                            <div class="help-block__item"><a href="#">What if I don’t consent?</a></div>
-                            <div class="help-block__item"><a href="#">How does legitimate interest work?</a></div>
-                            <div class="help-block__item"><a href="#">Do I have to consent to everything?</a></div>
+                <div class="content">
+                    <div class="content__list">
+                        <div class="content__item">
+                            <div class="icn icn-user"></div>
+                            <h4>Select personalised ads</h4>
+                        </div>
+                        <div class="content__item">
+                            <div class="icn icn-content"></div>
+                            <h4>Personalised content</h4>
+                        </div>
+                        <div class="content__item">
+                            <div class="icn icn-device"></div>
+                            <h4>Store and/or access information on a device</h4>
                         </div>
                     </div>
-                </div>
 
-                <p>Your personal data will be processed and information from your device (cookies, unique identifiers, and other device data) may be stored by, accessed by and shared with
-                    <a href="#">third party vendors</a>, or used specifically by this site or app.</p>
-                <p> Some vendors may process your personal data on the basis of legitimate interest, which you can object to by managing your options below. Look for a link at the bottom of this page or in our privacy policy where you can withdraw consent.</p>
-            </div>
-        </div>
-
-        <div class="footer">
-            <div class="buttons-list">
-                <button id="consentBtn" type="button" class="button button-primary">Consent</button>
-                <button id="doNotConsentBtn" type="button" class="button button-primary">Do not consent</button>
-                <button id="manageOptions" type="button" class="button button-link">Manage Options</button>
-            </div>
-        </div>
-    </div>
-    <div class="screen screen--two">
-        <div class="back-block 1 backScreen">
-            <i class="icn icn-back"></i>
-            <span>Data preferences</span>
-        </div>
-
-        <div class="main">
-            <div class="logo">
-                <img src="" alt=""/>
-                <h2>Manage your data</h2>
-            </div>
-            <div class="content">
-                <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
-
-                <div class="content__separate-label">
-                    <p>TCF vendors</p>
-                    <div class="icn dialog--open icn-help">
-                        <dialog class="dialog">
-                            <h4 class="dialog__title">How does legitimate interest work?</h4>
-                            <div class="dialog__content">Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
-                            <button class="button button-primary-inverted dialog__btn">Close</button>
-                        </dialog>
+                    <div class="collapsable">
+                        <div class="collapsable-title">
+                            <i class="icn icn-arrow"></i>
+                            <h4>Learn more</h4>
+                        </div>
+                        <div class="collapsable-body">
+                            <div class="help-block">
+                                <div class="help-block__item"><a href="#">How can I change my choice?</a></div>
+                                <div class="help-block__item"><a href="#">What if I don’t consent?</a></div>
+                                <div class="help-block__item"><a href="#">How does legitimate interest work?</a></div>
+                                <div class="help-block__item"><a href="#">Do I have to consent to everything?</a></div>
+                            </div>
+                        </div>
                     </div>
+
+                    <p>Your personal data will be processed and information from your device (cookies, unique identifiers, and other device data) may be stored by, accessed by and shared with
+                        <a href="#">third party vendors</a>, or used specifically by this site or app.</p>
+                    <p> Some vendors may process your personal data on the basis of legitimate interest, which you can object to by managing your options below. Look for a link at the bottom of this page or in our privacy policy where you can withdraw consent.</p>
                 </div>
+            </div>
 
-                <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
-
-                <div class="content__separate-label">
-                    <p>Site or app</p>
-                </div>
-
-                <div class="preferences purposeList"></div>
-                <div class="preferences specialPurposeList"></div>
-                <div class="preferences featuresList"></div>
-                <div class="preferences specialFeaturesList"></div>
-
+            <div class="footer">
                 <div class="buttons-list">
-                    <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
+                    <button id="consentBtn" type="button" class="button button-primary">Consent</button>
+                    <button id="doNotConsentBtn" type="button" class="button button-primary">Do not consent</button>
+                    <button id="manageOptions" type="button" class="button button-link">Manage Options</button>
                 </div>
             </div>
         </div>
-
-        <div class="footer">
-            <div class="buttons-list">
-                <button id="requestStatus" type="button" class="button button-primary confirmChoices">Confirm Choices</button>
-                <button id="updValue" type="button" class="button button-primary acceptAll">Accept all</button>
+        <div class="screen screen--two">
+            <div class="back-block 1 backScreen">
+                <i class="icn icn-back"></i>
+                <span>Data preferences</span>
             </div>
-        </div>
-    </div>
-    <div class="screen screen--three">
-        <div class="back-block 2 backScreen">
-            <i class="icn icn-back"></i>
-            <span>Vendor preferences</span>
-        </div>
 
-        <div class="main">
-            <div class="logo">
-                <h2>Confirm our vendors</h2>
-            </div>
-            <div class="content">
-                <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
+            <div class="main">
+                <div class="logo">
+                    <img src="" alt=""/>
+                    <h2>Manage your data</h2>
+                </div>
+                <div class="content">
+                    <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
 
-                <div class="content__separate-label">
-                    <p>TCF vendors</p>
-                    <div class="icn dialog--open icn-help">
-                        <dialog class="dialog">
-                            <h4 class="dialog__title">How does legitimate interest work?</h4>
-                            <div class="dialog__content">Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
-                            <button class="button button-primary-inverted dialog__btn">Close</button>
-                        </dialog>
+                    <div class="content__separate-label">
+                        <p>TCF vendors</p>
+                        <div class="icn dialog--open icn-help">
+                            <dialog class="dialog">
+                                <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                <div class="dialog__content">Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
+                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                            </dialog>
+                        </div>
+                    </div>
+
+                    <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
+
+                    <div class="content__separate-label">
+                        <p>Site or app</p>
+                    </div>
+
+                    <div class="preferences purposeList"></div>
+                    <div class="preferences specialPurposeList"></div>
+                    <div class="preferences featuresList"></div>
+                    <div class="preferences specialFeaturesList"></div>
+
+                    <div class="buttons-list">
+                        <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
                     </div>
                 </div>
+            </div>
 
-                <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
-
-                <div class="content__separate-label">
-                    <p>Site or app</p>
+            <div class="footer">
+                <div class="buttons-list">
+                    <button id="requestStatus" type="button" class="button button-primary confirmChoices">Confirm Choices</button>
+                    <button id="updValue" type="button" class="button button-primary acceptAll">Accept all</button>
                 </div>
-
-                <div class="preferences vendorList"></div>
             </div>
         </div>
+        <div class="screen screen--three">
+            <div class="back-block 2 backScreen">
+                <i class="icn icn-back"></i>
+                <span>Vendor preferences</span>
+            </div>
 
-        <div class="footer">
-            <div class="buttons-list">
-                <button type="button" class="button button-primary confirmChoices">Confirm Choices</button>
-                <button type="button" class="button button-primary acceptAll">Accept all</button>
+            <div class="main">
+                <div class="logo">
+                    <h2>Confirm our vendors</h2>
+                </div>
+                <div class="content">
+                    <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
+
+                    <div class="content__separate-label">
+                        <p>TCF vendors</p>
+                        <div class="icn dialog--open icn-help">
+                            <dialog class="dialog">
+                                <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                <div class="dialog__content">Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
+                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                            </dialog>
+                        </div>
+                    </div>
+
+                    <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
+
+                    <div class="content__separate-label">
+                        <p>Site or app</p>
+                    </div>
+
+                    <div class="preferences vendorList"></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="buttons-list">
+                    <button type="button" class="button button-primary confirmChoices">Confirm Choices</button>
+                    <button type="button" class="button button-primary acceptAll">Accept all</button>
+                </div>
             </div>
         </div>
     </div>

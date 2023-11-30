@@ -1,21 +1,26 @@
 .footer {
-  position: fixed;
+  position: sticky;
   left: 0;
   right: 0;
   bottom: 0;
-  max-height: var(--footer-height);
   overflow-y: auto;
   padding: var(--gap) var(--gap) 0;
   background-color: var(--white);
 
   .button {
     width: 100%;
+    @include mediaLandscape {
+      margin: 0 calc(var(--gap) / 2) calc(var(--gap) * 2);
+    }
   }
 }
 
 .buttons-list {
   @include flexCenter();
   flex-direction: column;
+  @include mediaLandscape {
+    flex-direction: row;
+  }
 }
 
 #vendorPreferences {
