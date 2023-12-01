@@ -9,18 +9,13 @@ import {decodeGooglePrivacyConsent} from "../src/js/libraries/builds/google-priv
 import {decodeApdPrivacyV2Consent} from "../src/js/libraries/builds/apd-privacy-v2";
 
 export class ConsentManagerPlatform {
-    resolveShowPromise;
-    rejectShowPromise;
-
-    resolveStatusPromise;
-    rejectStatusPromise;
-
+    isFormShown = false;
     authorizationStatusIOS;
 
     setApp(appName, version, icon) {
+        renderAppName(appName);
         state.currentVersion = Number(version);
         renderLogo(icon)
-        renderAppName(appName);
     }
 
     setAuthorizationStatusIOS(authorizationStatus) {
@@ -40,7 +35,17 @@ export class ConsentManagerPlatform {
         }
     }
 
-    onRequestAuthorizationStatusIOS() {};
+    onRequestAuthorizationStatusIOS() {
+        return () => new Promise(this.authorizationStatusIOS)
+            .then(r => console.log(r, 'Set authorizationStatusIOS and waiting resolve/reject'));
+    };
+
+    initRequestAuthorizationStatusIOS() {
+        if (this.authorizationStatusIOS === 'NOT_DETERMINED') {
+            console.log('Show authorizationStatusIOS value:', this.authorizationStatusIOS);
+            return this.onRequestAuthorizationStatusIOS();
+        }
+    }
 
     setConsent(tcf, consent) {
         // Present consent on page
@@ -76,29 +81,9 @@ export class ConsentManagerPlatform {
     };
 
     async show() {
-        if (this.authorizationStatusIOS === 'NOT_DETERMINED') {
-            this.onRequestAuthorizationStatusIOS().then((res, rej) => {
-                this.rejectStatusPromise = res;
-                this.rejectStatusPromise = rej;
-            });
-        }
-
-        return new Promise((resolve, reject) => {
-            this.resolveShowPromise = resolve;
-            this.rejectShowPromise = reject;
-        }).then(isFinished => {
-            console.log('Finished interactions with form:', isFinished);
-
-            const body = document.body;
-            if (isFinished) {
-                body.classList.remove('show');
-                body.setAttribute('style', 'display: none');
-            } else {
-                body.removeAttribute('style');
-                body.classList.add('show');
-            }
-
-            return isFinished;
+        return new Promise(resolve => {
+            resolve(!!this.isFormShown);
+            console.log('Return value for show method:', this.isFormShown)
         });
     }
 }

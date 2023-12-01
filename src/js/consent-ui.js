@@ -119,7 +119,7 @@ export const displayScreens = {
         this.screenThree.classList.add('show');
     },
     backToPreviousScreen: function () {
-        let parent = this.parentElement;
+        let parent = this.parentElement.parentElement;
         let previous = parent.previousElementSibling;
         parent.classList.remove('show');
         previous.classList.add('show');
@@ -229,7 +229,10 @@ export const displayScreens = {
         return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
     },
     hideCmp: function () {
-        // window.cmp.resolveShowPromise = true;
+        window.cmp.isFormShown = false;
+        window.cmp.show().then(res => {
+            console.log(res, 'Hide cmp form');
+        });
     }
 }
 
