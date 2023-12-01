@@ -23,14 +23,14 @@ if (isTabletDesktop(navigator.userAgent || navigator.vendor || window.opera)) {
     document.getElementsByClassName('screen__list')[0].classList.add('tablet-desktop');
 }
 
+window.cmp = new ConsentManagerPlatform();
+displayScreens.renderAllVendors();
+displayScreens.initControls();
+
 document.addEventListener('readystatechange', () => {
     window.cmp.isFormShown = true;
     window.cmp.initRequestAuthorizationStatusIOS();
 });
-
-window.cmp = new ConsentManagerPlatform();
-displayScreens.renderAllVendors();
-displayScreens.initControls();
 
 const params = new URLSearchParams(document.location.search);
 

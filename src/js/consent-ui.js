@@ -231,7 +231,7 @@ export const displayScreens = {
     hideCmp: function () {
         window.cmp.isFormShown = false;
         window.cmp.show().then(res => {
-            console.log(res, 'Hide cmp form');
+            console.log('isFormShown CMP form:', res);
         });
     }
 }
