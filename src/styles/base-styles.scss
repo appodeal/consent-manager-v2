@@ -113,24 +113,23 @@ h4 {
   padding: var(--gap);
   font-size: 16px;
   line-height: 28px;
-  @include flex(center, flex-start);
-  cursor: pointer;
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
   background-color: var(--white);
   z-index: 1;
-  transform: translateX(0px);
-  transition: transform .3s;
 
-  &:hover {
-    transform: translateX(-5px);
-    transition: transform .3s;
+  &__wrap {
+    padding: 8px 12px 8px 8px;
+    border-radius: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
 
-    .icn + span {
-      transform: translateX(-12px);
-      transition: transform .3s;
+    &:hover {
+      background-color: #EFF2F7;
     }
   }
 
@@ -138,11 +137,6 @@ h4 {
     min-width: 24px;
     @include square(24px);
     margin-right: var(--gap);
-
-    & + span {
-      transform: translateX(0px);
-      transition: transform .3s;
-    }
   }
 }
 

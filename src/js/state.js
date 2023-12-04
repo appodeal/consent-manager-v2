@@ -1,5 +1,5 @@
 export const state = {
-    currentVersion: null,
+    currentVersion: '2',
     currentConsent: undefined,
     consentDialogVersion: 'AcceptEverything',
 

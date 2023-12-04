@@ -119,14 +119,14 @@ export const displayScreens = {
         this.screenThree.classList.add('show');
     },
     backToPreviousScreen: function () {
-        let parent = this.parentElement.parentElement;
+        let parent = this.closest('.screen');
         let previous = parent.previousElementSibling;
         parent.classList.remove('show');
         previous.classList.add('show');
         displayScreens.scrollToTop();
     },
     scrollToTop: function () {
-        window.scrollTo(0, 0);
+        document.getElementsByClassName('screen__list')[0].scrollTo(0, 0);
     },
     attachCollapsible: function () {
         const timeouts = new Map();
