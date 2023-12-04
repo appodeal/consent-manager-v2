@@ -99,6 +99,14 @@ h4 {
     .logo {
       padding: var(--gap);
     }
+
+    .dialog__title {
+      position: sticky;
+      top: calc(-1 * var(--gap));
+      background: white;
+      padding: var(--gap) 0 calc(var(--gap) / 2);
+      margin: calc(-1 * var(--gap)) 0 0;
+    }
   }
 
   &.show {
@@ -172,8 +180,8 @@ h4 {
   }
 }
 
-.content__list {
-
+.content__txt {
+  margin: var(--gap) 0;
 }
 
 .content__item {
@@ -201,6 +209,20 @@ h4 {
   &:last-of-type {
     margin-bottom: 0;
   }
+}
+
+.help-block__link {
+  display: inline-block;
+  color: var(--link-text-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+#allVendors {
+  display: inline-block;
 }
 
 

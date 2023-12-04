@@ -6,6 +6,7 @@
   max-width: 330px;
   cursor: default;
   text-indent: 0;
+  max-height: 800px;
 
   ul + ul {
     margin: 0;
@@ -30,6 +31,11 @@
   color: inherit;
   margin-bottom: calc(var(--gap) / 2);
   display: block;
+}
+
+.dialog__link {
+  color: var(--link-text-color);
+  display: inline-block;
 }
 
 .dialog__content {
@@ -57,4 +63,24 @@
   width: 100%;
   max-width: none;
   margin-bottom: 0;
+
+  &--with-icn {
+    @include flex(center, flex-start);
+
+    a {
+      margin-right: 4px;
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+}
+
+.dialog__footer {
+  position: sticky;
+  bottom: calc(-1 * var(--gap));
+  background: white;
+  padding: var(--gap) 0;
+  margin: 0 0 calc(-1 * var(--gap));
 }

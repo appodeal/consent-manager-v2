@@ -42,17 +42,90 @@
                         </div>
                         <div class="collapsable-body">
                             <div class="help-block">
-                                <div class="help-block__item"><a href="#">How can I change my choice?</a></div>
-                                <div class="help-block__item"><a href="#">What if I don’t consent?</a></div>
-                                <div class="help-block__item"><a href="#">How does legitimate interest work?</a></div>
-                                <div class="help-block__item"><a href="#">Do I have to consent to everything?</a></div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        How can I change my choice?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">How can I change my choice?</h4>
+                                            <div class="dialog__content">
+                                                <span class="dialog__txt">Change your choice at any time. View our privacy policy to learn more.</span>
+                                                <div class="dialog__btn--with-icn">
+                                                    <a href="https://appodeal.com/privacy-policy/" target="_blank">Privacy policy</a>
+                                                    <i class="icn icn-privacy-policy"></i>
+                                                </div>
+                                            </div>
+                                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                                        </dialog>
+                                    </div>
+                                </div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        What if I don't consent?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">What if I don't consent?</h4>
+                                            <div class="dialog__content">Your personal data won't be used for the above, unless we and our vendors determine that we have a legitimate interest to do so.</div>
+                                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                                        </dialog>
+                                    </div>
+                                </div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        How does legitimate interest work?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                            <div class="dialog__content">
+                                                <span class="dialog__txt">Some vendors are not asking for your consent, but are using your personal data on the basis of their legitimate interest. To turn this off, click "Manage options".</span>
+                                                <div class="dialog__btn--with-icn">
+                                                    <a href="https://gdpr.eu/recital-47-overriding-legitimate-interest/" target="_blank">Learn more</a>
+                                                    <i class="icn icn-privacy-policy"></i>
+                                                </div>
+                                            </div>
+                                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                                        </dialog>
+                                    </div>
+                                </div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        Do I have to consent to everything?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">Do I have to consent to everything?</h4>
+                                            <div class="dialog__content">
+                                                <span class="dialog__txt">No. You can change how your personal data is used and who uses it by clicking "Manage options".</span>
+                                                <span class="dialog__txt">To collect and use data, vendors can:</span>
+                                                <ul class="dialog__list">
+                                                    <li>Match and combine data from other data sources</li>
+                                                    <li>Link different devices</li>
+                                                    <li>Identify devices based on information transmitted automatically</li>
+                                                </ul>
+                                                <br />
+                                                <span class="dialog__txt">Collecting and using the following data will require your consent, unless it's collected to ensure security, prevent fraud, or debug:</span>
+                                                <ul class="dialog__list"><li>Use precise geolocation data</li></ul>
+                                            </div>
+                                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                                        </dialog>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <p>Your personal data will be processed and information from your device (cookies, unique identifiers, and other device data) may be stored by, accessed by and shared with
-                        <a href="#">third party vendors</a>, or used specifically by this site or app.</p>
-                    <p> Some vendors may process your personal data on the basis of legitimate interest, which you can object to by managing your options below. Look for a link at the bottom of this page or in our privacy policy where you can withdraw consent.</p>
+                    <div class="content__txt">Your personal data will be processed and information from your device (cookies, unique identifiers,
+                        and other device data) may be stored by, accessed by and shared with
+                        <div class="dialog--open dialog__link">
+                            third party vendors
+                            <dialog class="dialog">
+                                <h4 class="dialog__title">What third party vendors can access my data?</h4>
+                                <span class="dialog__txt">The following third party vendors can use your data to provide services:</span>
+                                <ul class="dialog__list" id="allVendors"></ul>
+                                <div class="dialog__footer">
+                                    <button class="button button-primary-inverted dialog__btn">Close</button>
+                                </div>
+                            </dialog>
+                        </div>, or used specifically by this site or app.
+                    </div>
+                    <p> Some vendors may process your personal data on the basis of legitimate interest,
+                        which you can object to by managing your options below. Look for a link at the bottom
+                        of this page or in our privacy policy where you can withdraw consent.</p>
                 </div>
             </div>
 
@@ -85,7 +158,7 @@
                         <div class="icn dialog--open icn-help">
                             <dialog class="dialog">
                                 <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                <div class="dialog__content">Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
+                                <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
                                 <button class="button button-primary-inverted dialog__btn">Close</button>
                             </dialog>
                         </div>
@@ -135,7 +208,7 @@
                         <div class="icn dialog--open icn-help">
                             <dialog class="dialog">
                                 <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                <div class="dialog__content">Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
+                                <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
                                 <button class="button button-primary-inverted dialog__btn">Close</button>
                             </dialog>
                         </div>

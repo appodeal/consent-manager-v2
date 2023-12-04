@@ -77,12 +77,14 @@ export const displayScreens = {
         const confirmChoices = Array(...document.getElementsByClassName('confirmChoices'));
         const acceptAll = Array(...document.getElementsByClassName('acceptAll'));
 
+        const showAllVendors = document.getElementById('allVendors');
+
         this.attachCollapsible();
 
-        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
-        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll);
+        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
+        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
@@ -93,8 +95,12 @@ export const displayScreens = {
 
         confirmChoices.forEach(item => item.removeEventListener('click', this.confirmChoicesFn, true));
         acceptAll.forEach(item => item.removeEventListener('click', this.acceptAllFn, true));
+
+        vendorPreferences.removeEventListener('click', this.showScreenThree, true);
+
+        showAllVendors.removeEventListener('click', this.showAllVendors(), true);
     },
-    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll) {
+    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
         manageOptions.addEventListener('click', this.showScreenTwo.bind(this), true);
         vendorPreferences.addEventListener('click', this.showScreenThree.bind(this), true);
         backScreenList.forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
@@ -105,10 +111,20 @@ export const displayScreens = {
 
         confirmChoices.forEach(item => item.addEventListener('click', this.confirmChoicesFn.bind(this, item), true));
         acceptAll.forEach(item => item.addEventListener('click', this.acceptAllFn.bind(this, item), true));
+
+        showAllVendors.addEventListener('click', this.showAllVendors.bind(this), true);
     },
     hideAllScreens: function () {
         Array(...this.screen).forEach(item => item.classList.remove("show"));
         this.scrollToTop();
+    },
+    showAllVendors: function (vendors) {
+        if (!vendors) {
+            return;
+        }
+        console.log('Show all vendors in dialog');
+        let list = vendors.map(vendor => `<li>${vendor.name}</li>`).join('');
+        document.getElementById('allVendors').innerHTML += `${list}`;
     },
     showScreenTwo: function () {
         this.hideAllScreens();
@@ -304,6 +320,7 @@ export function renderVendors(tcf, vList) {
 
     buildListConsentFirstPage(vendorList)
 
+    displayScreens.showAllVendors(vendorList.vendors);
 
     const htmlVendorList = vendorList
         .vendors
@@ -403,7 +420,7 @@ function buildLegIntPurposesSwitcher(tcf, vendor) {
                         <dialog class="dialog">
                             <h4 class="dialog__title">How does legitimate interest work?</h4>
                             <div class="dialog__content">
-                                <span>Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
+                                <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
                             </div>
                             <button class="button button-primary-inverted dialog__btn">Close</button>
                         </dialog>
@@ -485,7 +502,7 @@ function buildPurposesList(selector, list, type) {
                                   <dialog class="dialog">
                                       <h4 class="dialog__title">How does legitimate interest work?</h4>
                                       <div class="dialog__content">
-                                          <span>Some venders are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
+                                          <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
                                       </div>
                                       <button class="button button-primary-inverted dialog__btn">Close</button>
                                   </dialog>
