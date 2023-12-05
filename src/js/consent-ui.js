@@ -245,10 +245,8 @@ export const displayScreens = {
         return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
     },
     hideCmp: function () {
-        window.cmp.isFormShown = false;
-        window.cmp.show().then(res => {
-            console.log('isFormShown CMP form:', res);
-        });
+        window.cmp.isFormFinished = true;
+        window.cmp.show().then(res => console.log('Hide CMP:', res));
     }
 }
 

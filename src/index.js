@@ -28,7 +28,6 @@ displayScreens.renderAllVendors();
 displayScreens.initControls();
 
 document.addEventListener('readystatechange', () => {
-    window.cmp.isFormShown = true;
     window.cmp.initRequestAuthorizationStatusIOS();
 });
 

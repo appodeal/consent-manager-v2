@@ -9,7 +9,7 @@ import {decodeGooglePrivacyConsent} from "../src/js/libraries/builds/google-priv
 import {decodeApdPrivacyV2Consent} from "../src/js/libraries/builds/apd-privacy-v2";
 
 export class ConsentManagerPlatform {
-    isFormShown = false;
+    isFormFinished;
     authorizationStatusIOS;
 
     setApp(appName, version, icon) {
@@ -82,8 +82,10 @@ export class ConsentManagerPlatform {
 
     async show() {
         return new Promise(resolve => {
-            resolve(!!this.isFormShown);
-            console.log('Return value for show method:', this.isFormShown)
+            if (window.cmp.isFormFinished) {
+                resolve(true);
+                console.log('isFormFinished CMP form:', true);
+            }
         });
     }
 }
