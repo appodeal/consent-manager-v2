@@ -1,5 +1,5 @@
 import {state} from "../state";
-import {GVL, TCModel} from "./mjs";
+import {GVL, TCModel} from "./cjs";
 import {normalizeId, onSave} from "../consent-ui";
 import {buildGooglePrivacyConsent} from "./builds/google-privacy";
 import {buildIABTCF} from "./builds/iab";

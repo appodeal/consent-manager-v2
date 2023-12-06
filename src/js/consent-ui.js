@@ -123,7 +123,7 @@ export const displayScreens = {
             return;
         }
         console.log('Show all vendors in dialog');
-        let list = vendors.map(vendor => `<li>${vendor.name}</li>`).join('');
+        const list = vendors.map(vendor => `<li>${vendor.name}</li>`).join('');
         document.getElementById('allVendors').innerHTML += `${list}`;
     },
     showScreenTwo: function () {
@@ -135,8 +135,8 @@ export const displayScreens = {
         this.screenThree.classList.add('show');
     },
     backToPreviousScreen: function () {
-        let parent = this.closest('.screen');
-        let previous = parent.previousElementSibling;
+        const parent = this.closest('.screen');
+        const previous = parent.previousElementSibling;
         parent.classList.remove('show');
         previous.classList.add('show');
         displayScreens.scrollToTop();
@@ -261,13 +261,19 @@ function saveVendorsAndRender(tcf, vendorList) {
 }
 
 export function renderVendors(tcf, vList) {
-    const vendorList = checkHasOwnProp(vList, 'vendors').length ? {
+    const vendors = checkHasOwnProp(vList, 'vendors');
+    const purposes = checkHasOwnProp(vList, 'purposes');
+    const features = checkHasOwnProp(vList, 'features');
+    const specialPurposes = checkHasOwnProp(vList, 'specialPurposes');
+    const specialFeatures = checkHasOwnProp(vList, 'specialFeatures');
+
+    const vendorList = vendors?.length ? {
         ...vList,
-        purposes: checkHasOwnProp(vList, 'purposes'),
-        specialPurposes: checkHasOwnProp(vList, 'specialPurposes'),
-        features: checkHasOwnProp(vList, 'features'),
-        specialFeatures: checkHasOwnProp(vList, 'specialFeatures'),
-        vendors: checkHasOwnProp(vList, 'vendors'),
+        purposes,
+        specialPurposes,
+        features,
+        specialFeatures,
+        vendors
     } : {
         purposes: [],
         specialPurposes: [],
@@ -275,11 +281,6 @@ export function renderVendors(tcf, vList) {
         specialFeatures: [],
         vendors: vList ? Object.values(vList) : [],
     };
-
-    const purposeMap = {};
-    vendorList.purposes.forEach(purpose => purposeMap[purpose.id] = purpose);
-    const featuresMap = {};
-    vendorList.features.forEach(feature => featuresMap[feature.id] = feature);
 
     function vendorStorageDisclosure(vendor) {
         if (!vendor.deviceStorageDisclosureUrl) {

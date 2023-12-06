@@ -1,4 +1,4 @@
-import {TCString} from "../mjs";
+import {TCString} from "../cjs";
 
 export function decodeIABTCFConsent(consentString) {
     if (!consentString) {
