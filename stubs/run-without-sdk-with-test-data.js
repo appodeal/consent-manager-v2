@@ -61,17 +61,17 @@ if (window.cmp !== undefined) {
         console.log('Version:', tcf, 'Consent:', consent);
     };
 
-    window.cmp.show().then(isFinished => {
-        console.log('Finished interactions with form:', isFinished);
+    // window.cmp.show().then(isFinished => {
+    //     console.log('Finished interactions with form:', isFinished);
 
-        const body = document.body;
-        if (isFinished) {
-            body.classList.remove('show');
-            body.setAttribute('style', 'display: none');
-        } else {
-            body.removeAttribute('style');
-            body.classList.add('show');
-        }
-    });
+    //     const body = document.body;
+    //     if (isFinished) {
+    //         body.classList.remove('show');
+    //         body.setAttribute('style', 'display: none');
+    //     } else {
+    //         body.removeAttribute('style');
+    //         body.classList.add('show');
+    //     }
+    // });
 }
 

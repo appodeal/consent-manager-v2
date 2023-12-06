@@ -245,8 +245,7 @@ export const displayScreens = {
         return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
     },
     hideCmp: function () {
-        window.cmp.isFormFinished = true;
-        window.cmp.show().then(res => console.log('Hide CMP:', res));
+        window.cmp.resolveFormFinished(true);
     }
 }
 
