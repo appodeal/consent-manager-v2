@@ -171,6 +171,7 @@ export const displayScreens = {
         saveVendorsAndRender('IAB_TCF_V2.2', state.iabVendorList);
         saveVendorsAndRender('GOOGLE_PRIVACY', state.googleVendorList);
         saveVendorsAndRender('APD_PRIVACY_V2', state.appodealsVendorList);
+        vendorsCountRender();
     },
     createCollapsible: function (title, body) {
         return `<div class="collapsable">
@@ -259,6 +260,14 @@ function saveVendorsAndRender(tcf, vendorList) {
     renderVendors(tcf, vendorList);
 }
 
+function vendorsCountRender() {
+    const vendorsInfoContentText = `${state.tcfVendorsCount} TCF vendor(s) and ${state.adVendorsCount} ad partner(s)`;
+    const vendorsInfoElement = document.querySelector('.vendors-count-info');
+    if(vendorsInfoElement) {
+        vendorsInfoElement.innerHTML += vendorsInfoContentText;
+    }
+}
+
 export function renderVendors(tcf, vList) {
     const vendors = checkHasOwnProp(vList, 'vendors');
     const purposes = checkHasOwnProp(vList, 'purposes');
@@ -288,7 +297,6 @@ export function renderVendors(tcf, vList) {
         return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link" target="_blank">Storage details</a>`;
     }
 
-
     //  --------------------- find privacy link by current lang ---------------------
     function vendorPolicyUrl(vendor) {
         if (!vendor.urls[0].privacy) {
@@ -299,7 +307,6 @@ export function renderVendors(tcf, vList) {
                     <i class="icn icn-privacy-policy"></i>
                 </a>`;
     }
-
 
     function vendorTitle(vendor) {
         if (state.consentDialogVersion === 'AcceptEverything') {
@@ -357,6 +364,12 @@ export function renderVendors(tcf, vList) {
         vendorListTag.innerHTML += htmlVendorList;
     } else {
         vendorListTag.innerHTML = htmlVendorList;
+    }
+
+    if (tcf === 'IAB_TCF_V2.2') {
+        state.tcfVendorsCount += vendorList.vendors.length;
+    } else {
+        state.adVendorsCount += vendorList.vendors.length;
     }
 
     function buildConsentNamesList(vendor, key) {
