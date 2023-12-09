@@ -7,6 +7,7 @@ import {
 import {decodeIABTCFConsent} from "../src/js/libraries/builds/iab";
 import {decodeGooglePrivacyConsent} from "../src/js/libraries/builds/google-privacy";
 import {decodeApdPrivacyV2Consent} from "../src/js/libraries/builds/apd-privacy-v2";
+import {AuthorizationStatuses, TypesTCF} from "../src/js/helpers";
 
 export class ConsentManagerPlatform {
     resolveFormFinished;
@@ -22,16 +23,16 @@ export class ConsentManagerPlatform {
     setAuthorizationStatusIOS(authorizationStatus) {
         switch (authorizationStatus) {
             case 0:
-                this.authorizationStatusIOS = 'NOT_DETERMINED';
+                this.authorizationStatusIOS = AuthorizationStatuses.NOT_DETERMINED;
                 break;
             case 1:
-                this.authorizationStatusIOS = 'RESTRICTED';
+                this.authorizationStatusIOS = AuthorizationStatuses.RESTRICTED;
                 break;
             case 2:
-                this.authorizationStatusIOS = 'DENIED';
+                this.authorizationStatusIOS = AuthorizationStatuses.DENIED;
                 break;
             case 3:
-                this.authorizationStatusIOS = 'AUTHORIZED';
+                this.authorizationStatusIOS = AuthorizationStatuses.AUTHORIZED;
                 break;
         }
     }
@@ -42,7 +43,7 @@ export class ConsentManagerPlatform {
     };
 
     initRequestAuthorizationStatusIOS() {
-        if (this.authorizationStatusIOS === 'NOT_DETERMINED') {
+        if (this.authorizationStatusIOS === AuthorizationStatuses.NOT_DETERMINED) {
             console.log('Show authorizationStatusIOS value:', this.authorizationStatusIOS);
             return this.onRequestAuthorizationStatusIOS();
         }
@@ -61,15 +62,15 @@ export class ConsentManagerPlatform {
         }
 
         switch (tcf) {
-            case 'IAB_TCF_V2.2':
+            case TypesTCF.IAB_TCF_V2:
                 state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent.IABTCF_TCString));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
-            case 'GOOGLE_PRIVACY':
+            case TypesTCF.GOOGLE_PRIVACY:
                 state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_AddtlConsent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
-            case 'APD_PRIVACY_V2':
+            case TypesTCF.APD_PRIVACY_V2:
                 state.decodedPreviouslyVendor.set(tcf, decodeApdPrivacyV2Consent(consent.IABTCF_ApdPrivacyConsent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
@@ -85,6 +86,7 @@ export class ConsentManagerPlatform {
         return new Promise((resolve, reject) => {
             this.resolveFormFinished = resolve;
             this.rejectFormFinished = reject;
+            console.log('Resolve CMP form:', resolve);
         });
     }
 }

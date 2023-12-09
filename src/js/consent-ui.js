@@ -1,6 +1,7 @@
 import {state} from './state';
 import {buildConsent} from './libraries/consent-framework-v1';
 import {selectAll, selectChoices} from "./libraries/consent-framework-v2";
+import {getDaysFromSeconds, TypesTCF} from "./helpers";
 
 
 //  ---------- build consent for IAB_TCF_V1.1 ----------
@@ -52,11 +53,6 @@ function save(nextStatus, apdIds) {
     setTimeout(() => ConsentManager.closeWebView());
 }
 //  ----------------------------------------------------
-
-export function normalizeId(x) {
-    const id = x.split('_');
-    return Number(id[id.length - 1]);
-}
 
 export const displayScreens = {
     screen: document.getElementsByClassName('screen'),
@@ -216,7 +212,9 @@ export const displayScreens = {
             return;
         }
 
-        Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {el.checked = true});
+        Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
+            el.checked = true
+        });
 
         // for example: new Set('IAB_TCF_V2.2', state.vendor)
         [...state.allVendorList.keys()].forEach(async tcf => {
@@ -263,11 +261,12 @@ function saveVendorsAndRender(tcf, vendorList) {
 function vendorsCountRender() {
     const vendorsInfoContentText = `${state.tcfVendorsCount} TCF vendor(s) and ${state.adVendorsCount} ad partner(s)`;
     const vendorsInfoElement = document.querySelector('.vendors-count-info');
-    if(vendorsInfoElement) {
+    if (vendorsInfoElement) {
         vendorsInfoElement.innerHTML += vendorsInfoContentText;
     }
 }
 
+let currentVendorList;
 export function renderVendors(tcf, vList) {
     const vendors = checkHasOwnProp(vList, 'vendors');
     const purposes = checkHasOwnProp(vList, 'purposes');
@@ -275,6 +274,9 @@ export function renderVendors(tcf, vList) {
     const specialPurposes = checkHasOwnProp(vList, 'specialPurposes');
     const specialFeatures = checkHasOwnProp(vList, 'specialFeatures');
 
+    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures'];
+
+    currentVendorList = {};
     const vendorList = vendors?.length ? {
         ...vList,
         purposes,
@@ -289,24 +291,7 @@ export function renderVendors(tcf, vList) {
         specialFeatures: [],
         vendors: vList ? Object.values(vList) : [],
     };
-
-    function vendorStorageDisclosure(vendor) {
-        if (!vendor.deviceStorageDisclosureUrl) {
-            return '';
-        }
-        return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link" target="_blank">Storage details</a>`;
-    }
-
-    //  --------------------- find privacy link by current lang ---------------------
-    function vendorPolicyUrl(vendor) {
-        if (!vendor.urls[0].privacy) {
-            return '';
-        }
-        return `<a href="${vendor.urls[0].privacy}" class="preferences__link" target="_blank">
-                    Privacy Policy
-                    <i class="icn icn-privacy-policy"></i>
-                </a>`;
-    }
+    currentVendorList = Object.assign({}, vendorList);
 
     function vendorTitle(vendor) {
         if (state.consentDialogVersion === 'AcceptEverything') {
@@ -322,7 +307,6 @@ export function renderVendors(tcf, vList) {
         return ``;
     }
 
-
     buildListConsentFirstPage(vendorList)
 
     displayScreens.showAllVendors(vendorList.vendors);
@@ -332,55 +316,89 @@ export function renderVendors(tcf, vList) {
         .map(vendor =>
             createPreferences(
                 `${vendorTitle(vendor)}`,
-                `<div class="preferences__list-link">
-                            <div class="preferences__link dialog--open">
-                                View details
-                                <dialog class="dialog">
-                                    <h3 class="dialog__title">${vendor.name}</h3>
-                                    <div class="dialog__content">
-                                        <span class="dialog__txt">To ${vendor.name} vendors can:</span>
-                                        ${buildConsentNamesList(vendor, 'purposes')}
-                                        ${buildConsentNamesList(vendor, 'specialPurposes')}
-                                        ${buildConsentNamesList(vendor, 'features')}
-                                        ${buildConsentNamesList(vendor, 'specialFeatures')}
-                                    </div>
-                                    
-                                    <button autofocus class="button button-primary-inverted dialog__btn">Close</button>
-                                </dialog>
-                            </div>
-                            ${vendorStorageDisclosure(vendor)}
-                            ${vendorPolicyUrl(vendor)}
-                        </div>
-                        
-                       ${buildConsentSwitcher(tcf, vendor)}
-                       ${buildLegIntPurposesSwitcher(tcf, vendor)}
+                `
+                ${buildDetails(vendor, subSettingsOfVendors)}
+                ${buildConsentSwitcher(tcf, vendor)}
+                ${buildLegIntPurposesSwitcher(tcf, vendor)}
             `)
         )
         .join('');
 
 
-    const vendorListTag = document.querySelector('.vendorList');
-    if (vendorListTag.childNodes.length > 0) {
-        vendorListTag.innerHTML += htmlVendorList;
-    } else {
-        vendorListTag.innerHTML = htmlVendorList;
-    }
-
-    if (tcf === 'IAB_TCF_V2.2') {
+    let vendorListSelector;
+    if (tcf === TypesTCF.IAB_TCF_V2) {
+        vendorListSelector = document.querySelector('.vendorList');
         state.tcfVendorsCount += vendorList.vendors.length;
     } else {
+        vendorListSelector = document.querySelector('.vendorListAdPartner');
         state.adVendorsCount += vendorList.vendors.length;
     }
 
-    function buildConsentNamesList(vendor, key) {
-        if (!vendor.hasOwnProperty(key) || !vendor[key].length) {
-            return '';
+    setVendorsToTemplate(vendorListSelector, htmlVendorList);
+}
+
+function setVendorsToTemplate(selector, htmlVendorList) {
+    if (selector.childNodes.length > 0) {
+        selector.innerHTML += htmlVendorList;
+    } else {
+        selector.innerHTML = htmlVendorList;
+    }
+}
+
+function vendorStorageDisclosure(vendor) {
+    if (!vendor.deviceStorageDisclosureUrl) {
+        return '';
+    }
+    return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link" target="_blank">Storage details</a>`;
+}
+
+
+//  --------------------- find privacy link by current lang ---------------------
+function vendorPolicyUrl(vendor) {
+    if (!vendor.urls[0].privacy) {
+        return '';
+    }
+    return `<a href="${vendor.urls[0].privacy}" class="preferences__link" target="_blank">
+                    Privacy Policy
+                    <i class="icn icn-privacy-policy"></i>
+                </a>`;
+}
+
+function buildDetails(vendor, subSettings) {
+    return `<div class="preferences__list-link">
+                ${hasSubSettings(currentVendorList, subSettings) ? `<div class="preferences__link dialog--open">
+                    View details
+                    <dialog class="dialog">
+                        <h3 class="dialog__title">${vendor.name}</h3>
+                        <div class="dialog__content">
+                            <span class="dialog__txt">To ${vendor.name} vendors can:</span>
+                            <ul class="dialog__list">
+                                ${buildConsentNamesList(vendor, subSettings)}
+                            </ul>
+                        </div>
+
+                        <button autofocus class="button button-primary-inverted dialog__btn">Close</button>
+                    </dialog>
+                </div>` : `<div class="preferences__list-link"></div>`}
+                ${vendorStorageDisclosure(vendor)}
+                ${vendorPolicyUrl(vendor)}
+            </div>`
+}
+
+function buildConsentNamesList(vendor, keySettings) {
+    return keySettings.map(key => {
+        if (!vendor[key] || !vendor[key].length) {
+            return;
         }
 
-        return `<ul class="dialog__list">${vendor[key].map(p => {
-            return `<li>${vendorList[key].find(item => item.id === p).name}</li>`
-        }).join('')}</ul>`
-    }
+        return vendor[key]
+            .map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`)
+            .join('');
+    }).join('');
+}
+
+function hasSubSettings(vendor, itemSettings) {
+    return itemSettings.some(item => vendor && vendor.hasOwnProperty(item) && vendor[item].length);
 }
 
 function getSubNameVendorId(tcf) {
@@ -418,6 +436,7 @@ function buildConsentSwitcher(tcf, vendor) {
             </label>`
         : '';
 }
+
 function buildLegIntPurposesSwitcher(tcf, vendor) {
     if (tcf !== 'IAB_TCF_V2.2') {
         return '';
@@ -475,11 +494,6 @@ function buildListConsentFirstPage(vendorList) {
         vendorList.specialFeatures,
         'specialFeatures'
     );
-}
-
-function getDaysFromSeconds(seconds) {
-    const day = Math.floor(seconds / (3600 * 24));
-    return day > 0 ? day + (day === 1 ? " (day)" : " (days)") : "";
 }
 
 function buildPurposesList(selector, list, type) {

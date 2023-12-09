@@ -1,17 +1,18 @@
 import {state} from "../state";
 import {GVL, TCModel} from "./cjs";
-import {normalizeId, onSave} from "../consent-ui";
+import {onSave} from "../consent-ui";
 import {buildGooglePrivacyConsent} from "./builds/google-privacy";
 import {buildIABTCF} from "./builds/iab";
 import {buildApdPrivacyV2Consent} from "./builds/apd-privacy-v2";
+import {normalizeId, TypesTCF} from "../helpers";
 
 
 export async function selectChoices(tcf, vendorList, selected) {
     switch (tcf) {
-        case 'IAB_TCF_V1.1':
-            window.cmp.onUpdateConsent('IAB_TCF_V1.1', onSave());
+        case TypesTCF.IAB_TCF_V1:
+            window.cmp.onUpdateConsent(TypesTCF.IAB_TCF_V1, onSave());
             break;
-        case 'IAB_TCF_V2.2':
+        case TypesTCF.IAB_TCF_V2:
             const gvl = new GVL(vendorList);
             const tcModel = new TCModel(gvl);
 
@@ -29,7 +30,7 @@ export async function selectChoices(tcf, vendorList, selected) {
             });
 
             break;
-        case 'GOOGLE_PRIVACY':
+        case TypesTCF.GOOGLE_PRIVACY:
             const getSelectedIds = [].concat(getIdFromElem(selected.vendorsGoogle));
             const vendorsGoogle = Object.values(vendorList);
             const selectedIdsFromCurrentVendor = vendorsGoogle
@@ -38,7 +39,7 @@ export async function selectChoices(tcf, vendorList, selected) {
 
             window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(selectedIdsFromCurrentVendor));
             break;
-        case 'APD_PRIVACY_V2':
+        case TypesTCF.APD_PRIVACY_V2:
             const selectedIds = [].concat(getIdFromElem(selected.vendorsApd));
             const vendorsApd = Object.values(vendorList);
             const selectedStatusesFromCurrentVendor = vendorsApd
@@ -59,10 +60,10 @@ function getIdFromElem(arr) {
 
 export async function selectAll(tcf, vendorList) {
     switch (tcf) {
-        case 'IAB_TCF_V1.1':
-            window.cmp.onUpdateConsent('IAB_TCF_V1.1', onSave());
+        case TypesTCF.IAB_TCF_V1:
+            window.cmp.onUpdateConsent(TypesTCF.IAB_TCF_V1, onSave());
             break;
-        case 'IAB_TCF_V2.2':
+        case TypesTCF.IAB_TCF_V2:
             const gvl = new GVL(vendorList);
             const tcModel = new TCModel(gvl);
 
@@ -75,11 +76,11 @@ export async function selectAll(tcf, vendorList) {
             });
 
             break;
-        case 'GOOGLE_PRIVACY':
+        case TypesTCF.GOOGLE_PRIVACY:
             const vendorIds = Object.keys(vendorList);
             window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(vendorIds));
             break;
-        case 'APD_PRIVACY_V2':
+        case TypesTCF.APD_PRIVACY_V2:
             const statuses = Object.values(vendorList).map(v => v.status);
             window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(statuses));
             break;
