@@ -65,7 +65,9 @@ export const displayScreens = {
         const manageOptions = document.getElementById('manageOptions');
         const vendorPreferences = document.getElementById('vendorPreferences');
         const backScreenList = Array(...document.getElementsByClassName('backScreen'));
+
         const dialogBtnList = Array(...document.getElementsByClassName('dialog--open'));
+        const dialogBtnClose = Array(...document.getElementsByClassName('dialog__btn'));
 
         const consentBtn = document.getElementById('consentBtn');
         const doNotConsentBtn = document.getElementById('doNotConsentBtn');
@@ -77,14 +79,16 @@ export const displayScreens = {
 
         this.attachCollapsible();
 
-        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
-        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
+        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
+        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
+
         dialogBtnList.forEach(item => item.removeEventListener('click', this.showDialog, true));
+        dialogBtnClose.forEach(item => item.removeEventListener('click', this.closeDialog, true));
 
         consentBtn.removeEventListener('click', this.consentFn, true);
         doNotConsentBtn.removeEventListener('click', this.doNotConsentFn, true);
@@ -96,11 +100,13 @@ export const displayScreens = {
 
         showAllVendors.removeEventListener('click', this.showAllVendors(), true);
     },
-    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
+    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
         manageOptions.addEventListener('click', this.showScreenTwo.bind(this), true);
         vendorPreferences.addEventListener('click', this.showScreenThree.bind(this), true);
         backScreenList.forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
+
         dialogBtnList.forEach(item => item.addEventListener('click', this.showDialog.bind(this, item), true));
+        dialogBtnClose.forEach(item => item.addEventListener('click', this.closeDialog.bind(this, item), true));
 
         consentBtn.addEventListener('click', this.consentFn.bind(this), true);
         doNotConsentBtn.addEventListener('click', this.doNotConsentFn.bind(this), true);
@@ -176,14 +182,15 @@ export const displayScreens = {
             </div>`;
     },
     showDialog: function (dialog) {
-        if (dialog.children[0].open) {
-            this.closeDialog(dialog.children[0])
-        } else {
-            dialog.children[0].showModal();
-        }
+        dialog.children[0].showModal();
     },
     closeDialog: function (dialog) {
-        dialog.close();
+        if (dialog.parentNode.classList.value === 'dialog__footer') {
+            dialog.parentElement.parentNode.close();
+        } else {
+            dialog.parentNode.close();
+        }
+
     },
     consentFn: function () {
         console.log('consent');

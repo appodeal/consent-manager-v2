@@ -12,9 +12,10 @@ html {
 body {
   min-width: 320px;
   margin: 0;
-  background: var(--white);
+  background-color: var(--black);
   color: var(--font-color);
   @include animateOpacity(0, hidden);
+  overflow: hidden;
 
   &.show {
     @include animateOpacity(1, visible);
@@ -70,7 +71,9 @@ h4 {
   display: none;
 
   &__list {
-    height: 100vh;
+    height: 90vh;
+    overflow: auto;
+    background-color: var(--white);
 
     &.tablet-desktop {
       width: 480px;
@@ -171,7 +174,7 @@ h4 {
 }
 
 .content {
-  padding: 0 var(--gap);
+  padding: 0 var(--gap) calc(var(--gap) / 4);
   text-align: left;
 
   p {

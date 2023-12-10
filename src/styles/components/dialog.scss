@@ -6,7 +6,10 @@
   max-width: 330px;
   cursor: default;
   text-indent: 0;
-  max-height: 800px;
+  max-height: 700px;
+  @include mediaLandscape {
+    max-height: 75vh;
+  }
 
   ul + ul {
     margin: 0;
@@ -36,7 +39,6 @@
 .dialog__link {
   color: var(--link-text-color);
   display: inline-block;
-  padding: 0 calc(var(--gap) / 4);
 }
 
 .dialog__content {
