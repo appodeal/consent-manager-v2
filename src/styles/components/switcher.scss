@@ -8,12 +8,12 @@ $peg-background-active: var(--blue);
 
 .switch-control {
   @include flex(center, space-between);
-  cursor: pointer;
   margin-bottom: 14px;
   -webkit-tap-highlight-color: transparent;
 
   & > .switch-control {
     margin-bottom: 0;
+    cursor: pointer;
   }
 
   &__label {

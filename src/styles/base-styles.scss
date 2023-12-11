@@ -71,9 +71,12 @@ h4 {
   display: none;
 
   &__list {
-    height: 90vh;
+    height: 91vh;
     overflow: auto;
     background-color: var(--white);
+    @include mediaLandscape {
+      height: 95vh;
+    }
 
     &.tablet-desktop {
       width: 480px;
@@ -108,7 +111,7 @@ h4 {
       top: calc(-1 * var(--gap));
       background: white;
       padding: var(--gap) 0 calc(var(--gap) / 2);
-      margin: calc(-1 * var(--gap)) 0 0;
+      margin: calc(-1 * var(--gap)) -2px 0;
     }
   }
 

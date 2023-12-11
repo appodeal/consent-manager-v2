@@ -8,7 +8,7 @@
   text-indent: 0;
   max-height: 700px;
   @include mediaLandscape {
-    max-height: 75vh;
+    max-height: 73vh;
   }
 
   ul + ul {
@@ -86,5 +86,5 @@
   bottom: calc(-1 * var(--gap));
   background: white;
   padding: var(--gap) 0;
-  margin: 0 0 calc(-1 * var(--gap));
+  margin: 0 -2px calc(-1 * var(--gap));
 }

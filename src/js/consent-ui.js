@@ -121,7 +121,7 @@ export const displayScreens = {
         this.scrollToTop();
     },
     showAllVendors: function (vendors) {
-        if (!vendors) {
+        if (!vendors || !Array.isArray(vendors)) {
             return;
         }
         console.log('Show all vendors in dialog');
@@ -145,6 +145,9 @@ export const displayScreens = {
     },
     scrollToTop: function () {
         document.getElementsByClassName('screen__list')[0].scrollTo(0, 0);
+    },
+    scrollToTopDialog: function (id) {
+        document.getElementById(id).scrollTo(0, 0);
     },
     attachCollapsible: function () {
         const timeouts = new Map();
@@ -182,13 +185,23 @@ export const displayScreens = {
             </div>`;
     },
     showDialog: function (dialog) {
-        dialog.children[0].showModal();
+        const child = dialog.children[0];
+
+        child.id = 'dialogId';
+        child.showModal();
+        displayScreens.scrollToTopDialog(child.id);
     },
     closeDialog: function (dialog) {
         if (dialog.parentNode.classList.value === 'dialog__footer') {
-            dialog.parentElement.parentNode.close();
+            let parent = dialog.parentElement.parentNode;
+
+            parent.removeAttribute('id');
+            parent.close();
         } else {
-            dialog.parentNode.close();
+            let parent = dialog.parentNode;
+
+            parent.removeAttribute('id');
+            parent.close();
         }
 
     },
@@ -414,34 +427,21 @@ function getSubNameVendorId(tcf) {
 
 function buildConsentSwitcher(tcf, vendor) {
     const subNameId = getSubNameVendorId(tcf);
+    const switcher = `<div class="switch-control">
+                        <div class="switch-control__label">Consent</div>
+                        <label class="switch-control" for="${subNameId + vendor.id}">
+                            <input type="checkbox"
+                                   class="checkboxSwitcher"
+                                   id="${subNameId + vendor.id}"
+                                   name="${subNameId + vendor.id}"
+                            />
+                            <span class="track">
+                                <span class="peg"></span>
+                            </span>
+                        </label>
+                     </div>`
 
-    if (tcf !== 'IAB_TCF_V2.2') {
-        return `<label class="switch-control" for="${subNameId + vendor.id}">
-                    Consent
-                    <input type="checkbox"
-                           class="checkboxSwitcher"
-                           id="${subNameId + vendor.id}"
-                           name="${subNameId + vendor.id}"
-                    />
-                    <span class="track">
-                        <span class="peg"></span>
-                    </span>
-                </label>`;
-    }
-
-    return vendor.features && vendor.features.length
-        ? `<label class="switch-control" for="${subNameId + vendor.id}">
-                Consent
-                <input type="checkbox"
-                       class="checkboxSwitcher"
-                       id="${subNameId + vendor.id}"
-                       name="${subNameId + vendor.id}"
-                />
-                <span class="track">
-                    <span class="peg"></span>
-                </span>
-            </label>`
-        : '';
+    return tcf !== 'IAB_TCF_V2.2' || (vendor.features && vendor.features.length) ? switcher : '';
 }
 
 function buildLegIntPurposesSwitcher(tcf, vendor) {
@@ -516,16 +516,18 @@ function buildPurposesList(selector, list, type) {
                     ``
                 ),
                 `<p>${item.description}</p>
-                      <label class="switch-control" for="${type + '_' + item.id}">
-                          Consent
-                          <input type="checkbox"
-                                 class="checkboxSwitcher"
-                                 id="${type + '_' + item.id}"
-                                 name="${type + '_' + item.id}">
-                          <span class="track">
-                              <span class="peg"></span>
-                          </span>
-                      </label>
+                      <div class="switch-control">
+                          <div class="switch-control__label">Consent</div>
+                          <label class="switch-control" for="${type + '_' + item.id}">
+                              <input type="checkbox"
+                                     class="checkboxSwitcher"
+                                     id="${type + '_' + item.id}"
+                                     name="${type + '_' + item.id}">
+                              <span class="track">
+                                  <span class="peg"></span>
+                              </span>
+                          </label>
+                      </div>
 
                       ${true ? `<div class="switch-control">
                           <div class="switch-control__label">
