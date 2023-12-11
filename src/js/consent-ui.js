@@ -356,7 +356,7 @@ function vendorStorageDisclosure(vendor) {
     if (!vendor.deviceStorageDisclosureUrl) {
         return '';
     }
-    return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link" target="_blank">Storage details</a>`;
+    return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link">Storage details</a>`;
 }
 
 
@@ -365,7 +365,7 @@ function vendorPolicyUrl(vendor) {
     if (!vendor.urls[0].privacy) {
         return '';
     }
-    return `<a href="${vendor.urls[0].privacy}" class="preferences__link" target="_blank">
+    return `<a href="${vendor.urls[0].privacy}" class="preferences__link">
                     Privacy Policy
                     <i class="icn icn-privacy-policy"></i>
                 </a>`;

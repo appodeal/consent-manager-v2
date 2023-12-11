@@ -39,6 +39,7 @@
 .dialog__link {
   color: var(--link-text-color);
   display: inline-block;
+  padding-left: calc(var(--gap) / 4);
 }
 
 .dialog__content {
