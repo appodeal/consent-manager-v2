@@ -68,3 +68,15 @@
     @content;
   }
 }
+
+@mixin schemaLight {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}
+
+@mixin schemaDark {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}

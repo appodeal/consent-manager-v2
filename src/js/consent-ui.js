@@ -378,9 +378,9 @@ function vendorPolicyUrl(vendor) {
     if (!vendor.urls[0].privacy) {
         return '';
     }
-    return `<span class="preferences__link">
+    return `<a href="${vendor.urls[0].privacy}" target="_blank" class="preferences__link">
                 <span>Privacy Policy <i class="icn icn-privacy-policy"></i></span>
-            </span>`;
+            </a>`;
 }
 
 function buildDetails(vendor, subSettings) {
