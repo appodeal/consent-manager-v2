@@ -134,23 +134,10 @@ export const displayScreens = {
     showScreenTwo: function () {
         this.hideAllScreens();
         this.screenTwo.classList.add('show');
-
-        console.log('Show timeout List:', timeoutMap)
     },
     showScreenThree: function () {
         this.hideAllScreens();
         this.screenThree.classList.add('show');
-        if (!timeoutMap.size) {
-            state.vendorsTemplateList.forEach((list, i) => {
-                if (i > 0) {
-                    clearTimeout(timeoutMap.get(i));
-                    timeoutMap.set(i, setTimeout(() => {
-                        setVendorsToTemplate(document.querySelector('.vendorListAdPartner'), list);
-                        console.log('Loaded more vendors', timeoutMap);
-                    }, 2500 * i));
-                }
-            });
-        }
     },
     backToPreviousScreen: function () {
         const parent = this.closest('.screen');
@@ -364,16 +351,16 @@ export function renderVendors(tcf, vList) {
         .join('');
 
 
+    let vendorListSelector;
     if (tcf === TypesTCF.IAB_TCF_V2) {
+        vendorListSelector = document.querySelector('.vendorList');
         state.tcfVendorsCount += vendorList.vendors.length;
     } else {
+        vendorListSelector = document.querySelector('.vendorListAdPartner');
         state.adVendorsCount += vendorList.vendors.length;
     }
 
-    state.vendorsTemplateList.push(htmlVendorList);
-    if (state.vendorsTemplateList.length === 1) {
-        setVendorsToTemplate(document.querySelector('.vendorList'), htmlVendorList);
-    }
+    setVendorsToTemplate(vendorListSelector, htmlVendorList);
 }
 
 function setVendorsToTemplate(selector, htmlVendorList) {
