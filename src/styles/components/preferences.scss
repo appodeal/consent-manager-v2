@@ -30,7 +30,8 @@
 
 .preferences__list-link {
   text-align: left;
-  margin: var(--gap) 0;
+  margin: calc(-1 * var(--gap) / 2) 0 calc(var(--gap) / 2) calc(-1 * var(--gap) / 2);
+  font-size: 0;
 
   .preferences__link {
     display: inline-flex;
@@ -43,7 +44,7 @@
       width: 1px;
       height: 15px;
       background-color: var(--link-separator);
-      margin: 0 calc(var(--gap) / 4) 0 calc(var(--gap) / 2);
+      margin: 0;
     }
   }
 }
@@ -55,8 +56,19 @@
   letter-spacing: .15px;
   cursor: pointer;
 
+  & > span {
+    padding: 8px 10px;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+  }
+
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
+
+    & > span {
+      background-color: var(--link-button-background-hover);
+    }
   }
 
   .icn {

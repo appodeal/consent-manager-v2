@@ -185,7 +185,7 @@ export const displayScreens = {
             </div>`;
     },
     showDialog: function (dialog) {
-        const child = dialog.children[0];
+        const child = [...dialog.children].find(item => item.className === 'dialog');
 
         child.id = 'dialogId';
         child.showModal();
@@ -369,7 +369,7 @@ function vendorStorageDisclosure(vendor) {
     if (!vendor.deviceStorageDisclosureUrl) {
         return '';
     }
-    return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link">Storage details</a>`;
+    return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link"><span>Storage details</span></a>`;
 }
 
 
@@ -379,15 +379,14 @@ function vendorPolicyUrl(vendor) {
         return '';
     }
     return `<a href="${vendor.urls[0].privacy}" class="preferences__link">
-                    Privacy Policy
-                    <i class="icn icn-privacy-policy"></i>
-                </a>`;
+                <span>Privacy Policy <i class="icn icn-privacy-policy"></i></span>
+            </a>`;
 }
 
 function buildDetails(vendor, subSettings) {
     return `<div class="preferences__list-link">
                 ${hasSubSettings(currentVendorList, subSettings) ? `<div class="preferences__link dialog--open">
-                    View details
+                    <span>View details</span>
                     <dialog class="dialog">
                         <h3 class="dialog__title">${vendor.name}</h3>
                         <div class="dialog__content">
@@ -397,7 +396,9 @@ function buildDetails(vendor, subSettings) {
                             </ul>
                         </div>
 
-                        <button autofocus class="button button-primary-inverted dialog__btn">Close</button>
+                        <div class="dialog__footer">
+                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                        </div>
                     </dialog>
                 </div>` : `<div class="preferences__list-link"></div>`}
                 ${vendorStorageDisclosure(vendor)}
@@ -459,7 +460,9 @@ function buildLegIntPurposesSwitcher(tcf, vendor) {
                             <div class="dialog__content">
                                 <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
                             </div>
-                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                            <div class="dialog__footer">
+                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                            </div>
                         </dialog>
                     </i>
                 </div>
@@ -538,7 +541,9 @@ function buildPurposesList(selector, list, type) {
                                       <div class="dialog__content">
                                           <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
                                       </div>
-                                      <button class="button button-primary-inverted dialog__btn">Close</button>
+                                      <div class="dialog__footer">
+                                          <button class="button button-primary-inverted dialog__btn">Close</button>
+                                      </div>
                                   </dialog>
                               </i>
                           </div>
