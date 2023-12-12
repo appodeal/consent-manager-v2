@@ -30,7 +30,7 @@
 
 .preferences__list-link {
   text-align: left;
-  margin: calc(-1 * var(--gap) / 2) 0 calc(var(--gap) / 2) calc(-1 * var(--gap) / 2);
+  margin: calc(-1 * (var(--gap) / 2)) 0 calc(var(--gap) / 2) calc((-1 * (var(--gap) / 2)) - 2px);
   font-size: 0;
 
   .preferences__link {

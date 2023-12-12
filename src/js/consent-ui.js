@@ -23,6 +23,7 @@ export function onSave() {
         return save('PERSONALIZED', Object.values(state.appodealsVendorList.vendors).map(v => v.apdId));
     }
 }
+
 function save(nextStatus, apdIds) {
     const nextAcceptedVendors = Object.values(state.appodealsVendorList.vendors)
         .filter(vendor => apdIds.includes(vendor.apdId))
@@ -52,8 +53,10 @@ function save(nextStatus, apdIds) {
     ConsentManager.send(JSON.stringify(nextConsent));
     setTimeout(() => ConsentManager.closeWebView());
 }
+
 //  ----------------------------------------------------
 
+const timeoutMap = new Map();
 export const displayScreens = {
     screen: document.getElementsByClassName('screen'),
     screenOne: document.getElementsByClassName('screen--one')[0],
@@ -131,10 +134,23 @@ export const displayScreens = {
     showScreenTwo: function () {
         this.hideAllScreens();
         this.screenTwo.classList.add('show');
+
+        console.log('Show timeout List:', timeoutMap)
     },
     showScreenThree: function () {
         this.hideAllScreens();
         this.screenThree.classList.add('show');
+        if (!timeoutMap.size) {
+            state.vendorsTemplateList.forEach((list, i) => {
+                if (i > 0) {
+                    clearTimeout(timeoutMap.get(i));
+                    timeoutMap.set(i, setTimeout(() => {
+                        setVendorsToTemplate(document.querySelector('.vendorListAdPartner'), list);
+                        console.log('Loaded more vendors', timeoutMap);
+                    }, 2500 * i));
+                }
+            });
+        }
     },
     backToPreviousScreen: function () {
         const parent = this.closest('.screen');
@@ -173,9 +189,9 @@ export const displayScreens = {
         });
     },
     renderAllVendors: function () {
-        saveVendorsAndRender('IAB_TCF_V2.2', state.iabVendorList);
-        saveVendorsAndRender('GOOGLE_PRIVACY', state.googleVendorList);
-        saveVendorsAndRender('APD_PRIVACY_V2', state.appodealsVendorList);
+        saveVendorsAndRender(TypesTCF.IAB_TCF_V2, state.iabVendorList);
+        saveVendorsAndRender(TypesTCF.GOOGLE_PRIVACY, state.googleVendorList);
+        saveVendorsAndRender(TypesTCF.APD_PRIVACY_V2, state.appodealsVendorList);
         vendorsCountRender();
     },
     createCollapsible: function (title, body) {
@@ -244,7 +260,10 @@ export const displayScreens = {
         this.hideCmp();
     },
     buildChecked: function () {
-        const vendors = document.querySelectorAll('.vendorList .checkboxSwitcher');
+        const vendors = [
+            ...document.querySelectorAll('.vendorList .checkboxSwitcher'),
+            ...document.querySelectorAll('.vendorListAdPartner .checkboxSwitcher')
+        ];
         const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
         const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
         const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
@@ -345,16 +364,16 @@ export function renderVendors(tcf, vList) {
         .join('');
 
 
-    let vendorListSelector;
     if (tcf === TypesTCF.IAB_TCF_V2) {
-        vendorListSelector = document.querySelector('.vendorList');
         state.tcfVendorsCount += vendorList.vendors.length;
     } else {
-        vendorListSelector = document.querySelector('.vendorListAdPartner');
         state.adVendorsCount += vendorList.vendors.length;
     }
 
-    setVendorsToTemplate(vendorListSelector, htmlVendorList);
+    state.vendorsTemplateList.push(htmlVendorList);
+    if (state.vendorsTemplateList.length === 1) {
+        setVendorsToTemplate(document.querySelector('.vendorList'), htmlVendorList);
+    }
 }
 
 function setVendorsToTemplate(selector, htmlVendorList) {
@@ -423,7 +442,7 @@ function hasSubSettings(vendor, itemSettings) {
 }
 
 function getSubNameVendorId(tcf) {
-    return tcf === 'GOOGLE_PRIVACY' ? 'vendorGoogle_' : tcf === 'APD_PRIVACY_V2' ? 'vendorApd_' : 'vendor_';
+    return tcf === TypesTCF.GOOGLE_PRIVACY ? 'vendorGoogle_' : tcf === TypesTCF.APD_PRIVACY_V2 ? 'vendorApd_' : 'vendor_';
 }
 
 function buildConsentSwitcher(tcf, vendor) {
@@ -442,11 +461,11 @@ function buildConsentSwitcher(tcf, vendor) {
                         </label>
                      </div>`
 
-    return tcf !== 'IAB_TCF_V2.2' || (vendor.features && vendor.features.length) ? switcher : '';
+    return tcf !== TypesTCF.IAB_TCF_V2 || (vendor.features && vendor.features.length) ? switcher : '';
 }
 
 function buildLegIntPurposesSwitcher(tcf, vendor) {
-    if (tcf !== 'IAB_TCF_V2.2') {
+    if (tcf !== TypesTCF.IAB_TCF_V2) {
         return '';
     }
 
@@ -624,10 +643,10 @@ export function checkSelectedVendors(tcf, decodedConsentObj) {
     decodedConsentObj.vendorConsents.forEach(id => {
         let selector;
         switch (tcf) {
-            case 'GOOGLE_PRIVACY':
+            case TypesTCF.GOOGLE_PRIVACY:
                 selector = document.getElementById('vendorGoogle_' + id);
                 break;
-            case 'APD_PRIVACY_V2':
+            case TypesTCF.APD_PRIVACY_V2:
                 selector = document.getElementById('vendorApd_' + id);
                 break;
             default:

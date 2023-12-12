@@ -20,7 +20,7 @@ function isTabletDesktop (a) {
 }
 
 if (isTabletDesktop(navigator.userAgent || navigator.vendor || window.opera)) {
-    document.getElementsByClassName('screen__list')[0].classList.add('tablet-desktop');
+    document.body.classList.add('tablet-desktop');
 }
 
 window.cmp = new ConsentManagerPlatform();
