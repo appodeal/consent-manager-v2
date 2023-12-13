@@ -120,66 +120,114 @@ export const displayScreens = {
         showAllVendors.addEventListener('click', this.showAllVendors.bind(this), true);
     },
     hideAllScreens: function () {
-        Array(...this.screen).forEach(item => item.classList.remove("show"));
-        this.scrollToTop();
+        try {
+            Array(...this.screen).forEach(item => item.classList.remove("show"));
+            this.scrollToTop();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     showAllVendors: function (vendors) {
-        if (!vendors || !Array.isArray(vendors)) {
-            return;
+        try {
+            if (!vendors || !Array.isArray(vendors)) {
+                return;
+            }
+            console.log('Show all vendors in dialog');
+            const list = vendors.map(vendor => `<li>${vendor.name}</li>`).join('');
+            document.getElementById('allVendors').innerHTML += `${list}`;
         }
-        console.log('Show all vendors in dialog');
-        const list = vendors.map(vendor => `<li>${vendor.name}</li>`).join('');
-        document.getElementById('allVendors').innerHTML += `${list}`;
+        catch(error) {
+            this.throwErrorObject(error)
+        }
+
     },
     showScreenTwo: function () {
-        this.hideAllScreens();
-        this.screenTwo.classList.add('show');
+        try {
+            this.hideAllScreens();
+            this.screenTwo.classList.add('show');
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
+
     },
     showScreenThree: function () {
-        this.hideAllScreens();
-        this.screenThree.classList.add('show');
+        try {
+            this.hideAllScreens();
+            this.screenThree.classList.add('show');
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
+
     },
     backToPreviousScreen: function () {
-        const parent = this.closest('.screen');
-        const previous = parent.previousElementSibling;
-        parent.classList.remove('show');
-        previous.classList.add('show');
-        displayScreens.scrollToTop();
+        try {
+            const parent = this.closest('.screen');
+            const previous = parent.previousElementSibling;
+            parent.classList.remove('show');
+            previous.classList.add('show');
+            displayScreens.scrollToTop();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     scrollToTop: function () {
-        document.getElementsByClassName('screen__list')[0].scrollTo(0, 0);
+        try {
+            document.getElementsByClassName('screen__list')[0].scrollTo(0, 0);
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     scrollToTopDialog: function (id) {
-        document.getElementById(id).scrollTo(0, 0);
+        try {
+            document.getElementById(id).scrollTo(0, 0);
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     attachCollapsible: function () {
-        const timeouts = new Map();
-        Array.from(document.querySelectorAll('.collapsable')).forEach(el => el.querySelector('.collapsable-body').style.height = '0px');
-        Array.from(document.querySelectorAll('.collapsable .collapsable-title')).forEach(el => {
-            el.addEventListener('click', function (e) {
-                const rootEl = e.target.closest('.collapsable');
-                const textEl = e.target.closest('.collapsable').querySelector('.collapsable-body');
-                clearTimeout(timeouts.get(textEl));
-                if (rootEl.classList.contains('expanded')) {
-                    textEl.style.height = textEl.clientHeight + 'px';
-                    timeouts.set(textEl, setTimeout(() => {
+        try {
+            const timeouts = new Map();
+            Array.from(document.querySelectorAll('.collapsable')).forEach(el => el.querySelector('.collapsable-body').style.height = '0px');
+            Array.from(document.querySelectorAll('.collapsable .collapsable-title')).forEach(el => {
+                el.addEventListener('click', function (e) {
+                    const rootEl = e.target.closest('.collapsable');
+                    const textEl = e.target.closest('.collapsable').querySelector('.collapsable-body');
+                    clearTimeout(timeouts.get(textEl));
+                    if (rootEl.classList.contains('expanded')) {
+                        textEl.style.height = textEl.clientHeight + 'px';
+                        timeouts.set(textEl, setTimeout(() => {
+                            textEl.style.height = '0px';
+                            rootEl.classList.remove('expanded');
+                        }));
+                    } else {
                         textEl.style.height = '0px';
-                        rootEl.classList.remove('expanded');
-                    }));
-                } else {
-                    textEl.style.height = '0px';
-                    textEl.style.height = textEl.scrollHeight + 'px';
-                    rootEl.classList.add('expanded');
-                    timeouts.set(textEl, setTimeout(() => textEl.style.removeProperty('height'), 200));
-                }
+                        textEl.style.height = textEl.scrollHeight + 'px';
+                        rootEl.classList.add('expanded');
+                        timeouts.set(textEl, setTimeout(() => textEl.style.removeProperty('height'), 200));
+                    }
+                });
             });
-        });
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     renderAllVendors: function () {
-        saveVendorsAndRender(TypesTCF.IAB_TCF_V2, state.iabVendorList);
-        saveVendorsAndRender(TypesTCF.GOOGLE_PRIVACY, state.googleVendorList);
-        saveVendorsAndRender(TypesTCF.APD_PRIVACY_V2, state.appodealsVendorList);
-        vendorsCountRender();
+        try {
+            saveVendorsAndRender(TypesTCF.IAB_TCF_V2, state.iabVendorList);
+            saveVendorsAndRender(TypesTCF.GOOGLE_PRIVACY, state.googleVendorList);
+            saveVendorsAndRender(TypesTCF.APD_PRIVACY_V2, state.appodealsVendorList);
+            vendorsCountRender();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     createCollapsible: function (title, body) {
         return `<div class="collapsable">
@@ -188,89 +236,140 @@ export const displayScreens = {
             </div>`;
     },
     showDialog: function (dialog) {
-        const child = [...dialog.children].find(item => item.className === 'dialog');
-
-        child.id = 'dialogId';
-        child.showModal();
-        displayScreens.scrollToTopDialog(child.id);
+        try {
+            const child = [...dialog.children].find(item => item.className === 'dialog');
+            child.id = 'dialogId';
+            child.showModal();
+            displayScreens.scrollToTopDialog(child.id);
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     closeDialog: function (dialog) {
-        if (dialog.parentNode.classList.value === 'dialog__footer') {
-            let parent = dialog.parentElement.parentNode;
-
-            parent.removeAttribute('id');
-            parent.close();
-        } else {
-            let parent = dialog.parentNode;
-
-            parent.removeAttribute('id');
-            parent.close();
+        try {
+            if (dialog.parentNode.classList.value === 'dialog__footer') {
+                let parent = dialog.parentElement.parentNode;
+                parent.removeAttribute('id');
+                parent.close();
+            } else {
+                let parent = dialog.parentNode;
+                parent.removeAttribute('id');
+                parent.close();
+            }
         }
-
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     consentFn: function () {
-        console.log('consent');
-        this.acceptAllFn();
+        try {
+            this.acceptAllFn();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     doNotConsentFn: function () {
-        console.log('do not consent');
-        this.confirmChoicesFn();
+        try {
+            console.log('do not consent');
+            this.confirmChoicesFn();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     confirmChoicesFn: function () {
-        console.log('confirm Choices');
-        const selectedItems = this.buildChecked();
-        [...state.allVendorList.keys()].forEach(async tcf => {
-            await selectChoices(
-                tcf,
-                state.allVendorList.get(tcf),
-                selectedItems
-            )
-        });
-        this.hideCmp();
+        try {
+            console.log('confirm Choices');
+            const selectedItems = this.buildChecked();
+            [...state.allVendorList.keys()].forEach(async tcf => {
+                await selectChoices(
+                    tcf,
+                    state.allVendorList.get(tcf),
+                    selectedItems
+                )
+            });
+            this.hideCmp();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     acceptAllFn: function () {
-        console.log('accept All');
+        try {
+            console.log('accept All');
 
-        if (!state.allVendorList.size) {
-            return;
+            if (!state.allVendorList.size) {
+                window.cmp.rejectFormFinished('VendorList is empty');
+                return;
+            }
+    
+            Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
+                el.checked = true
+            });
+    
+            // for example: new Set('IAB_TCF_V2.2', state.vendor)
+            [...state.allVendorList.keys()].forEach(async tcf => {
+                await selectAll(tcf, state.allVendorList.get(tcf));
+            });
+    
+            this.hideCmp();
+        }
+        catch(error) {
+            this.throwErrorObject(error)
         }
 
-        Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
-            el.checked = true
-        });
-
-        // for example: new Set('IAB_TCF_V2.2', state.vendor)
-        [...state.allVendorList.keys()].forEach(async tcf => {
-            await selectAll(tcf, state.allVendorList.get(tcf));
-        });
-
-        this.hideCmp();
     },
     buildChecked: function () {
-        const vendors = [
-            ...document.querySelectorAll('.vendorList .checkboxSwitcher'),
-            ...document.querySelectorAll('.vendorListAdPartner .checkboxSwitcher')
-        ];
-        const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
-        const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
-        const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
-        const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
-
-        return {
-            vendorsIab: this.findChecked(vendors, 'vendor_'),
-            vendorsGoogle: this.findChecked(vendors, 'vendorGoogle_'),
-            vendorsApd: this.findChecked(vendors, 'vendorApd_'),
-            vendorLegitimate: this.findChecked(vendorLegitimate, 'vendorLegitimate_'),
-            purposes: this.findChecked(purposes, 'purpose_'),
-            purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
-            specialFeatures: this.findChecked(specialFeature, 'specialFeatures_'),
+        try {
+            const vendors = [
+                ...document.querySelectorAll('.vendorList .checkboxSwitcher'),
+                ...document.querySelectorAll('.vendorListAdPartner .checkboxSwitcher')
+            ];
+            const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
+            const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
+            const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
+            const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
+    
+            return {
+                vendorsIab: this.findChecked(vendors, 'vendor_'),
+                vendorsGoogle: this.findChecked(vendors, 'vendorGoogle_'),
+                vendorsApd: this.findChecked(vendors, 'vendorApd_'),
+                vendorLegitimate: this.findChecked(vendorLegitimate, 'vendorLegitimate_'),
+                purposes: this.findChecked(purposes, 'purpose_'),
+                purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
+                specialFeatures: this.findChecked(specialFeature, 'specialFeatures_'),
+            }
+        }
+        catch(error) {
+            this.throwErrorObject(error)
         }
     },
     findChecked: function (list, nameId) {
-        return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
+        try {
+            return Array.from(list).map(v => v.checked && v.id.includes(nameId) ? v : '').filter(Boolean)
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
     },
     hideCmp: function () {
-        window.cmp.resolveFormFinished(true);
+        try {
+            console.log('hideCmp')
+            window.cmp.resolveFormFinished(true);
+        }
+        catch(error) {
+            this.throwErrorObject(error)
+        }
+    },
+    throwErrorObject: function(error) {
+        const currentError = {
+            errorCode: undefined,
+            errorName: error.name,
+            description: error.message
+        }
+        window.cmp.rejectFormFinished(currentError);
     }
 }
 
