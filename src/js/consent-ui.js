@@ -459,7 +459,73 @@ export function renderVendors(tcf, vList) {
         state.adVendorsCount += vendorList.vendors.length;
     }
 
+    const storageDialog = document.querySelector('.dialog-storage');
+    const closeBtn = document.querySelector('.storage-dialog-close-btn');
+    if(closeBtn) {
+        closeBtn.addEventListener("click", () => {
+            if(storageDialog) {
+                storageDialog.close();
+            }
+        });
+    }
     setVendorsToTemplate(vendorListSelector, htmlVendorList);
+
+    setTimeout(() => initStorageDisclosureDialog(vendorList, storageDialog));
+}
+
+function initStorageDisclosureButton(vendor) {
+    if (!(vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure)) {
+        return '';
+    }
+    return `
+    <div class="preferences__link" id="vendor_${vendor.id}">
+        Storage details
+    </div>
+    `;
+}
+
+function initStorageDisclosureDialog(vendorList, storageDialog) {
+    vendorList.vendors.forEach(vendor => {
+        if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure) {
+            const storageDetailsLink = document.getElementById('vendor_' + vendor.id);
+            if(storageDetailsLink) {
+                storageDetailsLink.addEventListener("click", () => {
+                    if(storageDialog) {
+                        storageDialog.showModal();
+                    }
+                    const dialogConent = document.querySelector('.dialog-storage-content');
+
+                    if(vendor.deviceStorageDisclosure.disclosures?.length) {
+                        vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
+                            const name = disclosure?.identifier || '';
+                            const type = disclosure?.type || '';
+                            const duration = Math.round(disclosure?.maxAgeSeconds/3600/24) || 0;
+                            const domains = disclosure?.domains || [];
+                            const purposes = disclosure?.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
+                            const cookieRefresh = disclosure?.cookieRefresh || false;
+
+                            const dialogHtml = `<div class="dialog__list">
+                                    <span><b>Name:</b> ${name}</span></br>
+                                    <span><b>Type:</b> ${type}</span></br>
+                                    <span><b>Duration:</b> ${duration} (days)</span></br>
+                                    <span><b>Domain:</b> *${domains}</span></br>
+                                    <span><b>Purposes:</b></br> ${buildPurpose(purposes)}</span>
+                                    <span><b>Refreshes Cookies:</b> ${cookieRefresh}</span>
+                                </div></br></br>`;
+                            if(dialogConent) {
+                                dialogConent.innerHTML += dialogHtml;
+                            }
+                        })
+                    }
+                    
+                });
+            }
+        }
+    });
+}
+function buildPurpose(purposes) {
+    return purposes.map(p => `<li>${p}</li>`)
+    .join('');
 }
 
 function setVendorsToTemplate(selector, htmlVendorList) {
@@ -469,14 +535,6 @@ function setVendorsToTemplate(selector, htmlVendorList) {
         selector.innerHTML = htmlVendorList;
     }
 }
-
-function vendorStorageDisclosure(vendor) {
-    if (!vendor.deviceStorageDisclosureUrl) {
-        return '';
-    }
-    return `<a href="${vendor.deviceStorageDisclosureUrl}" class="preferences__link"><span>Storage details</span></a>`;
-}
-
 
 //  --------------------- find privacy link by current lang ---------------------
 function vendorPolicyUrl(vendor) {
@@ -506,7 +564,7 @@ function buildDetails(vendor, subSettings) {
                         </div>
                     </dialog>
                 </div>` : `<div class="preferences__list-link"></div>`}
-                ${vendorStorageDisclosure(vendor)}
+                ${initStorageDisclosureButton(vendor)}
                 ${vendorPolicyUrl(vendor)}
             </div>`
 }
