@@ -497,12 +497,12 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
 
                     if(vendor.deviceStorageDisclosure.disclosures?.length) {
                         vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
-                            const name = disclosure?.identifier || '';
-                            const type = disclosure?.type || '';
-                            const duration = Math.round(disclosure?.maxAgeSeconds/3600/24) || 0;
-                            const domains = disclosure?.domains || [];
-                            const purposes = disclosure?.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
-                            const cookieRefresh = disclosure?.cookieRefresh || false;
+                            const name = disclosure.identifier || '';
+                            const type = disclosure.type || '';
+                            const duration = Math.round(disclosure.maxAgeSeconds/3600/24) || 0;
+                            const domains = disclosure.domains || [];
+                            const purposes = disclosure.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
+                            const cookieRefresh = disclosure.cookieRefresh || false;
 
                             const dialogHtml = `<div class="dialog__list">
                                     <span><b>Name:</b> ${name}</span></br>
@@ -647,43 +647,50 @@ function buildListConsentFirstPage(vendorList) {
     buildPurposesList(
         '.purposeList',
         vendorList.purposes,
-        'purpose'
+        'purpose',
+        vendorList.vendors
     );
 
     buildPurposesList(
         '.specialPurposeList',
         vendorList.specialPurposes,
-        'specialPurpose'
+        'specialPurpose',
+        vendorList.vendors
     );
 
     buildPurposesList(
         '.featuresList',
         vendorList.features,
-        'features'
+        'features',
+        vendorList.vendors
     );
 
     buildPurposesList(
         '.specialFeaturesList',
         vendorList.specialFeatures,
-        'specialFeatures'
+        'specialFeatures',
+        vendorList.vendors
     );
 }
 
-function buildPurposesList(selector, list, type) {
+function buildPurposesList(selector, list, type, vendors) {
     if (list.length === 0) {
         return '';
     }
 
     document.querySelector(selector).innerHTML = list
-        .map(item =>
-            createPreferences(
+        .map(item => {
+            const consentCount = vendors.filter(vendor => vendor?.purposes?.some(purpose => purpose === item.id)).length || 0;
+            const legitimateInterestCount = vendors.filter(vendor => vendor?.legIntPurposes?.some(purpose => purpose === item.id)).length || 0;
+            vendors.filter(vendor => vendor.legIntPurposes.some(purpose => purpose === item.id)).length
+            return createPreferences(
                 createTitlePreferences(
                     item.name,
                     ``
                 ),
                 `<p>${item.description}</p>
                       <div class="switch-control">
-                          <div class="switch-control__label">Consent</div>
+                          <div class="switch-control__label">Consent ${consentCount} </div>
                           <label class="switch-control" for="${type + '_' + item.id}">
                               <input type="checkbox"
                                      class="checkboxSwitcher"
@@ -697,7 +704,7 @@ function buildPurposesList(selector, list, type) {
 
                       ${true ? `<div class="switch-control">
                           <div class="switch-control__label">
-                              Legitimate interest
+                              Legitimate interest ${legitimateInterestCount}
                               <i class="icn dialog--open icn-help">
                                   <dialog class="dialog">
                                       <h4 class="dialog__title">How does legitimate interest work?</h4>
@@ -721,7 +728,7 @@ function buildPurposesList(selector, list, type) {
                               </span>
                           </label>
                       </div>` : ''}`
-            )
+            )}
         ).join('');
 }
 
