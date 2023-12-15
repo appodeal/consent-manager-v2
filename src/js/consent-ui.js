@@ -478,8 +478,8 @@ function initStorageDisclosureButton(vendor) {
         return '';
     }
     return `
-    <div class="preferences__link" id="vendor_${vendor.id}">
-        Storage details
+    <div class="preferences__link" id="vendorStorageDetails_${vendor.id}">
+        <span>Storage details</span>
     </div>
     `;
 }
@@ -487,13 +487,13 @@ function initStorageDisclosureButton(vendor) {
 function initStorageDisclosureDialog(vendorList, storageDialog) {
     vendorList.vendors.forEach(vendor => {
         if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure) {
-            const storageDetailsLink = document.getElementById('vendor_' + vendor.id);
+            const storageDetailsLink = document.getElementById('vendorStorageDetails_' + vendor.id);
             if(storageDetailsLink) {
                 storageDetailsLink.addEventListener("click", () => {
                     if(storageDialog) {
                         storageDialog.showModal();
                     }
-                    const dialogConent = document.querySelector('.dialog-storage-content');
+                    const dialogConent = document.querySelector('.dialog__content--storage');
 
                     if(vendor.deviceStorageDisclosure.disclosures?.length) {
                         vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
@@ -504,14 +504,14 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
                             const purposes = disclosure.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
                             const cookieRefresh = disclosure.cookieRefresh || false;
 
-                            const dialogHtml = `<div class="dialog__list">
-                                    <span><b>Name:</b> ${name}</span></br>
-                                    <span><b>Type:</b> ${type}</span></br>
-                                    <span><b>Duration:</b> ${duration} (days)</span></br>
-                                    <span><b>Domain:</b> *${domains}</span></br>
-                                    <span><b>Purposes:</b></br> ${buildPurpose(purposes)}</span>
-                                    <span><b>Refreshes Cookies:</b> ${cookieRefresh}</span>
-                                </div></br></br>`;
+                            const dialogHtml = `
+                                <b>Name:</b><span> ${name}</span></br>
+                                <b>Type:</b><span> ${type}</span></br>
+                                <b>Duration:</b><span> ${duration} (days)</span></br>
+                                <b>Domain:</b><span> *${domains}</span></br>
+                                <b>Purposes:</b></br><ul class="dialog__list">${buildPurpose(purposes)}</ul>
+                                <b>Refreshes Cookies:</b><span> ${cookieRefresh}</span>
+                                </br></br>`;
                             if(dialogConent) {
                                 dialogConent.innerHTML += dialogHtml;
                             }
@@ -690,7 +690,7 @@ function buildPurposesList(selector, list, type, vendors) {
                 ),
                 `<p>${item.description}</p>
                       <div class="switch-control">
-                          <div class="switch-control__label">Consent ${consentCount} </div>
+                          <div class="switch-control__label">Consent (${consentCount} vendors)</div>
                           <label class="switch-control" for="${type + '_' + item.id}">
                               <input type="checkbox"
                                      class="checkboxSwitcher"
@@ -704,7 +704,7 @@ function buildPurposesList(selector, list, type, vendors) {
 
                       ${true ? `<div class="switch-control">
                           <div class="switch-control__label">
-                              Legitimate interest ${legitimateInterestCount}
+                              Legitimate interest (${legitimateInterestCount} vendors)
                               <i class="icn dialog--open icn-help">
                                   <dialog class="dialog">
                                       <h4 class="dialog__title">How does legitimate interest work?</h4>
