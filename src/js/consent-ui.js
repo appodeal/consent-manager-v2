@@ -690,7 +690,7 @@ function buildPurposesList(selector, list, type, vendors) {
                 ),
                 `<p>${item.description}</p>
                       <div class="switch-control">
-                          <div class="switch-control__label">Consent ${consentCount} </div>
+                          <div class="switch-control__label">Consent (${consentCount} vendors)</div>
                           <label class="switch-control" for="${type + '_' + item.id}">
                               <input type="checkbox"
                                      class="checkboxSwitcher"
@@ -704,7 +704,7 @@ function buildPurposesList(selector, list, type, vendors) {
 
                       ${true ? `<div class="switch-control">
                           <div class="switch-control__label">
-                              Legitimate interest ${legitimateInterestCount}
+                              Legitimate interest (${legitimateInterestCount} vendors)
                               <i class="icn dialog--open icn-help">
                                   <dialog class="dialog">
                                       <h4 class="dialog__title">How does legitimate interest work?</h4>
