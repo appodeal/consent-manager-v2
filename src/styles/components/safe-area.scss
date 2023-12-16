@@ -1,0 +1,42 @@
+// Older browsers (which don't support CSS variables)
+body {
+  height: 100%;
+}
+
+// Browsers which partially support CSS variables (iOS 11.0 – 11.2)
+@supports (padding-top: constant(safe-area-inset-top)) {
+  body {
+    --safe-area-inset-top: constant(safe-area-inset-top);
+    --safe-area-inset-bottom: constant(safe-area-inset-bottom);
+    --safe-area-inset-left: constant(safe-area-inset-left);
+    --safe-area-inset-right: constant(safe-area-inset-right);
+
+    height: calc(100% + var(--safe-area-inset-top) + var(--safe-area-inset-bottom));
+    padding: var(--safe-area-inset-top) var(--safe-area-inset-right) var(--safe-area-inset-bottom) var(--safe-area-inset-left);
+  }
+}
+
+// Browsers which fully support CSS variables (iOS 11.2+).
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
+
+    height: calc(100% + var(--safe-area-inset-top) + var(--safe-area-inset-bottom));
+    padding: var(--safe-area-inset-top) var(--safe-area-inset-right) var(--safe-area-inset-bottom) var(--safe-area-inset-left);
+  }
+}
+
+@media (display-mode: fullscreen) {
+  body {
+    padding: 0;
+  }
+}
+
+@media (display-mode: standalone) {
+  body {
+    padding: 0;
+  }
+}

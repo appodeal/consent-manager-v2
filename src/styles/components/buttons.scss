@@ -1,14 +1,19 @@
 .button {
+  @include mediaLandscape {
+    --gap: 8px;
+  }
+
+  --gap: 10px;
+
   cursor: pointer;
   max-width: 330px;
   text-align: center;
-  padding: 10px 24px;
+  padding: var(--gap) calc(var(--gap) * 2);
   margin-bottom: 16px;
   border-radius: 100px;
   letter-spacing: 0.1em;
   box-sizing: border-box;
   font: normal 14px/20px var(--font-family-bold);
-  transition: background-color .3s, border-color .3s;
 
   &-primary {
     color: var(--primary-button-text-color);
@@ -22,13 +27,24 @@
     }
   }
 
+  &-primary-inverted {
+    color: var(--link-button-text-color);
+    background-color: transparent;
+    border: 2px solid var(--primary-button-border-color-hover);
+
+    &:hover, &:active {
+      color: var(--primary-button-text-color);
+      background-color: var(--primary-button-background);
+      border-color: var(--primary-button-border-color);
+    }
+  }
+
   &-link {
     color: var(--link-button-text-color);
     background: var(--link-button-background);
     border: 2px solid var(--link-button-border-color);
 
     &:hover, &:active {
-      color: var(--link-button-text-color-hover);
       background: var(--link-button-background-hover);
       border-color: var(--link-button-border-color-hover);
     }

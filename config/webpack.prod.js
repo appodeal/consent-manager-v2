@@ -1,4 +1,9 @@
-process.env.RUBY_INJECT_VENDORS_CODE = '<script> window.appodealsVendorList = <%= AdConsent::VENDOR_LIST.html_safe %></script>';
+process.env.RUBY_INJECT_VENDORS_CODE = '' +
+    '<script>' +
+        'window.iabVendorList = <%= @iab_vendors.html_safe %>;' +
+        'window.googleVendorList = <%= @google_vendors.html_safe %>;' +
+        'window.appodealsVendorList = <%= @apd_vendors.html_safe %>' +
+    '</script>'
 
 const webpack = require('webpack');
 
@@ -30,7 +35,11 @@ module.exports = merge(common, {
             filename: 'styles/[name].[contenthash].css',
             chunkFilename: '[id].css'
         }),
-        new webpack.DefinePlugin({VENDOR_LIST: JSON.stringify(null)})
+        new webpack.DefinePlugin({
+            VENDOR_LIST_IAB: JSON.stringify(null),
+            VENDOR_LIST_GOOGLE: JSON.stringify(null),
+            VENDOR_LIST_APPODEAL: JSON.stringify(null)
+        })
     ],
     module: {
         rules: [

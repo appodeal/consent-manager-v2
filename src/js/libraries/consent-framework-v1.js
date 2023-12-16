@@ -532,12 +532,13 @@ export function buildConsent (appodealsVendorList, allowedPurposeIds, allowedVen
         lastUpdated: appodealsVendorList.lastUpdated,
         purposes: appodealsVendorList.purposes,
         features: appodealsVendorList.features,
-        vendors: appodealsVendorList.vendors.filter(vendor => vendor.iabId).map(vendor => ({
+        vendors: Object.values(appodealsVendorList.vendors).filter(vendor => vendor.id).map(vendor => ({
             id: vendor.iabId,
             ...vendor
         }))
     };
 
+    // code bellow from documentation --> https://github.com/InteractiveAdvertisingBureau/Consent-String-SDK-JS#encode-consent-data
     const consentData = new consentFrameworkV1.ConsentString();
 
     // Set the global vendor list
@@ -555,6 +556,7 @@ export function buildConsent (appodealsVendorList, allowedPurposeIds, allowedVen
 
     // Encode the data into a web-safe base64 string
     consentData.getConsentString();
+
     const allowedToAll = allowedVendorIds.length > 0;
     return {
         IABUSPrivacy_String: `1Y${allowedToAll ? 'Y' : 'N'}-`,

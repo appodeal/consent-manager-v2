@@ -30,20 +30,21 @@
 
 .preferences__list-link {
   text-align: left;
-  margin: var(--gap) 0;
+  margin: calc(-1 * (var(--gap) / 2)) 0 calc(var(--gap) / 2) calc((-1 * (var(--gap) / 2)) - 2px);
+  font-size: 0;
 
   .preferences__link {
     display: inline-flex;
     align-items: center;
 
-    &:not(:last-of-type)::after {
+    &:not(:last-child)::after {
       content: "";
       position: relative;
       display: inline-block;
       width: 1px;
       height: 15px;
       background-color: var(--link-separator);
-      margin: 0 calc(var(--gap) / 4) 0 calc(var(--gap) / 2);
+      margin: 0;
     }
   }
 }
@@ -53,6 +54,22 @@
   font: var(--font-size)/calc(var(--font-size) * 2) var(--font-family-regular);
   color: var(--link-text-color);
   letter-spacing: .15px;
+  cursor: pointer;
+
+  & > span {
+    padding: 8px 10px;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    & > span {
+      background-color: var(--link-button-background-hover);
+    }
+  }
 
   .icn {
     margin-left: calc(var(--gap) / 4);
