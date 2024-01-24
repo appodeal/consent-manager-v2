@@ -579,7 +579,7 @@ function buildConsentNamesList(vendor, keySettings) {
         }
 
         return `
-        <h3>${TypesPurposes[key]}</h3>
+        <h4 class="dialog__list-title">${TypesPurposes[key]}</h4>
         ${vendor[key]
             .map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`)
             .join('')}
@@ -718,7 +718,7 @@ function buildPurposesList(selector, list, type, vendors) {
     }
 
     document.querySelector(selector).innerHTML = 
-    `<h2>${TypesPurposes[type]}</h2>` + 
+    `<div class="vendors-title">${TypesPurposes[type]}</div>` + 
     list.map(item => {
             const consentCount = vendors.filter(vendor => vendor?.purposes?.some(purpose => purpose === item.id)).length || 0;
             const legitimateInterestCount = vendors.filter(vendor => vendor?.legIntPurposes?.some(purpose => purpose === item.id)).length || 0;
