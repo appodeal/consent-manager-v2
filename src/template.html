@@ -162,23 +162,11 @@
                 <div class="content">
                     <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
 
-                    <div class="content__separate-label">
-                        <p>TCF vendors</p>
-                        <div class="icn dialog--open icn-help">
-                            <dialog class="dialog">
-                                <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
-                                <div class="dialog__footer">
-                                    <button class="button button-primary-inverted dialog__btn">Close</button>
-                                </div>
-                            </dialog>
-                        </div>
-                    </div>
-
                     <div class="preferences purposeList"></div>
                     <div class="preferences specialPurposeList"></div>
                     <div class="preferences featuresList"></div>
                     <div class="preferences specialFeaturesList"></div>
+                    <div class="preferences stacksList"></div>
 
                     <div class="buttons-list">
                         <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
@@ -208,34 +196,44 @@
                 <div class="content">
                     <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
 
-                    <div class="content__separate-label">
-                        <p>TCF vendors</p>
-                        <div class="icn dialog--open icn-help">
-                            <dialog class="dialog">
-                                <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
-                                <div class="dialog__footer">
-                                    <button class="button button-primary-inverted dialog__btn">Close</button>
-                                </div>
-                            </dialog>
+                    <div class="collapsable">
+                        <div class="collapsable-title">
+                            <i class="icn icn-arrow"></i>
+                            <h2>IAB TCF Partners</h2>
+                            <div class="icn dialog--open icn-help">
+                                <dialog class="dialog">
+                                    <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                    <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
+                                    <div class="dialog__footer">
+                                        <button class="button button-primary-inverted dialog__btn">Close</button>
+                                    </div>
+                                </dialog>
+                            </div>
+                        </div>
+                        <div class="collapsable-body">
+                            <div class="preferences vendorList"></div>
                         </div>
                     </div>
-                    <div class="preferences vendorList"></div>
 
-
-                    <div class="content__separate-label">
-                        <p>Ad partners</p>
-                        <div class="icn dialog--open icn-help">
-                            <dialog class="dialog">
-                                <h4 class="dialog__title">What does 'Ad partners' mean?</h4>
-                                <div class="dialog__content">Google and other ad networks and ad partners use data about your users to, for example, show them personalized ads or to report on conversions</div>
-                                <div class="dialog__footer">
-                                    <button class="button button-primary-inverted dialog__btn">Close</button>
-                                </div>
-                            </dialog>
+                    <div class="collapsable">
+                        <div class="collapsable-title">
+                            <i class="icn icn-arrow"></i>
+                            <h2>Other Partners</h2>
+                            <div class="icn dialog--open icn-help">
+                                <dialog class="dialog">
+                                    <h4 class="dialog__title">What does 'Other Partners' mean?</h4>
+                                    <div class="dialog__content">To offer you the best gaming experiance, we team up with trusted partners beyond IAB for purposes such as personalised ads and content, measurement, product improvement, and audience insights.</div>
+                                    <div class="dialog__footer">
+                                        <button class="button button-primary-inverted dialog__btn">Close</button>
+                                    </div>
+                                </dialog>
+                            </div>
+                        </div>
+                        <div class="collapsable-body">
+                            <div class="preferences vendorListOtherPartner"></div>
                         </div>
                     </div>
-                    <div class="preferences vendorListAdPartner"></div>
+
                 </div>
             </div>
 

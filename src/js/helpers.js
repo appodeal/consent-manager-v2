@@ -5,6 +5,16 @@ export const TypesTCF = {
     APD_PRIVACY_V2: 'APD_PRIVACY_V2',
 }
 
+export const TypesPurposes = {
+    purpose: 'Purposes',
+    purposes: 'Purposes',
+    specialPurpose: 'Special Purposes',
+    specialPurposes: 'Special Purposes',
+    features: 'Features',
+    specialFeatures: 'Special Features',
+    stacks: 'Stacks'
+}
+
 export const AuthorizationStatuses = {
     NOT_DETERMINED: 'NOT_DETERMINED',
     RESTRICTED: 'RESTRICTED',

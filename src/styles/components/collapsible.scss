@@ -14,11 +14,14 @@
     margin-right: var(--gap);
     transform: rotate(0deg);
     transition: transform .3s;
+    &.icn-arrow {
+      transform: rotate(270deg);
+    }
   }
 }
 
 .collapsable.expanded .icn-arrow {
-  transform: rotate(180deg);
+  transform: rotate(360deg);
 }
 
 .collapsable h4 {

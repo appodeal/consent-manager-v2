@@ -8,7 +8,7 @@ $peg-background-active: var(--blue);
 
 .switch-control {
   @include flex(center, space-between);
-  margin-bottom: 14px;
+  margin-bottom: 20px;
   -webkit-tap-highlight-color: transparent;
 
   & > .switch-control {

@@ -1,7 +1,7 @@
 import {state} from './state';
 import {buildConsent} from './libraries/consent-framework-v1';
 import {selectAll, selectChoices} from "./libraries/consent-framework-v2";
-import {getDaysFromSeconds, TypesTCF} from "./helpers";
+import {getDaysFromSeconds, TypesTCF, TypesPurposes} from "./helpers";
 
 
 //  ---------- build consent for IAB_TCF_V1.1 ----------
@@ -325,12 +325,13 @@ export const displayScreens = {
         try {
             const vendors = [
                 ...document.querySelectorAll('.vendorList .checkboxSwitcher'),
-                ...document.querySelectorAll('.vendorListAdPartner .checkboxSwitcher')
+                ...document.querySelectorAll('.vendorListOtherPartner .checkboxSwitcher')
             ];
             const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
             const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
+            const stack = document.querySelectorAll('.stacksList .checkboxSwitcher');
     
             return {
                 vendorsIab: this.findChecked(vendors, 'vendor_'),
@@ -340,6 +341,7 @@ export const displayScreens = {
                 purposes: this.findChecked(purposes, 'purpose_'),
                 purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
                 specialFeatures: this.findChecked(specialFeature, 'specialFeatures_'),
+                stacks: this.findChecked(stack, 'stacks_'),
             }
         }
         catch(error) {
@@ -379,7 +381,6 @@ function checkHasOwnProp(vendorList, prop) {
 
 function saveVendorsAndRender(tcf, vendorList) {
     state.allVendorList.set(tcf, vendorList);
-    console.log('Display all vendors list:', state.allVendorList);
     renderVendors(tcf, vendorList);
 }
 
@@ -398,8 +399,9 @@ export function renderVendors(tcf, vList) {
     const features = checkHasOwnProp(vList, 'features');
     const specialPurposes = checkHasOwnProp(vList, 'specialPurposes');
     const specialFeatures = checkHasOwnProp(vList, 'specialFeatures');
+    const stacks = checkHasOwnProp(vList, 'stacks');
 
-    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures'];
+    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures', 'stacks'];
 
     currentVendorList = {};
     const vendorList = vendors?.length ? {
@@ -408,12 +410,14 @@ export function renderVendors(tcf, vList) {
         specialPurposes,
         features,
         specialFeatures,
+        stacks,
         vendors
     } : {
         purposes: [],
         specialPurposes: [],
         features: [],
         specialFeatures: [],
+        stacks: [],
         vendors: vList ? Object.values(vList) : [],
     };
     currentVendorList = Object.assign({}, vendorList);
@@ -435,7 +439,7 @@ export function renderVendors(tcf, vList) {
     buildListConsentFirstPage(vendorList)
 
     displayScreens.showAllVendors(vendorList.vendors);
-
+    console.log("~ renderVendors ~ vendorList:", vendorList)
     const htmlVendorList = vendorList
         .vendors
         .map(vendor =>
@@ -449,13 +453,12 @@ export function renderVendors(tcf, vList) {
         )
         .join('');
 
-
     let vendorListSelector;
-    if (tcf === TypesTCF.IAB_TCF_V2) {
+    if (tcf === TypesTCF.IAB_TCF_V2 || tcf === TypesTCF.IAB_TCF_V1) {
         vendorListSelector = document.querySelector('.vendorList');
         state.tcfVendorsCount += vendorList.vendors.length;
     } else {
-        vendorListSelector = document.querySelector('.vendorListAdPartner');
+        vendorListSelector = document.querySelector('.vendorListOtherPartner');
         state.adVendorsCount += vendorList.vendors.length;
     }
 
@@ -575,10 +578,19 @@ function buildConsentNamesList(vendor, keySettings) {
             return;
         }
 
-        return vendor[key]
+        return `
+        <h3>${TypesPurposes[key]}</h3>
+        ${vendor[key]
             .map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`)
-            .join('');
+            .join('')}
+        `;
     }).join('');
+}
+
+function buildlegIntPurposesList(vendor) {
+    return vendor.legIntPurposes
+        .map(p => `<li>${currentVendorList.purposes.find(item => item.id === p).name}</li>`) // TODO: change purposes to legIntPurposes (we dont have data)
+        .join('');
 }
 
 function hasSubSettings(vendor, itemSettings) {
@@ -639,7 +651,27 @@ function buildLegIntPurposesSwitcher(tcf, vendor) {
                         <span class="peg"></span>
                     </span>
                 </label>
-            </div>`
+            </div>
+
+            <div class="preferences__list-link">
+                <div class="preferences__link dialog--open">
+                <span>View Legitimate Interests</span>
+                    <dialog class="dialog">
+                        <h3 class="dialog__title">Legitimate interest based purposes</h3>
+                        <div class="dialog__content">
+                            <span class="dialog__txt">To ${vendor.name} vendors can:</span>
+                            <ul class="dialog__list">
+                                ${buildlegIntPurposesList(vendor)}
+                            </ul>
+                        </div>
+
+                        <div class="dialog__footer">
+                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                        </div>
+                    </dialog>
+                </div>
+            </div>
+            `
         : '';
 }
 
@@ -671,6 +703,13 @@ function buildListConsentFirstPage(vendorList) {
         'specialFeatures',
         vendorList.vendors
     );
+
+    buildPurposesList(
+        '.stacksList',
+        vendorList.stacks,
+        'stacks',
+        vendorList.vendors
+    );
 }
 
 function buildPurposesList(selector, list, type, vendors) {
@@ -678,8 +717,9 @@ function buildPurposesList(selector, list, type, vendors) {
         return '';
     }
 
-    document.querySelector(selector).innerHTML = list
-        .map(item => {
+    document.querySelector(selector).innerHTML = 
+    `<h2>${TypesPurposes[type]}</h2>` + 
+    list.map(item => {
             const consentCount = vendors.filter(vendor => vendor?.purposes?.some(purpose => purpose === item.id)).length || 0;
             const legitimateInterestCount = vendors.filter(vendor => vendor?.legIntPurposes?.some(purpose => purpose === item.id)).length || 0;
             vendors.filter(vendor => vendor.legIntPurposes.some(purpose => purpose === item.id)).length
@@ -689,6 +729,11 @@ function buildPurposesList(selector, list, type, vendors) {
                     ``
                 ),
                 `<p>${item.description}</p>
+                    <div class="preferences__list-link">
+                        <div class="preferences__link dialog--open">
+                            <span>View details</span>
+                        </div>
+                    </div>
                       <div class="switch-control">
                           <div class="switch-control__label">Consent (${consentCount} vendors)</div>
                           <label class="switch-control" for="${type + '_' + item.id}">
