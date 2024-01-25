@@ -479,7 +479,7 @@ export function renderVendors(tcf, vList) {
 }
 
 function initStorageDisclosureButton(vendor) {
-    if (!(vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure)) {
+    if (!(vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure.disclosures?.length)) {
         return '';
     }
     return `
@@ -491,7 +491,7 @@ function initStorageDisclosureButton(vendor) {
 
 function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
     vendorList.vendors.forEach(vendor => {
-        if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure) {
+        if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure.disclosures?.length) {
             const storageDetailsLink = document.getElementById('vendorStorageDetails_' + vendor.id);
             if(storageDetailsLink) {
                 storageDetailsLink.addEventListener("click", () => {
@@ -499,29 +499,26 @@ function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
                         storageDialog.showModal();
                     }
 
-                    if(vendor.deviceStorageDisclosure.disclosures?.length) {
-                        vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
-                            const name = disclosure.identifier || '';
-                            const type = disclosure.type || '';
-                            const duration = Math.round(disclosure.maxAgeSeconds/3600/24) || 0;
-                            const domains = disclosure.domains || [];
-                            const purposes = disclosure.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
-                            const cookieRefresh = disclosure.cookieRefresh || false;
+                    vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
+                        const name = disclosure.identifier || '';
+                        const type = disclosure.type || '';
+                        const duration = Math.round(disclosure.maxAgeSeconds/3600/24) || 0;
+                        const domains = disclosure.domains || [];
+                        const purposes = disclosure.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
+                        const cookieRefresh = disclosure.cookieRefresh || false;
 
-                            const dialogHtml = `
-                                <b>Name:</b><span> ${name}</span></br>
-                                <b>Type:</b><span> ${type}</span></br>
-                                <b>Duration:</b><span> ${duration} (days)</span></br>
-                                <b>Domain:</b><span> *${domains}</span></br>
-                                <b>Purposes:</b></br><ul class="dialog__list">${buildPurpose(purposes)}</ul>
-                                <b>Refreshes Cookies:</b><span> ${cookieRefresh}</span>
-                                </br></br>`;
-                            if(dialogConent) {
-                                dialogConent.innerHTML += dialogHtml;
-                            }
-                        })
-                    }
-                    
+                        const dialogHtml = `
+                            <b>Name:</b><span> ${name}</span></br>
+                            <b>Type:</b><span> ${type}</span></br>
+                            <b>Duration:</b><span> ${duration} (days)</span></br>
+                            <b>Domain:</b><span> *${domains}</span></br>
+                            <b>Purposes:</b></br><ul class="dialog__list">${buildPurpose(purposes)}</ul>
+                            <b>Refreshes Cookies:</b><span> ${cookieRefresh}</span>
+                            </br></br>`;
+                        if(dialogConent) {
+                            dialogConent.innerHTML += dialogHtml;
+                        }
+                    })
                 });
             }
         }
