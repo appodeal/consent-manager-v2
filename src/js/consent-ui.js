@@ -464,16 +464,18 @@ export function renderVendors(tcf, vList) {
 
     const storageDialog = document.querySelector('.dialog-storage');
     const closeBtn = document.querySelector('.storage-dialog-close-btn');
+    const dialogConent = document.querySelector('.dialog__content--storage');
     if(closeBtn) {
         closeBtn.addEventListener("click", () => {
             if(storageDialog) {
+                dialogConent.innerHTML = '';
                 storageDialog.close();
             }
         });
     }
     setVendorsToTemplate(vendorListSelector, htmlVendorList);
 
-    setTimeout(() => initStorageDisclosureDialog(vendorList, storageDialog));
+    setTimeout(() => initStorageDisclosureDialog(vendorList, storageDialog, dialogConent));
 }
 
 function initStorageDisclosureButton(vendor) {
@@ -487,7 +489,7 @@ function initStorageDisclosureButton(vendor) {
     `;
 }
 
-function initStorageDisclosureDialog(vendorList, storageDialog) {
+function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
     vendorList.vendors.forEach(vendor => {
         if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure) {
             const storageDetailsLink = document.getElementById('vendorStorageDetails_' + vendor.id);
@@ -496,7 +498,6 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
                     if(storageDialog) {
                         storageDialog.showModal();
                     }
-                    const dialogConent = document.querySelector('.dialog__content--storage');
 
                     if(vendor.deviceStorageDisclosure.disclosures?.length) {
                         vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
