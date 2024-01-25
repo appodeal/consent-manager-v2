@@ -79,6 +79,13 @@ p, .collapsable-body {
   letter-spacing: 0.25px;
 }
 
+.collapsable-body--vendors {
+  p {
+    color: var(--gray-light);
+    margin: var(--gap) 0;
+  }
+}
+
 hr {
   border: 1px solid var(--gray);
 }
