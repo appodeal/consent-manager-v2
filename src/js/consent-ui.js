@@ -479,7 +479,7 @@ export function renderVendors(tcf, vList) {
 }
 
 function initStorageDisclosureButton(vendor) {
-    if (!(vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure.disclosures?.length)) {
+    if (!(vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure?.disclosures?.length)) {
         return '';
     }
     return `
@@ -491,7 +491,7 @@ function initStorageDisclosureButton(vendor) {
 
 function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
     vendorList.vendors.forEach(vendor => {
-        if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure.disclosures?.length) {
+        if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure?.disclosures?.length) {
             const storageDetailsLink = document.getElementById('vendorStorageDetails_' + vendor.id);
             if(storageDetailsLink) {
                 storageDetailsLink.addEventListener("click", () => {
