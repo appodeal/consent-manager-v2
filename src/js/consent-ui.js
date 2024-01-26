@@ -396,6 +396,7 @@ let currentVendorList;
 export function renderVendors(tcf, vList) {
     const vendors = checkHasOwnProp(vList, 'vendors');
     const purposes = checkHasOwnProp(vList, 'purposes');
+    const dataCategories = checkHasOwnProp(vList, 'dataCategories');
     const features = checkHasOwnProp(vList, 'features');
     const specialPurposes = checkHasOwnProp(vList, 'specialPurposes');
     const specialFeatures = checkHasOwnProp(vList, 'specialFeatures');
@@ -407,6 +408,7 @@ export function renderVendors(tcf, vList) {
     const vendorList = vendors?.length ? {
         ...vList,
         purposes,
+        dataCategories,
         specialPurposes,
         features,
         specialFeatures,
@@ -414,6 +416,7 @@ export function renderVendors(tcf, vList) {
         vendors
     } : {
         purposes: [],
+        dataCategories: [],
         specialPurposes: [],
         features: [],
         specialFeatures: [],
@@ -429,7 +432,7 @@ export function renderVendors(tcf, vList) {
                 ${vendor.usesCookies
                 ? `<p>Cookie duration: ${getDaysFromSeconds(vendor.cookieMaxAgeSeconds)}. Cookie duration resets each
                     session. Uses other forms of storage.</p>`
-                : `<p>Doesn't use cookies</p>`
+                : ``
             }`;
         }
 
@@ -498,7 +501,9 @@ function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
                     if(storageDialog) {
                         storageDialog.showModal();
                     }
-
+                    const dataCategories = vendor.dataDeclaration.map(declarationId => vendorList.dataCategories[declarationId]?.name);
+                    const categoriesHtml = `<b>Categories of data collected:</b></br><ul class="dialog__list">${buildLi(dataCategories)}</ul></br></br>`
+                    dialogConent.innerHTML += categoriesHtml;
                     vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
                         const name = disclosure.identifier || '';
                         const type = disclosure.type || '';
@@ -512,7 +517,7 @@ function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
                             <b>Type:</b><span> ${type}</span></br>
                             <b>Duration:</b><span> ${duration} (days)</span></br>
                             <b>Domain:</b><span> *${domains}</span></br>
-                            <b>Purposes:</b></br><ul class="dialog__list">${buildPurpose(purposes)}</ul>
+                            <b>Purposes:</b></br><ul class="dialog__list">${buildLi(purposes)}</ul>
                             <b>Refreshes Cookies:</b><span> ${cookieRefresh}</span>
                             </br></br>`;
                         if(dialogConent) {
@@ -524,8 +529,8 @@ function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
         }
     });
 }
-function buildPurpose(purposes) {
-    return purposes.map(p => `<li>${p}</li>`)
+function buildLi(elements) {
+    return elements.filter(el => !!el).map(p => !!p ? `<li>${p}</li>` : '')
     .join('');
 }
 
@@ -615,7 +620,7 @@ function buildConsentSwitcher(tcf, vendor) {
                         </label>
                      </div>`
 
-    return tcf !== TypesTCF.IAB_TCF_V2 || (vendor.features && vendor.features.length) ? switcher : '';
+    return switcher;
 }
 
 function buildLegIntPurposesSwitcher(tcf, vendor) {
@@ -717,21 +722,24 @@ function buildPurposesList(selector, list, type, vendors) {
 
     document.querySelector(selector).innerHTML = 
     `<div class="vendors-title">${TypesPurposes[type]}</div>` + 
-    list.map(item => {
+    list.filter(item => {
+        const hasConsent = vendors.some(vendor => vendor?.purposes?.some(purpose => purpose === item.id || vendor?.legIntPurposes?.some(purpose => purpose === item.id)));
+        if(hasConsent) {
+            return item;
+        }
+    }).map(item => {
             const consentCount = vendors.filter(vendor => vendor?.purposes?.some(purpose => purpose === item.id)).length || 0;
             const legitimateInterestCount = vendors.filter(vendor => vendor?.legIntPurposes?.some(purpose => purpose === item.id)).length || 0;
-            vendors.filter(vendor => vendor.legIntPurposes.some(purpose => purpose === item.id)).length
+            vendors.filter(vendor => vendor.legIntPurposes.some(purpose => purpose === item.id)).length;
+            if(!consentCount && !legitimateInterestCount) {
+                return;
+            }
             return createPreferences(
                 createTitlePreferences(
                     item.name,
                     ``
                 ),
                 `<p>${item.description}</p>
-                    <div class="preferences__list-link">
-                        <div class="preferences__link dialog--open">
-                            <span>View details</span>
-                        </div>
-                    </div>
                       <div class="switch-control">
                           <div class="switch-control__label">Consent (${consentCount} vendors)</div>
                           <label class="switch-control" for="${type + '_' + item.id}">
