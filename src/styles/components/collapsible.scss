@@ -10,15 +10,23 @@
 .collapsable-title {
   @include flex(center, flex-start);
 
+  &.collapsable-title--vendors {
+    margin-bottom: -15px;
+    margin-top: 15px;
+  }
+
   .icn {
     margin-right: var(--gap);
     transform: rotate(0deg);
     transition: transform .3s;
+    &.icn-arrow {
+      transform: rotate(270deg);
+    }
   }
 }
 
 .collapsable.expanded .icn-arrow {
-  transform: rotate(180deg);
+  transform: rotate(360deg);
 }
 
 .collapsable h4 {

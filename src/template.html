@@ -7,291 +7,235 @@
           content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover, height=device-height"
     />
     <meta name="HandheldFriendly" content="true">
-
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
-<body>
-    <div class="screen screen--one show">
-        <div class="main">
-            <div class="logo">
-                <img src="../images/avatar.png" alt=""/>
-                <h2>Word Bakers asks for your consent to use your personal data to:</h2>
-            </div>
-            <div class="content">
-
-                <div class="content__list">
-                    <div class="content__item">
-                        <div class="icn icn-user"></div>
-                        <h4>Select personalised ads</h4>
-                    </div>
-                    <div class="content__item">
-                        <div class="icn icn-content"></div>
-                        <h4>Personalised content</h4>
-                    </div>
-                    <div class="content__item">
-                        <div class="icn icn-device"></div>
-                        <h4>Store and/or access information on a device</h4>
-                    </div>
+<body class="show">
+    <div class="screen__list">
+        <div class="screen screen--one show">
+            <div class="main">
+                <div class="logo">
+                    <img src="" alt="" />
+                    <h2></h2>
                 </div>
-
-                <div class="vendorList"></div>
-
-                <div class="collapsable">
-                    <div class="collapsable-title">
-                        <i class="icn icn-arrow"></i>
-                        <h4>Learn more</h4>
-                    </div>
-                    <div class="collapsable-body">
-                        <div class="help-block">
-                            <div class="help-block__item"><a href="#">How can I change my choice?</a></div>
-                            <div class="help-block__item"><a href="#">What if I don’t consent?</a></div>
-                            <div class="help-block__item"><a href="#">How does legitimate interest work?</a></div>
-                            <div class="help-block__item"><a href="#">Do I have to consent to everything?</a></div>
+                <div class="content">
+                    <div class="content__list">
+                        <div class="content__item">
+                            <div class="icn icn-user"></div>
+                            <h4>Personalised advertising, audience research and service development</h4>
+                        </div>
+                        <div class="content__item">
+                            <div class="icn icn-content"></div>
+                            <h4>Personalised content, advertising and content measurement</h4>
+                        </div>
+                        <div class="content__item">
+                            <div class="icn icn-device"></div>
+                            <h4>Store and/or access information on a device</h4>
                         </div>
                     </div>
-                </div>
 
-                <p>Your personal data will be processed and information from your device (cookies, unique identifiers, and other device data) may be stored by, accessed by and shared with
-                    <a href="#">third party vendors</a>, or used specifically by this site or app.</p>
-                <p> Some vendors may process your personal data on the basis of legitimate interest, which you can object to by managing your options below. Look for a link at the bottom of this page or in our privacy policy where you can withdraw consent.</p>
-            </div>
-        </div>
-
-        <div class="footer">
-            <div class="buttons-list">
-                <button type="button" class="button button-primary">Consent</button>
-                <button type="button" class="button button-primary">Do not consent</button>
-                <button id="manageOptions" type="button" class="button button-link">Manage Options</button>
-            </div>
-        </div>
-    </div>
-    <div class="screen screen--two">
-        <div class="back-block 1 backScreen">
-            <i class="icn icn-back"></i>
-            <span>Data preferences</span>
-        </div>
-
-        <div class="main">
-            <div class="logo">
-                <img src="" alt=""/>
-                <h2>Manage your data</h2>
-            </div>
-            <div class="content">
-                <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
-
-                <div class="content__separate-label">
-                    <p>TCF vendors</p>
-                    <i class="icn icn--sm icn-help"></i>
-                </div>
-
-                <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
-
-                <div class="content__separate-label">
-                    <p>Site or app</p>
-                </div>
-
-                <div class="preferences">
-                    <div class="preferences__item">
-                        <h3>Store and/or access information on a device</h3>
-                        <p>Cookies, device identifiers, or other information can be stored or accessed on your device for the
-                            purposes presented to you.</p>
-                        <div><a href="#" class="preferences__link">View details</a></div>
-                        <label class="switch-control">
-                            Consent
-                            <input type="checkbox">
-                            <span class="track">
-                        <span class="peg"></span>
-                    </span>
-                        </label>
-                    </div>
-                    <div class="preferences__item">
-                        <div class="preferences__title">
-                            <h3>Select personalised ads</h3>
-                            <i class="icn icn--sm icn-help"></i>
+                    <div class="collapsable">
+                        <div class="collapsable-title">
+                            <i class="icn icn-arrow"></i>
+                            <h4>Learn more</h4>
                         </div>
-                        <p>Personalised ads can be shown to you based on a profile about you.</p>
-                        <div><a href="#" class="preferences__link">View details</a></div>
-                        <label class="switch-control">
-                            Consent
-                            <input type="checkbox">
-                            <span class="track">
-                        <span class="peg"></span>
-                    </span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="buttons-list">
-                    <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <div class="buttons-list">
-                <button id="requestStatus" type="button" class="button button-primary">Confirm Choices</button>
-                <button id="updValue" type="button" class="button button-primary">Accept all</button>
-            </div>
-        </div>
-    </div>
-    <div class="screen screen--three">
-        <div class="back-block 2 backScreen">
-            <i class="icn icn-back"></i>
-            <span>Vendor preferences</span>
-        </div>
-
-        <div class="main">
-            <div class="logo">
-                <h2>Confirm our vendors</h2>
-            </div>
-            <div class="content">
-                <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
-
-                <div class="content__separate-label">
-                    <p>TCF vendors</p>
-                    <i class="icn icn--sm icn-help"></i>
-                </div>
-
-                <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
-
-                <div class="content__separate-label">
-                    <p>Site or app</p>
-                </div>
-
-                <div class="preferences">
-                    <div class="preferences__item">
-                        <h3>Name</h3>
-                        <p>Cookies, device identifiers, or other information can be stored or accessed on your device for the
-                            purposes presented to you.</p>
-                        <div class="preferences__list-link">
-                            <a href="#" class="preferences__link">View details</a>
-                            <a href="#" class="preferences__link">Storage details</a>
-                            <a href="#" class="preferences__link">
-                                Privacy Policy
-                                <i class="icn icn--sm icn-privacy-policy"></i>
-                            </a>
-                        </div>
-                        <label class="switch-control">
-                            Consent
-                            <input type="checkbox">
-                            <span class="track">
-                        <span class="peg"></span>
-                    </span>
-                        </label>
-                        <label class="switch-control">
-                            <div class="switch-control__label">
-                                <span>Legitimate interest</span> <i class="icn icn--sm icn-help"></i>
+                        <div class="collapsable-body">
+                            <div class="help-block">
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        How can I change my choice?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">How can I change my choice?</h4>
+                                            <div class="dialog__content">
+                                                <span class="dialog__txt">Change your choice at any time. View our privacy policy to learn more.</span>
+                                                <div class="dialog__btn--with-icn preferences__list-link">
+                                                    <a href="https://appodeal.com/privacy-policy/" target="_blank" class="preferences__link">
+                                                        <span>Privacy policy<i class="icn icn-privacy-policy"></i></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="dialog__footer">
+                                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                                            </div>
+                                        </dialog>
+                                    </div>
+                                </div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        What if I don't consent?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">What if I don't consent?</h4>
+                                            <div class="dialog__content">Your personal data won't be used for the above, unless we and our vendors determine that we have a legitimate interest to do so.</div>
+                                            <div class="dialog__footer">
+                                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                                            </div>
+                                        </dialog>
+                                    </div>
+                                </div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        How does legitimate interest work?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                            <div class="dialog__content">
+                                                <span class="dialog__txt">Some vendors are not asking for your consent, but are using your personal data on the basis of their legitimate interest. To turn this off, click "Manage options".</span>
+                                                <div class="dialog__btn--with-icn preferences__list-link">
+                                                    <a href="https://gdpr.eu/recital-47-overriding-legitimate-interest/" target="_blank" class="preferences__link">
+                                                        <span>Learn more<i class="icn icn-privacy-policy"></i></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="dialog__footer">
+                                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                                            </div>
+                                        </dialog>
+                                    </div>
+                                </div>
+                                <div class="help-block__item">
+                                    <div class="help-block__link dialog--open">
+                                        Do I have to consent to everything?
+                                        <dialog class="dialog">
+                                            <h4 class="dialog__title">Do I have to consent to everything?</h4>
+                                            <div class="dialog__content">
+                                                <span class="dialog__txt">No. You can change how your personal data is used and who uses it by clicking "Manage options".</span>
+                                                <span class="dialog__txt">To collect and use data, vendors can:</span>
+                                                <ul class="dialog__list">
+                                                    <li>Match and combine data from other data sources</li>
+                                                    <li>Link different devices</li>
+                                                    <li>Identify devices based on information transmitted automatically</li>
+                                                </ul>
+                                                <br />
+                                                <span class="dialog__txt">Collecting and using the following data will require your consent, unless it's collected to ensure security, prevent fraud, or debug:</span>
+                                                <ul class="dialog__list"><li>Use precise geolocation data</li></ul>
+                                            </div>
+                                            <div class="dialog__footer">
+                                                <button class="button button-primary-inverted dialog__btn">Close</button>
+                                            </div>
+                                        </dialog>
+                                    </div>
+                                </div>
                             </div>
-                            <input type="checkbox">
-                            <span class="track">
-                        <span class="peg"></span>
-                    </span>
-                        </label>
+                        </div>
                     </div>
-                    <div class="preferences__item">
-                        <div class="preferences__title">
-                            <h3>Name 2</h3>
-                            <i class="icn icn--sm icn-help"></i>
+
+                    <div class="content__txt">Your personal data will be processed and information from your device (cookies, unique identifiers,
+                        and other device data) may be stored by, accessed by and shared with
+                        <div class="dialog--open dialog__link vendors-count-info">
+                            <dialog class="dialog">
+                                <h4 class="dialog__title">What third party vendors can access my data?</h4>
+                                <span class="dialog__txt">The following third party vendors can use your data to provide services:</span>
+                                <ul class="dialog__list" id="allVendors"></ul>
+                                <div class="dialog__footer">
+                                    <button class="button button-primary-inverted dialog__btn">Close</button>
+                                </div>
+                            </dialog>
+                        </div>, or used specifically by this site or app.
+                    </div>
+                    <p> Some vendors may process your personal data on the basis of legitimate interest,
+                        which you can object to by managing your options below. Look for a link at the bottom
+                        of this page or in our privacy policy where you can withdraw consent.</p>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="buttons-list">
+                    <button id="consentBtn" type="button" class="button button-primary">Consent</button>
+                    <button id="doNotConsentBtn" type="button" class="button button-primary">Do not consent</button>
+                    <button id="manageOptions" type="button" class="button button-link">Manage Options</button>
+                </div>
+            </div>
+        </div>
+        <div class="screen screen--two">
+            <div class="main">
+                <div class="back-block">
+                    <div class="back-block__wrap backScreen">
+                        <i class="icn icn-back"></i>
+                        <span>Data preferences</span>
+                    </div>
+                </div>
+
+                <div class="logo">
+                    <img src="" alt=""/>
+                    <h2>Manage your data</h2>
+                </div>
+                <div class="content">
+                    <p>You can choose how your personal data is used. Vendors want your permission to do the following:</p>
+
+                    <div class="preferences purposeList"></div>
+                    <div class="preferences specialPurposeList"></div>
+                    <div class="preferences featuresList"></div>
+                    <div class="preferences specialFeaturesList"></div>
+                    <div class="preferences stacksList"></div>
+
+                    <div class="buttons-list">
+                        <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="buttons-list">
+                    <button id="requestStatus" type="button" class="button button-primary confirmChoices">Confirm Choices</button>
+                    <button id="updValue" type="button" class="button button-primary acceptAll">Accept all</button>
+                </div>
+            </div>
+        </div>
+        <div class="screen screen--three">
+            <div class="main">
+                <div class="back-block">
+                    <div class="back-block__wrap backScreen">
+                        <i class="icn icn-back"></i>
+                        <span>Vendor preferences</span>
+                    </div>
+                </div>
+
+                <div class="logo">
+                    <h2>Confirm our vendors</h2>
+                </div>
+                <div class="content">
+                    <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
+
+                    <div class="collapsable">
+                        <div class="collapsable-title collapsable-title--vendors">
+                            <i class="icn icn-arrow"></i>
+                            <div class="vendors-title">IAB TCF Partners</div>
                         </div>
-                        <p>Cookies, device identifiers, or other information can be stored or accessed on your device for the
-                            purposes presented to you.</p>
-                        <div class="preferences__list-link">
-                            <a href="#" class="preferences__link">View details</a>
-                            <a href="#" class="preferences__link">Storage details</a>
-                            <a href="#" class="preferences__link">
-                                Privacy Policy
-                                <i class="icn icn--sm icn-privacy-policy"></i>
-                            </a>
+                        <div class="collapsable-body collapsable-body--vendors">
+                            <p>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</p>
+                            <div class="preferences vendorList"></div>
                         </div>
-                        <label class="switch-control">
-                            Consent
-                            <input type="checkbox">
-                            <span class="track">
-                        <span class="peg"></span>
-                    </span>
-                        </label>
+                    </div>
+
+                    <div class="collapsable">
+                        <div class="collapsable-title collapsable-title--vendors">
+                            <i class="icn icn-arrow"></i>
+                            <div class="vendors-title">Other Partners</div>
+                        </div>
+                        <div class="collapsable-body collapsable-body--vendors">
+                            <p>To offer you the best gaming experiance, we team up with trusted partners beyond IAB for purposes such as personalised ads and content, measurement, product improvement, and audience insights.</p>
+                            <div class="preferences vendorListOtherPartner"></div>
+                        </div>
                     </div>
 
                 </div>
             </div>
-        </div>
 
-        <div class="footer">
-            <div class="buttons-list">
-                <button type="button" class="button button-primary">Confirm Choices</button>
-                <button type="button" class="button button-primary">Accept all</button>
+            <div class="footer">
+                <div class="buttons-list">
+                    <button type="button" class="button button-primary confirmChoices">Confirm Choices</button>
+                    <button type="button" class="button button-primary acceptAll">Accept all</button>
+                </div>
             </div>
         </div>
     </div>
-</body>
-<script>
-    let displayScreens = {
-        screen: document.getElementsByClassName('screen'),
-        screenOne: document.getElementsByClassName('screen--one')[0],
-        screenTwo: document.getElementsByClassName('screen--two')[0],
-        screenThree: document.getElementsByClassName('screen--three')[0],
+    <dialog class="dialog dialog-storage">
+        <h2 class="dialog__title">Storage Details</h2>
+        <div class="dialog__content dialog__content--storage"></div>
+        <div class="dialog__footer">
+            <button class="button button-primary-inverted dialog__btn storage-dialog-close-btn">Close</button>
+        </div>
+    </dialog>
 
-        // remove class show
-        initControls: function () {
-            document.getElementById('manageOptions').addEventListener('click', this.showScreenTwo.bind(this), true);
-            document.getElementById('vendorPreferences').addEventListener('click', this.showScreenThree.bind(this), true);
-            Array(...document.getElementsByClassName('backScreen')).forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
-            this.attachCollapsible();
-        },
-        hideAllScreens: function () {
-            Array(...this.screen).forEach(item => item.classList.remove("show"));
-            this.scrollToTop();
-        },
-        showScreenTwo: function () {
-            this.hideAllScreens();
-            this.screenTwo.classList.add('show');
-        },
-        showScreenThree: function () {
-            this.hideAllScreens();
-            this.screenThree.classList.add('show');
-        },
-        backToPreviousScreen: function () {
-            let parent = this.parentElement;
-            let previous = parent.previousElementSibling;
-            parent.classList.remove('show');
-            previous.classList.add('show');
-            displayScreens.scrollToTop();
-        },
-        scrollToTop: function () {
-            window.scrollTo(0, 0);
-        },
-        attachCollapsible: function () {
-            const timeouts = new Map();
-            Array.from(document.querySelectorAll('.collapsable')).forEach(el => el.querySelector('.collapsable-body').style.height = '0px');
-            Array.from(document.querySelectorAll('.collapsable .collapsable-title')).forEach(el => {
-                el.addEventListener('click', function (e) {
-                    const rootEl = e.target.closest('.collapsable');
-                    const textEl = e.target.closest('.collapsable').querySelector('.collapsable-body');
-                    clearTimeout(timeouts.get(textEl));
-                    if (rootEl.classList.contains('expanded')) {
-                        textEl.style.height = textEl.clientHeight + 'px';
-                        timeouts.set(textEl, setTimeout(() => {
-                            textEl.style.height = '0px';
-                            rootEl.classList.remove('expanded');
-                        }));
-                    } else {
-                        textEl.style.height = '0px';
-                        textEl.style.height = textEl.scrollHeight + 'px';
-                        rootEl.classList.add('expanded');
-                        timeouts.set(textEl, setTimeout(() => textEl.style.removeProperty('height'), 200));
-                    }
-                });
-            });
-        },
-        createCollapsible: function (title, body) {
-            return `<div class="collapsable">
-                <div class="collapsable-title">${title}</div>
-                <div class="collapsable-body">${body}</div>
-            </div>`;
-        }
-    }
-    displayScreens.initControls();
-</script>
+</body>
 </html>

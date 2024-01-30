@@ -3,12 +3,14 @@
 @import 'variables/_variables';
 
 // default styles
+@import 'components/safe-area';
 @import "base-styles";
 @import 'icons';
 
 // components
-@import "components/collapsible";
 @import 'components/buttons';
+@import "components/collapsible";
+@import "components/dialog";
 @import 'components/footer';
 @import 'components/preferences';
 @import 'components/switcher';
