@@ -283,6 +283,7 @@ export const displayScreens = {
         try {
             console.log('confirm Choices');
             const selectedItems = this.buildChecked();
+            console.log("🚀 ~ selectedItems:", selectedItems);
             [...state.allVendorList.keys()].forEach(async tcf => {
                 await selectChoices(
                     tcf,
@@ -442,17 +443,22 @@ export function renderVendors(tcf, vList) {
     buildListConsentFirstPage(vendorList)
 
     displayScreens.showAllVendors(vendorList.vendors);
-    console.log("~ renderVendors ~ vendorList:", vendorList)
+    let duplicatesList = [];
     const htmlVendorList = vendorList
         .vendors
-        .map(vendor =>
-            createPreferences(
+        .map(vendor => {
+            const subNameId = getSubNameVendorId(tcf);
+            
+            if(vendor?.hasOwnProperty('duplicates')) {
+                duplicatesList.push({vendor, subNameId})
+            }
+            return createPreferences(
                 `${vendorTitle(vendor)}`,
                 `
                 ${buildDetails(vendor, subSettingsOfVendors)}
-                ${buildConsentSwitcher(tcf, vendor)}
+                ${buildConsentSwitcher(subNameId, vendor)}
                 ${buildLegIntPurposesSwitcher(tcf, vendor)}
-            `)
+            `, vendor.hidden)}
         )
         .join('');
 
@@ -478,7 +484,10 @@ export function renderVendors(tcf, vList) {
     }
     setVendorsToTemplate(vendorListSelector, htmlVendorList);
 
-    setTimeout(() => initStorageDisclosureDialog(vendorList, storageDialog, dialogConent));
+    setTimeout(() => {
+        initSwitcherDuplicatesListener(duplicatesList);
+        initStorageDisclosureDialog(vendorList, storageDialog, dialogConent);
+    }, 0);
 }
 
 function initStorageDisclosureButton(vendor) {
@@ -490,6 +499,36 @@ function initStorageDisclosureButton(vendor) {
         <span>Storage details</span>
     </div>
     `;
+}
+
+function initSwitcherDuplicatesListener(duplicatesList) {
+    duplicatesList.forEach(duplicate => {
+        const switcher = document.getElementById(duplicate.subNameId + duplicate.vendor.id);
+        if(!switcher) {
+            return;
+        }
+        let selector;
+        switcher.addEventListener('click', () => {
+            if(duplicate?.vendor?.duplicates?.hasOwnProperty('iab')) {
+                selector = document.getElementById('vendor_' + duplicate.vendor.duplicates.iab);
+                if (selector) {
+                    selector.checked = true;
+                }
+            }
+            if (duplicate?.vendor?.duplicates?.hasOwnProperty('google')) {
+                selector = document.getElementById('vendorGoogle_' + duplicate.vendor.duplicates.google);
+                if (selector) {
+                    selector.checked = true;
+                }
+            }
+            if(duplicate?.vendor?.duplicates?.hasOwnProperty('apd')) {
+                selector = document.getElementById('vendorApd_' + duplicate.vendor.duplicates.apd);
+                if (selector) {
+                    selector.checked = true;
+                }
+            }
+        });
+    })
 }
 
 function initStorageDisclosureDialog(vendorList, storageDialog, dialogConent) {
@@ -604,8 +643,7 @@ function getSubNameVendorId(tcf) {
     return tcf === TypesTCF.GOOGLE_PRIVACY ? 'vendorGoogle_' : tcf === TypesTCF.APD_PRIVACY_V2 ? 'vendorApd_' : 'vendor_';
 }
 
-function buildConsentSwitcher(tcf, vendor) {
-    const subNameId = getSubNameVendorId(tcf);
+function buildConsentSwitcher(subNameId, vendor) {
     const switcher = `<div class="switch-control">
                         <div class="switch-control__label">Consent</div>
                         <label class="switch-control" for="${subNameId + vendor.id}">
@@ -783,8 +821,8 @@ function buildPurposesList(selector, list, type, vendors) {
         ).join('');
 }
 
-export function createPreferences(title, body) {
-    return `<div class="preferences__item">
+export function createPreferences(title, body, hidden = false) {
+    return `<div class="${hidden ? 'preferences__list-hidden' : 'preferences__item'}">
                 ${title}
                 ${body}
             </div>`;

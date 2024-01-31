@@ -24,6 +24,13 @@
   }
 }
 
+.preferences__list-hidden {
+  visibility: hidden;
+  margin-bottom: 0px;
+  height: 0px;
+  padding: 0px;
+}
+
 .preferences__title {
   @include flex(center, space-between);
 }
