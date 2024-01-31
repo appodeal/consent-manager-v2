@@ -283,7 +283,6 @@ export const displayScreens = {
         try {
             console.log('confirm Choices');
             const selectedItems = this.buildChecked();
-            console.log("🚀 ~ selectedItems:", selectedItems);
             [...state.allVendorList.keys()].forEach(async tcf => {
                 await selectChoices(
                     tcf,
