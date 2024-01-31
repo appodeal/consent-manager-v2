@@ -1,232 +1,225 @@
 {
   "1": {
-    "name": "Appodeal, Inc.",
-    "id": 1,
-    "status": "appodeal",
-    "urls": [
-      {
-        "privacy": "https://www.appodeal.com/home/privacy-policy/"
-      }
-    ]
-  },
-  "3": {
-    "name": "AdColony, Inc.",
-    "id": 3,
-    "status": "adcolony",
-    "urls": [
-      {
-        "privacy": "http://www.adcolony.com/privacy-policy"
-      }
-    ]
-  },
-  "4": {
-    "name": "Google LLC",
-    "id": 4,
-    "status": "admob",
-    "urls": [
-      {
-        "privacy": "https://support.google.com/admob/answer/6128543?hl=en"
-      }
-    ]
-  },
-  "5": {
-    "name": "Amazon",
-    "id": 5,
-    "status": "amazon_ads",
-    "urls": [
-      {
-        "privacy": "https://www.amazon.com/gp/help/customer/display.html?nodeId=468496"
-      }
-    ]
-  },
-  "6": {
-    "name": "AppLovin Corporation",
-    "id": 6,
-    "status": "applovin",
-    "urls": [
-      {
-        "privacy": "https://www.applovin.com/privacy/"
-      }
-    ]
-  },
-  "7": {
-    "name": "Chartboost, Inc.",
-    "id": 7,
-    "status": "chartboost",
-    "urls": [
-      {
-        "privacy": "https://answers.chartboost.com/en-us/articles/200780269"
-      }
-    ]
-  },
-  "8": {
-    "name": "Facebook, Inc.",
-    "id": 8,
-    "status": "facebook",
-    "urls": [
-      {
-        "privacy": "https://developers.facebook.com/docs/audience-network/policy"
-      }
-    ]
-  },
-  "11": {
-    "name": "InMobi Pte Ltd",
-    "id": 11,
-    "status": "inmobi",
-    "urls": [
-      {
-        "privacy": "https://www.inmobi.com/privacy-policy-for-eea"
-      }
-    ]
-  },
-  "12": {
-    "name": "ironSource Ltd.",
-    "id": 12,
-    "status": "ironsource",
-    "urls": [
-      {
-        "privacy": "https://www.ironsrc.com/wp-content/uploads/2019/03/ironSource-Privacy-Policy.pdf"
-      }
-    ]
-  },
-  "13": {
-    "name": "MobVista International Technology Limited",
-    "id": 13,
-    "status": "mintegral",
-    "urls": [
-      {
-        "privacy": "https://www.mobvista.com/en/privacy/"
-      }
-    ]
-  },
-  "15": {
-    "name": "My.com B.V.",
-    "id": 15,
-    "status": "my_target",
-    "urls": [
-      {
-        "privacy": "https://legal.my.com/us/mytarget/privacy/"
-      }
-    ]
-  },
-  "16": {
-    "name": "Ogury Ltd.",
-    "id": 16,
-    "status": "ogury",
-    "urls": [
-      {
-        "privacy": "https://www.ogury.com/privacy-policy/"
-      }
-    ]
-  },
-  "19": {
-    "name": "Smaato, Inc.",
-    "id": 19,
-    "status": "smaato",
-    "urls": [
-      {
-        "privacy": "https://www.smaato.com/privacy/"
-      }
-    ]
-  },
-  "20": {
-    "name": "StartApp Inc.",
-    "id": 20,
-    "status": "startapp",
-    "urls": [
-      {
-        "privacy": "https://www.startapp.com/policy/privacy-policy/"
-      }
-    ]
-  },
-  "21": {
-    "name": "Tapjoy, Inc.",
-    "id": 21,
-    "status": "tapjoy",
-    "urls": [
-      {
-        "privacy": "https://www.tapjoy.com/legal/#privacy-policy"
-      }
-    ]
-  },
-  "22": {
-    "name": "Unity Technologies",
-    "id": 22,
-    "status": "unity_ads",
-    "urls": [
-      {
-        "privacy": "https://unity3d.com/legal/privacy-policy"
-      }
-    ]
-  },
-  "23": {
-    "name": "Vungle, Inc.",
-    "id": 23,
-    "status": "vungle",
-    "urls": [
-      {
-        "privacy": "http://vungle.com/privacy/"
-      }
-    ]
-  },
-  "24": {
-    "name": "YANDEX LLC",
-    "id": 24,
-    "status": "yandex",
-    "urls": [
-      {
-        "privacy": "https://yandex.ru/legal/confidential/"
-      }
-    ]
+      "name": "Appodeal, Inc.",
+      "id": 1,
+      "status": "appodeal",
+      "urls": [{
+          "privacy": "https://www.appodeal.com/home/privacy-policy/"
+      }]
   },
   "25": {
-    "name": "BidMachine, Inc.",
-    "id": 25,
-    "status": "bidmachine",
-    "urls": [
-      {
-        "privacy": "https://explorestack.com/privacy-policy/"
-      }
-    ]
-  },
-  "26": {
-    "name": "Fyber ",
-    "id": 26,
-    "status": "dt_exchange",
-    "urls": [
-      {
-        "privacy": "https://www.digitalturbine.com/privacy-policy/"
-      }
-    ]
-  },
-  "27": {
-    "name": "Google Advertising Products",
-    "id": 27,
-    "status": "gam",
-    "urls": [
-      {
-        "privacy": "https://business.safety.google/privacy/"
-      }
-    ]
+      "name": "BidMachine, Inc.",
+      "id": 25,
+      "status": "bidmachine",
+      "urls": [{
+          "privacy": "https://explorestack.com/privacy-policy/"
+      }]
   },
   "28": {
-    "name": "BigoAds",
-    "id": 28,
-    "status": "bigo_ads",
-    "urls": [
-      {
-        "privacy": "https://www.bigossp.com/agreement/privacyPolicy"
+      "name": "BIGOAds",
+      "id": 28,
+      "status": "bigo_ads",
+      "urls": [{
+          "privacy": "https://www.bigossp.com/agreement/privacyPolicy"
+      }],
+      "duplicates": {
+          "google": 16831
       }
-    ]
+  },
+  "3": {
+      "name": "AdColony, Inc.",
+      "id": 3,
+      "status": "adcolony",
+      "urls": [{
+          "privacy": "http://www.adcolony.com/privacy-policy"
+      }]
+  },
+  "4": {
+      "name": "Google LLC",
+      "id": 4,
+      "status": "admob",
+      "urls": [{
+          "privacy": "https://support.google.com/admob/answer/6128543?hl=en"
+      }]
+  },
+  "5": {
+      "name": "Amazon Advertising",
+      "id": 5,
+      "status": "amazon_ads",
+      "urls": [{
+          "privacy": "https://www.amazon.com/gp/help/customer/display.html?nodeId=468496"
+      }],
+      "duplicates": {
+          "iab": 793
+      }
+  },
+  "6": {
+      "name": "AppLovin Corp.",
+      "id": 6,
+      "status": "applovin",
+      "urls": [{
+          "privacy": "https://www.applovin.com/privacy/"
+      }],
+      "duplicates": {
+          "google": 1301
+      }
+  },
+  "7": {
+      "name": "Chartboost",
+      "id": 7,
+      "status": "chartboost",
+      "urls": [{
+          "privacy": "https://answers.chartboost.com/en-us/articles/200780269"
+      }],
+      "duplicates": {
+          "google": 2898
+      }
+  },
+  "8": {
+      "name": "Facebook",
+      "id": 8,
+      "status": "facebook",
+      "urls": [{
+          "privacy": "https://developers.facebook.com/docs/audience-network/policy"
+      }],
+      "duplicates": {
+          "google": 89
+      }
+  },
+  "26": {
+      "name": "DT Exchange (Fyber Monetization Ltd.)",
+      "id": 26,
+      "status": "dt_exchange",
+      "urls": [{
+          "privacy": "https://www.digitalturbine.com/privacy-policy/"
+      }],
+      "duplicates": {
+          "iab": 262
+      }
+  },
+  "27": {
+      "name": "Google Advertising Products",
+      "id": 27,
+      "status": "gam",
+      "urls": [{
+          "privacy": "https://business.safety.google/privacy/"
+      }],
+      "duplicates": {
+          "iab": 755
+      }
+  },
+  "11": {
+      "name": "InMobi Pte Ltd",
+      "id": 11,
+      "status": "inmobi",
+      "urls": [{
+          "privacy": "https://www.inmobi.com/privacy-policy-for-eea"
+      }],
+      "duplicates": {
+          "iab": 333
+      }
+  },
+  "12": {
+      "name": "ironSource Mobile",
+      "id": 12,
+      "status": "ironsource",
+      "urls": [{
+          "privacy": "https://www.ironsrc.com/wp-content/uploads/2019/03/ironSource-Privacy-Policy.pdf"
+      }],
+      "duplicates": {
+          "google": 2878
+      }
   },
   "29": {
-    "name": "MobileFuse LLC",
-    "id": 29,
-    "status": "mobilefuse",
-    "urls": [
-      {
-        "privacy": "https://mobilefuse.com/privacy-policy/"
+      "name": "MobileFuse LLC",
+      "id": 29,
+      "status": "mobilefuse",
+      "urls": [{
+          "privacy": "https://mobilefuse.com/privacy-policy/"
+      }]
+  },
+  "13": {
+      "name": "MobVista International Technology Limited",
+      "id": 13,
+      "status": "mintegral",
+      "urls": [{
+          "privacy": "https://www.mobvista.com/en/privacy/"
+      }]
+  },
+  "15": {
+      "name": "My.com B.V.",
+      "id": 15,
+      "status": "my_target",
+      "urls": [{
+          "privacy": "https://legal.my.com/us/mytarget/privacy/"
+      }]
+  },
+  "16": {
+      "name": "Ogury Ltd",
+      "id": 16,
+      "status": "ogury",
+      "urls": [{
+          "privacy": "https://www.ogury.com/privacy-policy/"
+      }],
+      "duplicates": {
+          "iab": 31
       }
-    ]
+  },
+  "19": {
+      "name": "Smaato, Inc.",
+      "id": 19,
+      "status": "smaato",
+      "urls": [{
+          "privacy": "https://www.smaato.com/privacy/"
+      }],
+      "duplicates": {
+          "iab": 82
+      }
+  },
+  "20": {
+      "name": "Start.io Inc",
+      "id": 20,
+      "status": "startapp",
+      "urls": [{
+          "privacy": "https://www.startapp.com/policy/privacy-policy/"
+      }],
+      "duplicates": {
+          "iab": 1216
+      }
+  },
+  "21": {
+      "name": "Tapjoy, Inc.",
+      "id": 21,
+      "status": "tapjoy",
+      "urls": [{
+          "privacy": "https://www.tapjoy.com/legal/#privacy-policy"
+      }]
+  },
+  "22": {
+      "name": "Unity Ads",
+      "id": 22,
+      "status": "unity_ads",
+      "urls": [{
+          "privacy": "https://unity3d.com/legal/privacy-policy"
+      }],
+      "duplicates": {
+          "google": 3234
+      }
+  },
+  "23": {
+      "name": "Vungle, Inc.",
+      "id": 23,
+      "status": "vungle",
+      "urls": [{
+          "privacy": "http://vungle.com/privacy/"
+      }]
+  },
+  "24": {
+      "name": "YANDEX LLC",
+      "id": 24,
+      "status": "yandex",
+      "urls": [{
+          "privacy": "https://yandex.ru/legal/confidential/"
+      }]
   }
 }
