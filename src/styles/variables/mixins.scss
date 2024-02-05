@@ -28,6 +28,13 @@
   transform: translate(-50%, -50%);
 }
 
+@mixin fixedCenter {
+  top: 50%;
+  left: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
+}
+
 @mixin fullBlockFixed {
   position: fixed;
   top: 0;
@@ -39,5 +46,37 @@
 @mixin animateOpacity($opacity, $visibility) {
   opacity: $opacity;
   visibility: $visibility;
-  transition: opacity .3s, visibility .3s;
+  transition: opacity .3s .2s, visibility .3s;
+}
+
+
+// @media
+@mixin mediaPortrait {
+  @media screen and (orientation: portrait) {
+    @content;
+  }
+}
+
+@mixin mediaLandscape {
+  @media screen and (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin mediaMax1199 {
+  @media all and (max-width: 1199px) {
+    @content;
+  }
+}
+
+@mixin schemaLight {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}
+
+@mixin schemaDark {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
 }

@@ -8,8 +8,13 @@ $peg-background-active: var(--blue);
 
 .switch-control {
   @include flex(center, space-between);
-  cursor: pointer;
   margin-bottom: 14px;
+  -webkit-tap-highlight-color: transparent;
+
+  & > .switch-control {
+    margin-bottom: 0;
+    cursor: pointer;
+  }
 
   &__label {
     @include flex(center, flex-start);
@@ -56,5 +61,13 @@ $peg-background-active: var(--blue);
   > :checked + .track > .peg {
     left: $width / 2;
     background: $peg-background-active;
+  }
+
+  .icn-help {
+    margin-left: 4px;
+  }
+
+  .dialog__title {
+    font-style: normal;
   }
 }

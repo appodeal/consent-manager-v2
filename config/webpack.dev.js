@@ -4,7 +4,9 @@ const paths = require('./paths');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const stubVendorList = require('../stubs/vendorList');
+const stubVendorListIab = require('../stubs/vendorListIab');
+const stubVendorListGoogle = require('../stubs/vendorListGoogle');
+const stubVendorListAppodeal = require('../stubs/vendorListAppodeal');
 
 module.exports = merge(common, {
     /**
@@ -32,7 +34,9 @@ module.exports = merge(common, {
         open: true,
         compress: true,
         hot: true,
-        port: 8080
+        // host: '192.168.1.60', // For example. Uncomment this line if you need to test your layout on a mobile device.
+        port: 8080,
+        disableHostCheck: true,
     },
 
     plugins: [
@@ -42,7 +46,9 @@ module.exports = merge(common, {
          * Only update what has changed.
          */
         new webpack.DefinePlugin({
-            VENDOR_LIST: JSON.stringify(stubVendorList)
+            VENDOR_LIST_IAB: JSON.stringify(stubVendorListIab),
+            VENDOR_LIST_GOOGLE: JSON.stringify(stubVendorListGoogle),
+            VENDOR_LIST_APPODEAL: JSON.stringify(stubVendorListAppodeal)
         }),
         new webpack.HotModuleReplacementPlugin()
     ]

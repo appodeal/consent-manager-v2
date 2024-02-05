@@ -30,19 +30,19 @@
 
   // primary button
   --primary-button-border-color: var(--blue);
-  --primary-button-border-color-hover: var(--blue);
+  --primary-button-border-color-hover: #66AFFF;
   --primary-button-background: var(--blue);
-  --primary-button-background-hover: var(--white);
+  --primary-button-background-hover: #66AFFF;
   --primary-button-text-color: var(--white);
-  --primary-button-text-color-hover: var(--blue);
+  --primary-button-text-color-hover: var(--white);
 
   // link button
-  --link-button-border-color: var(--white);
-  --link-button-border-color-hover: var(--blue);
+  --link-button-border-color: transparent;
+  --link-button-border-color-hover: #eff2f7;
   --link-button-background: var(--white);
-  --link-button-background-hover: var(--blue);
+  --link-button-background-hover: #eff2f7;
   --link-button-text-color: var(--blue);
-  --link-button-text-color-hover: var(--white);
+  --link-button-text-color-hover: var(--blue);
 
   // link in content
   --link-text-color: var(--blue);
