@@ -244,12 +244,21 @@ h4 {
 }
 
 .content__separate-label {
-  background-color: var(--gray);
-  padding: calc(var(--gap) / 2) var(--gap);
-  @include flex(center, flex-start);
   margin: var(--gap) calc(-1 * var(--gap));
+  padding: 0 var(--gap);
+
+  &_txt {
+    @include flex(center, flex-start);
+    padding: calc(var(--gap) / 2) 0;
+
+    & > p {
+      --font-size: 18px;
+      --line-height: 27px;
+    }
+  }
 
   p {
     margin: 0 calc(var(--gap) / 4) 0 0;
+    letter-spacing: .25px;
   }
 }

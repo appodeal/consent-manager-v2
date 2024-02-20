@@ -304,16 +304,16 @@ export const displayScreens = {
                 window.cmp.rejectFormFinished('VendorList is empty');
                 return;
             }
-    
+
             Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
                 el.checked = true
             });
-    
+
             // for example: new Set('IAB_TCF_V2.2', state.vendor)
             [...state.allVendorList.keys()].forEach(async tcf => {
                 await selectAll(tcf, state.allVendorList.get(tcf));
             });
-    
+
             this.hideCmp();
         }
         catch(error) {
@@ -331,7 +331,7 @@ export const displayScreens = {
             const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
-    
+
             return {
                 vendorsIab: this.findChecked(vendors, 'vendor_'),
                 vendorsGoogle: this.findChecked(vendors, 'vendorGoogle_'),
@@ -423,7 +423,7 @@ export function renderVendors(tcf, vList) {
             return `
                 ${vendor.name}
                 ${vendor.usesCookies
-                ? `<p>Cookie duration: ${getDaysFromSeconds(vendor.cookieMaxAgeSeconds)}. Cookie duration resets each
+                ? `<p>Retention period: ${getDaysFromSeconds(vendor.cookieMaxAgeSeconds)}. Retention period resets each
                     session. Uses other forms of storage.</p>`
                 : `<p>Doesn't use cookies</p>`
             }`;
@@ -517,7 +517,7 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
                             }
                         })
                     }
-                    
+
                 });
             }
         }
@@ -689,6 +689,14 @@ function buildPurposesList(selector, list, type, vendors) {
                     ``
                 ),
                 `<p>${item.description}</p>
+                      ${item['illustrations'].length
+                        ? `<hr>
+                           <details class="preferences__illustrations-accordion">
+                              <summary>Illustrations</summary>
+                              ${item['illustrations'].map(ill => `<p>${ill}</p>`).join('",').split('",').join('')}
+                           </details>`
+                        : ''}
+
                       <div class="switch-control">
                           <div class="switch-control__label">Consent (${consentCount} vendors)</div>
                           <label class="switch-control" for="${type + '_' + item.id}">
@@ -700,34 +708,7 @@ function buildPurposesList(selector, list, type, vendors) {
                                   <span class="peg"></span>
                               </span>
                           </label>
-                      </div>
-
-                      ${true ? `<div class="switch-control">
-                          <div class="switch-control__label">
-                              Legitimate interest (${legitimateInterestCount} vendors)
-                              <i class="icn dialog--open icn-help">
-                                  <dialog class="dialog">
-                                      <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                      <div class="dialog__content">
-                                          <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
-                                      </div>
-                                      <div class="dialog__footer">
-                                          <button class="button button-primary-inverted dialog__btn">Close</button>
-                                      </div>
-                                  </dialog>
-                              </i>
-                          </div>
-                          <label class="switch-control" for="${type + 'Legitimate_' + item.id}">
-                              <input type="checkbox"
-                                     class="checkboxSwitcher"
-                                     id="${type + 'Legitimate_' + item.id}"
-                                     name="${type + 'Legitimate_' + item.id}"
-                              />
-                              <span class="track">
-                                  <span class="peg"></span>
-                              </span>
-                          </label>
-                      </div>` : ''}`
+                      </div>`
             )}
         ).join('');
 }
