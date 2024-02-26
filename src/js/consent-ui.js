@@ -56,7 +56,9 @@ function save(nextStatus, apdIds) {
 
 //  ----------------------------------------------------
 
-const timeoutMap = new Map();
+const saveAllPurposes = new Map();
+let currentVendorList;
+
 export const displayScreens = {
     screen: document.getElementsByClassName('screen'),
     screenOne: document.getElementsByClassName('screen--one')[0],
@@ -328,8 +330,9 @@ export const displayScreens = {
                 ...document.querySelectorAll('.vendorListAdPartner .checkboxSwitcher')
             ];
             const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
-            const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
+
+            const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
 
             return {
@@ -337,7 +340,7 @@ export const displayScreens = {
                 vendorsGoogle: this.findChecked(vendors, 'vendorGoogle_'),
                 vendorsApd: this.findChecked(vendors, 'vendorApd_'),
                 vendorLegitimate: this.findChecked(vendorLegitimate, 'vendorLegitimate_'),
-                purposes: this.findChecked(purposes, 'purpose_'),
+                purposes: this.findChecked(purposes, 'purposes_'),
                 purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
                 specialFeatures: this.findChecked(specialFeature, 'specialFeatures_'),
             }
@@ -391,7 +394,6 @@ function vendorsCountRender() {
     }
 }
 
-let currentVendorList;
 export function renderVendors(tcf, vList) {
     const vendors = checkHasOwnProp(vList, 'vendors');
     const purposes = checkHasOwnProp(vList, 'purposes');
@@ -442,6 +444,7 @@ export function renderVendors(tcf, vList) {
             createPreferences(
                 `${vendorTitle(vendor)}`,
                 `
+                ${buildListSelectedPurposes(vendor, subSettingsOfVendors)}
                 ${buildDetails(vendor, subSettingsOfVendors)}
                 ${buildConsentSwitcher(tcf, vendor)}
                 ${buildLegIntPurposesSwitcher(tcf, vendor)}
@@ -523,6 +526,7 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
         }
     });
 }
+
 function buildPurpose(purposes) {
     return purposes.map(p => `<li>${p}</li>`)
     .join('');
@@ -647,7 +651,7 @@ function buildListConsentFirstPage(vendorList) {
     buildPurposesList(
         '.purposeList',
         vendorList.purposes,
-        'purpose',
+        'purposes',
         vendorList.vendors
     );
 
@@ -677,6 +681,8 @@ function buildPurposesList(selector, list, type, vendors) {
     if (list.length === 0) {
         return '';
     }
+
+    saveAllPurposes.set(type, saveAllPurposes.has(type) ? saveAllPurposes.get(type).push(list) : [...list]);
 
     document.querySelector(selector).innerHTML = list
         .map(item => {
@@ -711,6 +717,33 @@ function buildPurposesList(selector, list, type, vendors) {
                       </div>`
             )}
         ).join('');
+}
+
+function buildListSelectedPurposes(vendor, subSettings) {
+
+    return subSettings.map(key => {
+        if (!vendor[key] || !vendor[key].length) {
+            return;
+        }
+
+        return `
+            <h4>${buildTitlePurposes(key)}</h4>
+            <ul>${vendor[key].map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`).join('')}</ul>
+        `;
+    }).join('');
+}
+
+function buildTitlePurposes(key) {
+    switch (key) {
+        case 'purposes':
+            return 'Purposes';
+        case 'specialPurposes':
+            return 'Special purposes';
+        case 'features':
+            return 'Features';
+        case 'specialFeatures':
+            return 'Special features';
+    }
 }
 
 export function createPreferences(title, body) {
@@ -748,7 +781,7 @@ export function checkSelectedVendors(tcf, decodedConsentObj) {
 
     // checked purpose consent
     decodedConsentObj.purposeConsents.forEach(id => {
-        document.getElementById('purpose_' + id).checked = true;
+        document.getElementById('purposes_' + id).checked = true;
     });
 
     // checked purpose legitimate

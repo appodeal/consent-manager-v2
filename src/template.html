@@ -177,6 +177,7 @@
                         </div>
                         <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
                     </div>
+                    <div class="preferences specialFeaturesList"></div>
 
 
                     <div class="content__separate-label">
@@ -184,11 +185,24 @@
                             <p>Purposes</p>
                         </div>
                     </div>
-
                     <div class="preferences purposeList"></div>
+
+
+                    <div class="content__separate-label">
+                        <div class="content__separate-label_txt">
+                            <p>Special purposes</p>
+                        </div>
+                    </div>
                     <div class="preferences specialPurposeList"></div>
+
+
+                    <div class="content__separate-label">
+                        <div class="content__separate-label_txt">
+                            <p>Features</p>
+                        </div>
+                    </div>
                     <div class="preferences featuresList"></div>
-                    <div class="preferences specialFeaturesList"></div>
+
 
                     <div class="buttons-list">
                         <button id="vendorPreferences" type="button" class="button button-link">Vendor preferences</button>
@@ -218,39 +232,33 @@
                 <div class="content">
                     <p>Vendors can use your data to provide services. Declining a vendor can stop them from using the data you shared.</p>
 
-                    <div class="content__separate-label">
-                        <div class="content__separate-label_txt">
-                            <p>TCF Vendors</p>
-                            <div class="icn dialog--open icn-help">
-                                <dialog class="dialog">
-                                    <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                    <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
-                                    <div class="dialog__footer">
-                                        <button class="button button-primary-inverted dialog__btn">Close</button>
-                                    </div>
-                                </dialog>
+                    <details class="content__separate-label">
+                        <summary>
+                            <div class="content__separate-label_txt">
+                                <p>TCF Vendors</p>
+                                <div class="icn dialog--open icn-help">
+                                    <dialog class="dialog">
+                                        <h4 class="dialog__title">How does legitimate interest work?</h4>
+                                        <div class="dialog__content">Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</div>
+                                        <div class="dialog__footer">
+                                            <button class="button button-primary-inverted dialog__btn">Close</button>
+                                        </div>
+                                    </dialog>
+                                </div>
                             </div>
-                        </div>
-                        <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
-                    </div>
-                    <div class="preferences vendorList"></div>
+                            <p>You can choose your data preferences. This site or app wants your permission to do the following:</p>
+                        </summary>
+                        <div class="preferences vendorList"></div>
+                    </details>
 
-
-                    <div class="content__separate-label">
-                        <div class="content__separate-label_txt">
-                            <p>Ad partners</p>
-                            <div class="icn dialog--open icn-help">
-                                <dialog class="dialog">
-                                    <h4 class="dialog__title">What does 'Ad partners' mean?</h4>
-                                    <div class="dialog__content">Google and other ad networks and ad partners use data about your users to, for example, show them personalized ads or to report on conversions</div>
-                                    <div class="dialog__footer">
-                                        <button class="button button-primary-inverted dialog__btn">Close</button>
-                                    </div>
-                                </dialog>
+                    <details class="content__separate-label">
+                        <summary>
+                            <div class="content__separate-label_txt">
+                                <p>Ad partners</p>
                             </div>
-                        </div>
-                    </div>
-                    <div class="preferences vendorListAdPartner"></div>
+                        </summary>
+                        <div class="preferences vendorListAdPartner"></div>
+                    </details>
                 </div>
             </div>
 
