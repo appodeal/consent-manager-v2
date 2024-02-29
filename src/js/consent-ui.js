@@ -445,7 +445,7 @@ export function renderVendors(tcf, vList) {
                 `${vendorTitle(vendor)}`,
                 `
                 ${buildListSelectedPurposes(vendor, subSettingsOfVendors)}
-                ${buildDetails(vendor, subSettingsOfVendors)}
+                ${buildDetails(vendor)}
                 ${buildConsentSwitcher(tcf, vendor)}
                 ${buildLegIntPurposesSwitcher(tcf, vendor)}
             `)
@@ -550,24 +550,8 @@ function vendorPolicyUrl(vendor) {
             </a>`;
 }
 
-function buildDetails(vendor, subSettings) {
+function buildDetails(vendor) {
     return `<div class="preferences__list-link">
-                ${hasSubSettings(currentVendorList, subSettings) ? `<div class="preferences__link dialog--open">
-                    <span>View details</span>
-                    <dialog class="dialog">
-                        <h3 class="dialog__title">${vendor.name}</h3>
-                        <div class="dialog__content">
-                            <span class="dialog__txt">To ${vendor.name} vendors can:</span>
-                            <ul class="dialog__list">
-                                ${buildConsentNamesList(vendor, subSettings)}
-                            </ul>
-                        </div>
-
-                        <div class="dialog__footer">
-                            <button class="button button-primary-inverted dialog__btn">Close</button>
-                        </div>
-                    </dialog>
-                </div>` : `<div class="preferences__list-link"></div>`}
                 ${initStorageDisclosureButton(vendor)}
                 ${vendorPolicyUrl(vendor)}
             </div>`
@@ -583,10 +567,6 @@ function buildConsentNamesList(vendor, keySettings) {
             .map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`)
             .join('');
     }).join('');
-}
-
-function hasSubSettings(vendor, itemSettings) {
-    return itemSettings.some(item => vendor && vendor.hasOwnProperty(item) && vendor[item].length);
 }
 
 function getSubNameVendorId(tcf) {
