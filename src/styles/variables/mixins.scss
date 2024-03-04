@@ -9,6 +9,12 @@
   text-overflow: ellipsis;
 }
 
+@mixin inlineFlex($aitems, $jcontent) {
+  display: inline-flex;
+  align-items: $aitems;
+  justify-content: $jcontent;
+}
+
 @mixin flex($aitems, $jcontent) {
   display: flex;
   align-items: $aitems;

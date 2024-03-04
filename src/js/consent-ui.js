@@ -56,7 +56,9 @@ function save(nextStatus, apdIds) {
 
 //  ----------------------------------------------------
 
-const timeoutMap = new Map();
+const saveAllPurposes = new Map();
+let currentVendorList;
+
 export const displayScreens = {
     screen: document.getElementsByClassName('screen'),
     screenOne: document.getElementsByClassName('screen--one')[0],
@@ -304,16 +306,16 @@ export const displayScreens = {
                 window.cmp.rejectFormFinished('VendorList is empty');
                 return;
             }
-    
+
             Array.from(document.querySelectorAll('.checkboxSwitcher')).forEach(el => {
                 el.checked = true
             });
-    
+
             // for example: new Set('IAB_TCF_V2.2', state.vendor)
             [...state.allVendorList.keys()].forEach(async tcf => {
                 await selectAll(tcf, state.allVendorList.get(tcf));
             });
-    
+
             this.hideCmp();
         }
         catch(error) {
@@ -328,16 +330,17 @@ export const displayScreens = {
                 ...document.querySelectorAll('.vendorListAdPartner .checkboxSwitcher')
             ];
             const vendorLegitimate = document.querySelectorAll('.vendorList .checkboxSwitcher');
-            const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const purposeLegitimate = document.querySelectorAll('.purposeList .checkboxSwitcher');
+
+            const purposes = document.querySelectorAll('.purposeList .checkboxSwitcher');
             const specialFeature = document.querySelectorAll('.specialFeaturesList .checkboxSwitcher');
-    
+
             return {
                 vendorsIab: this.findChecked(vendors, 'vendor_'),
                 vendorsGoogle: this.findChecked(vendors, 'vendorGoogle_'),
                 vendorsApd: this.findChecked(vendors, 'vendorApd_'),
                 vendorLegitimate: this.findChecked(vendorLegitimate, 'vendorLegitimate_'),
-                purposes: this.findChecked(purposes, 'purpose_'),
+                purposes: this.findChecked(purposes, 'purposes_'),
                 purposeLegitimate: this.findChecked(purposeLegitimate, 'purposeLegitimate_'),
                 specialFeatures: this.findChecked(specialFeature, 'specialFeatures_'),
             }
@@ -391,7 +394,6 @@ function vendorsCountRender() {
     }
 }
 
-let currentVendorList;
 export function renderVendors(tcf, vList) {
     const vendors = checkHasOwnProp(vList, 'vendors');
     const purposes = checkHasOwnProp(vList, 'purposes');
@@ -423,7 +425,7 @@ export function renderVendors(tcf, vList) {
             return `
                 ${vendor.name}
                 ${vendor.usesCookies
-                ? `<p>Cookie duration: ${getDaysFromSeconds(vendor.cookieMaxAgeSeconds)}. Cookie duration resets each
+                ? `<p>Retention period: ${getDaysFromSeconds(vendor.cookieMaxAgeSeconds)}. Retention period resets each
                     session. Uses other forms of storage.</p>`
                 : `<p>Doesn't use cookies</p>`
             }`;
@@ -442,7 +444,8 @@ export function renderVendors(tcf, vList) {
             createPreferences(
                 `${vendorTitle(vendor)}`,
                 `
-                ${buildDetails(vendor, subSettingsOfVendors)}
+                ${buildListSelectedPurposes(vendor, subSettingsOfVendors)}
+                ${buildDetails(vendor)}
                 ${buildConsentSwitcher(tcf, vendor)}
                 ${buildLegIntPurposesSwitcher(tcf, vendor)}
             `)
@@ -465,6 +468,7 @@ export function renderVendors(tcf, vList) {
         closeBtn.addEventListener("click", () => {
             if(storageDialog) {
                 storageDialog.close();
+                document.querySelector('.dialog__content--storage').innerHTML = '';
             }
         });
     }
@@ -488,11 +492,14 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
     vendorList.vendors.forEach(vendor => {
         if (vendor.hasOwnProperty('deviceStorageDisclosure') && vendor.deviceStorageDisclosure) {
             const storageDetailsLink = document.getElementById('vendorStorageDetails_' + vendor.id);
+
             if(storageDetailsLink) {
+
                 storageDetailsLink.addEventListener("click", () => {
                     if(storageDialog) {
                         storageDialog.showModal();
                     }
+
                     const dialogConent = document.querySelector('.dialog__content--storage');
 
                     if(vendor.deviceStorageDisclosure.disclosures?.length) {
@@ -512,17 +519,19 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
                                 <b>Purposes:</b></br><ul class="dialog__list">${buildPurpose(purposes)}</ul>
                                 <b>Refreshes Cookies:</b><span> ${cookieRefresh}</span>
                                 </br></br>`;
+
                             if(dialogConent) {
                                 dialogConent.innerHTML += dialogHtml;
                             }
                         })
                     }
-                    
+
                 });
             }
         }
     });
 }
+
 function buildPurpose(purposes) {
     return purposes.map(p => `<li>${p}</li>`)
     .join('');
@@ -546,24 +555,8 @@ function vendorPolicyUrl(vendor) {
             </a>`;
 }
 
-function buildDetails(vendor, subSettings) {
+function buildDetails(vendor) {
     return `<div class="preferences__list-link">
-                ${hasSubSettings(currentVendorList, subSettings) ? `<div class="preferences__link dialog--open">
-                    <span>View details</span>
-                    <dialog class="dialog">
-                        <h3 class="dialog__title">${vendor.name}</h3>
-                        <div class="dialog__content">
-                            <span class="dialog__txt">To ${vendor.name} vendors can:</span>
-                            <ul class="dialog__list">
-                                ${buildConsentNamesList(vendor, subSettings)}
-                            </ul>
-                        </div>
-
-                        <div class="dialog__footer">
-                            <button class="button button-primary-inverted dialog__btn">Close</button>
-                        </div>
-                    </dialog>
-                </div>` : `<div class="preferences__list-link"></div>`}
                 ${initStorageDisclosureButton(vendor)}
                 ${vendorPolicyUrl(vendor)}
             </div>`
@@ -579,10 +572,6 @@ function buildConsentNamesList(vendor, keySettings) {
             .map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`)
             .join('');
     }).join('');
-}
-
-function hasSubSettings(vendor, itemSettings) {
-    return itemSettings.some(item => vendor && vendor.hasOwnProperty(item) && vendor[item].length);
 }
 
 function getSubNameVendorId(tcf) {
@@ -647,7 +636,7 @@ function buildListConsentFirstPage(vendorList) {
     buildPurposesList(
         '.purposeList',
         vendorList.purposes,
-        'purpose',
+        'purposes',
         vendorList.vendors
     );
 
@@ -678,6 +667,8 @@ function buildPurposesList(selector, list, type, vendors) {
         return '';
     }
 
+    saveAllPurposes.set(type, saveAllPurposes.has(type) ? saveAllPurposes.get(type).push(list) : [...list]);
+
     document.querySelector(selector).innerHTML = list
         .map(item => {
             const consentCount = vendors.filter(vendor => vendor?.purposes?.some(purpose => purpose === item.id)).length || 0;
@@ -689,6 +680,14 @@ function buildPurposesList(selector, list, type, vendors) {
                     ``
                 ),
                 `<p>${item.description}</p>
+                      ${item['illustrations'].length
+                        ? `<hr>
+                           <details class="preferences__illustrations-accordion">
+                              <summary>Illustrations</summary>
+                              ${item['illustrations'].map(ill => `<p>${ill}</p>`).join('",').split('",').join('')}
+                           </details>`
+                        : ''}
+
                       <div class="switch-control">
                           <div class="switch-control__label">Consent (${consentCount} vendors)</div>
                           <label class="switch-control" for="${type + '_' + item.id}">
@@ -700,36 +699,36 @@ function buildPurposesList(selector, list, type, vendors) {
                                   <span class="peg"></span>
                               </span>
                           </label>
-                      </div>
-
-                      ${true ? `<div class="switch-control">
-                          <div class="switch-control__label">
-                              Legitimate interest (${legitimateInterestCount} vendors)
-                              <i class="icn dialog--open icn-help">
-                                  <dialog class="dialog">
-                                      <h4 class="dialog__title">How does legitimate interest work?</h4>
-                                      <div class="dialog__content">
-                                          <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
-                                      </div>
-                                      <div class="dialog__footer">
-                                          <button class="button button-primary-inverted dialog__btn">Close</button>
-                                      </div>
-                                  </dialog>
-                              </i>
-                          </div>
-                          <label class="switch-control" for="${type + 'Legitimate_' + item.id}">
-                              <input type="checkbox"
-                                     class="checkboxSwitcher"
-                                     id="${type + 'Legitimate_' + item.id}"
-                                     name="${type + 'Legitimate_' + item.id}"
-                              />
-                              <span class="track">
-                                  <span class="peg"></span>
-                              </span>
-                          </label>
-                      </div>` : ''}`
+                      </div>`
             )}
         ).join('');
+}
+
+function buildListSelectedPurposes(vendor, subSettings) {
+
+    return subSettings.map(key => {
+        if (!vendor[key] || !vendor[key].length) {
+            return;
+        }
+
+        return `
+            <h4>${buildTitlePurposes(key)}</h4>
+            <ul>${vendor[key].map(p => `<li>${currentVendorList[key].find(item => item.id === p).name}</li>`).join('')}</ul>
+        `;
+    }).join('');
+}
+
+function buildTitlePurposes(key) {
+    switch (key) {
+        case 'purposes':
+            return 'Purposes';
+        case 'specialPurposes':
+            return 'Special purposes';
+        case 'features':
+            return 'Features';
+        case 'specialFeatures':
+            return 'Special features';
+    }
 }
 
 export function createPreferences(title, body) {
@@ -767,7 +766,7 @@ export function checkSelectedVendors(tcf, decodedConsentObj) {
 
     // checked purpose consent
     decodedConsentObj.purposeConsents.forEach(id => {
-        document.getElementById('purpose_' + id).checked = true;
+        document.getElementById('purposes_' + id).checked = true;
     });
 
     // checked purpose legitimate
