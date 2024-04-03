@@ -56,11 +56,11 @@ export function buildIABTCF(tcModel, vendorList) {
         IABTCF_PurposeLegitimateInterests: buildBinaryString(vendorList.purposes, tcModel.purposeLegitimateInterests),
         IABTCF_SpecialFeaturesOptIns: buildBinaryString(vendorList.specialFeatures, tcModel.specialFeatureOptins),
 
-        IABTCF_PublisherRestrictions: prevVendor ? prevVendor.IABTCF_PublisherRestrictions : {},
-        IABTCF_PublisherConsent: prevVendor ? prevVendor.IABTCF_PublisherConsent : '0',
-        IABTCF_PublisherLegitimateInterests: prevVendor ? prevVendor.IABTCF_PublisherLegitimateInterests : '0',
-        IABTCF_PublisherCustomPurposesConsents: prevVendor ? prevVendor.IABTCF_PublisherCustomPurposesConsents : '0',
-        IABTCF_PublisherCustomPurposesLegitimateInterests: prevVendor ? prevVendor.IABTCF_PublisherCustomPurposesLegitimateInterests : '0',
+        IABTCF_PublisherRestrictions: '',
+        IABTCF_PublisherConsent: '',
+        IABTCF_PublisherLegitimateInterests: '',
+        IABTCF_PublisherCustomPurposesConsents: '',
+        IABTCF_PublisherCustomPurposesLegitimateInterests: '',
     }
 }
 

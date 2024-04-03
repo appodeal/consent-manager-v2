@@ -19,31 +19,12 @@ export function decodeGooglePrivacyConsent(consent) {
         purposeLegitimateInterests: new Set(),
 
         specialFeatureOptins: new Set(),
-
-        IABTCF_idfaFlowControl: consent.IABTCF_idfaFlowControl,
-        IABTCF_UseNonStandardStacks: consent.IABTCF_UseNonStandardStacks,
-        IABTCF_UserConsentRecordId: consent.IABTCF_UserConsentRecordId,
     };
 }
 
 export function buildGooglePrivacyConsent(vendorList) {
-    const tcf = TypesTCF.GOOGLE_PRIVACY;
-    const prevVendor = state.decodedPreviouslyVendor.get(tcf);
-
-    if (prevVendor) {
-        return {
-            IABTCF_idfaFlowControl: prevVendor.IABTCF_idfaFlowControl,
-            IABTCF_UseNonStandardStacks: prevVendor.IABTCF_UseNonStandardStacks,
-            IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
-            IABTCF_UserConsentRecordId: prevVendor.IABTCF_UserConsentRecordId,
-        };
-    }
-
-    return {
-        IABTCF_idfaFlowControl: '2',
-        IABTCF_UseNonStandardStacks: '0',
-        IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
-        IABTCF_UserConsentRecordId: '',
+   return {
+        IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList)
     };
 }
 
