@@ -12,6 +12,7 @@ export async function selectChoices(tcf, vendorList, selected) {
         case TypesTCF.IAB_TCF_V1:
             window.cmp.onUpdateConsent(TypesTCF.IAB_TCF_V1, onSave());
             break;
+
         case TypesTCF.IAB_TCF_V2:
             const gvl = new GVL(vendorList);
             const tcModel = new TCModel(gvl);
@@ -28,17 +29,23 @@ export async function selectChoices(tcf, vendorList, selected) {
 
                 window.cmp.onUpdateConsent(tcf, buildIABTCF(tcModel, vendorList));
             });
-
             break;
+
         case TypesTCF.GOOGLE_PRIVACY:
-            const getSelectedIds = [].concat(getIdFromElem(selected.vendorsGoogle));
+            const getSelectedIds = [].concat(getIdFromElem(selected.vendorsGoogle)); // from server selected vendors
             const vendorsGoogle = Object.values(vendorList);
-            const selectedIdsFromCurrentVendor = vendorsGoogle
-                .map(v => getSelectedIds.find(id => v.id === id))
-                .filter(Boolean);
 
-            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(selectedIdsFromCurrentVendor));
+            const map = new Map();
+            map.set('selected', []);
+            map.set('unselected', []);
+
+            vendorsGoogle.forEach(v => {
+                getSelectedIds.find(id => v.id === id) ? map.get('selected').push(v.id) : map.get('unselected').push(v.id);
+            });
+
+            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(map));
             break;
+
         case TypesTCF.APD_PRIVACY_V2:
             const selectedIds = [].concat(getIdFromElem(selected.vendorsApd));
             const vendorsApd = Object.values(vendorList);
@@ -78,7 +85,11 @@ export async function selectAll(tcf, vendorList) {
             break;
         case TypesTCF.GOOGLE_PRIVACY:
             const vendorIds = Object.keys(vendorList);
-            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(vendorIds));
+            const map = new Map();
+            map.set('selected', vendorIds);
+            map.set('unselected', []);
+
+            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(map));
             break;
         case TypesTCF.APD_PRIVACY_V2:
             const statuses = Object.values(vendorList).map(v => v.status);

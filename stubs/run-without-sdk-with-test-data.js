@@ -13,7 +13,7 @@ if (window.cmp !== undefined) {
 
     // Set previous consent
     const consentV2 = {
-        IABTCF_CmpSdkID: "300",
+        IABTCF_CmpSdkID: "432",
         IABTCF_CmpSdkVersion: "2",
         IABTCF_PolicyVersion: "2",
         IABTCF_gdprApplies: "1",
@@ -26,12 +26,14 @@ if (window.cmp !== undefined) {
         IABTCF_PurposeConsents: "1111111111",
         IABTCF_PurposeLegitimateInterests: "0100001111",
         IABTCF_SpecialFeaturesOptIns: "1",
+
         IABTCF_PublisherRestrictions: {
             "1": {
                 "1": 1,
                 "2": 1
             }
         },
+
         IABTCF_PublisherConsent: "01010101",
         IABTCF_PublisherLegitimateInterests: "01010101",
         IABTCF_PublisherCustomPurposesConsents: "0000000000",
@@ -63,14 +65,6 @@ if (window.cmp !== undefined) {
 
     window.cmp.show().then(isFinished => {
         console.log('Finished interactions with form:', isFinished);
-        // const body = document.body;
-        // if (isFinished) {
-        //     body.classList.remove('show');
-        //     body.setAttribute('style', 'display: none');
-        // } else {
-        //     body.removeAttribute('style');
-        //     body.classList.add('show');
-        // }
     }).catch(error => {
         console.log('ERROR:', error);
     });

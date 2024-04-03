@@ -63,11 +63,11 @@ export class ConsentManagerPlatform {
 
         switch (tcf) {
             case TypesTCF.IAB_TCF_V2:
-                state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent.IABTCF_TCString));
+                state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case TypesTCF.GOOGLE_PRIVACY:
-                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_AddtlConsent));
+                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case TypesTCF.APD_PRIVACY_V2:
