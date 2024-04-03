@@ -38,12 +38,13 @@ export function decodeIABTCFConsent(consentString) {
 // build consent
 export function buildIABTCF(tcModel, vendorList) {
     const tcf = TypesTCF.IAB_TCF_V2;
+    const prevVendor = state.decodedPreviouslyVendor.get(tcf);
     return {
         IABTCF_CmpSdkID: "432", // For certification we should implement our TCF IAB ID. Id number is 432
         IABTCF_CmpSdkVersion: tcModel.cmpVersion_,
         IABTCF_PolicyVersion: tcModel.policyVersion_,
 
-        IABTCF_gdprApplies: state.decodedPreviouslyVendor.get(tcf).IABTCF_gdprApplies,
+        IABTCF_gdprApplies: prevVendor ? prevVendor.IABTCF_gdprApplies : undefined,
 
         IABTCF_PublisherCC: tcModel.publisherCountryCode_,
         IABTCF_PurposeOneTreatment: getStringFromBool(tcModel.purposeOneTreatment_),
@@ -55,11 +56,11 @@ export function buildIABTCF(tcModel, vendorList) {
         IABTCF_PurposeLegitimateInterests: buildBinaryString(vendorList.purposes, tcModel.purposeLegitimateInterests),
         IABTCF_SpecialFeaturesOptIns: buildBinaryString(vendorList.specialFeatures, tcModel.specialFeatureOptins),
 
-        IABTCF_PublisherRestrictions: state.decodedPreviouslyVendor.get(tcf).IABTCF_PublisherRestrictions,
-        IABTCF_PublisherConsent: state.decodedPreviouslyVendor.get(tcf).IABTCF_PublisherConsent,
-        IABTCF_PublisherLegitimateInterests: state.decodedPreviouslyVendor.get(tcf).IABTCF_PublisherLegitimateInterests,
-        IABTCF_PublisherCustomPurposesConsents: state.decodedPreviouslyVendor.get(tcf).IABTCF_PublisherCustomPurposesConsents,
-        IABTCF_PublisherCustomPurposesLegitimateInterests: state.decodedPreviouslyVendor.get(tcf).IABTCF_PublisherCustomPurposesLegitimateInterests,
+        IABTCF_PublisherRestrictions: prevVendor ? prevVendor.IABTCF_PublisherRestrictions : {},
+        IABTCF_PublisherConsent: prevVendor ? prevVendor.IABTCF_PublisherConsent : '0',
+        IABTCF_PublisherLegitimateInterests: prevVendor ? prevVendor.IABTCF_PublisherLegitimateInterests : '0',
+        IABTCF_PublisherCustomPurposesConsents: prevVendor ? prevVendor.IABTCF_PublisherCustomPurposesConsents : '0',
+        IABTCF_PublisherCustomPurposesLegitimateInterests: prevVendor ? prevVendor.IABTCF_PublisherCustomPurposesLegitimateInterests : '0',
     }
 }
 

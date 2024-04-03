@@ -28,11 +28,22 @@ export function decodeGooglePrivacyConsent(consent) {
 
 export function buildGooglePrivacyConsent(vendorList) {
     const tcf = TypesTCF.GOOGLE_PRIVACY;
+    const prevVendor = state.decodedPreviouslyVendor.get(tcf);
+
+    if (prevVendor) {
+        return {
+            IABTCF_idfaFlowControl: prevVendor.IABTCF_idfaFlowControl,
+            IABTCF_UseNonStandardStacks: prevVendor.IABTCF_UseNonStandardStacks,
+            IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
+            IABTCF_UserConsentRecordId: prevVendor.IABTCF_UserConsentRecordId,
+        };
+    }
+
     return {
-        IABTCF_idfaFlowControl: state.decodedPreviouslyVendor.get(tcf).IABTCF_idfaFlowControl ?? '2',
-        IABTCF_UseNonStandardStacks: state.decodedPreviouslyVendor.get(tcf).IABTCF_UseNonStandardStacks ?? '0',
+        IABTCF_idfaFlowControl: '2',
+        IABTCF_UseNonStandardStacks: '0',
         IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
-        IABTCF_UserConsentRecordId: state.decodedPreviouslyVendor.get(tcf).IABTCF_UserConsentRecordId ?? '',
+        IABTCF_UserConsentRecordId: '',
     };
 }
 
