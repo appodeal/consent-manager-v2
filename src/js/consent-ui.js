@@ -685,8 +685,7 @@ function buildPurposesList(selector, list, type, vendors) {
     document.querySelector(selector).innerHTML = list
         .map(item => {
             const consentCount = vendors.filter(vendor => vendor?.purposes?.some(purpose => purpose === item.id)).length || 0;
-            const legitimateInterestCount = vendors.filter(vendor => vendor?.legIntPurposes?.some(purpose => purpose === item.id)).length || 0;
-            vendors.filter(vendor => vendor.legIntPurposes.some(purpose => purpose === item.id)).length
+
             return createPreferences(
                 createTitlePreferences(
                     item.name,
@@ -703,9 +702,10 @@ function buildPurposesList(selector, list, type, vendors) {
 
                       <div class="switch-control">
                           <div class="switch-control__label">Consent (${consentCount} vendors)</div>
-                          <label class="switch-control" for="${type + '_' + item.id}">
+                          <label class="switch-control ${type === 'features' ? 'disabled' : ''}" for="${type + '_' + item.id}">
                               <input type="checkbox"
                                      class="checkboxSwitcher"
+                                     ${type === 'features' ? 'checked' : ''}
                                      id="${type + '_' + item.id}"
                                      name="${type + '_' + item.id}">
                               <span class="track">
@@ -779,60 +779,51 @@ export function checkSelectedVendors(tcf, decodedConsentObj) {
 
     // checked purpose consent
     decodedConsentObj.purposeConsents.forEach(id => {
-        document.getElementById('purposes_' + id).checked = true;
+        setCheckedSwitcher('purposes_', id);
     });
 
     // checked purpose legitimate
     decodedConsentObj.purposeLegitimateInterests.forEach(id => {
-        const selector = document.getElementById('purposeLegitimate_' + id);
-        if (!selector) {
-            return;
-        }
-
-        selector.checked = true;
+        setCheckedSwitcher('purposeLegitimate_', id);
     });
 
     // checked specialFeatures
     decodedConsentObj.specialFeatureOptins.forEach(id => {
-        const selector = document.getElementById('specialFeatures_' + id);
-        if (!selector) {
-            return;
-        }
+        setCheckedSwitcher('specialFeatures_', id);
+    });
 
-        selector.checked = true;
+    // CHECK features
+    decodedConsentObj.specialFeatureOptins.forEach(id => {
+        setCheckedSwitcher('features_', id);
     });
 
     // checked consent
     decodedConsentObj.vendorConsents.forEach(id => {
-        let selector;
         switch (tcf) {
             case TypesTCF.GOOGLE_PRIVACY:
-                selector = document.getElementById('vendorGoogle_' + id);
+                setCheckedSwitcher('vendorGoogle_', id);
                 break;
             case TypesTCF.APD_PRIVACY_V2:
-                selector = document.getElementById('vendorApd_' + id);
+                setCheckedSwitcher('vendorApd_', id);
                 break;
             default:
-                selector = document.getElementById('vendor_' + id);
+                setCheckedSwitcher('vendor_', id);
                 break;
         }
-
-        if (!selector) {
-            return;
-        }
-
-        selector.checked = true;
     });
 
     // checked legitimate
     decodedConsentObj.vendorLegitimateInterests.forEach(id => {
-        const selector = document.getElementById('vendorLegitimate_' + id);
-        if (!selector) {
-            return;
-        }
-
-        selector.checked = true;
+        setCheckedSwitcher('vendorLegitimate_', id);
     });
 }
 
+function setCheckedSwitcher(type, id) {
+    const elem = document.getElementById(type + id);
+    if (!elem) {
+        return;
+    }
+
+    elem.checked = true;
+}
 
