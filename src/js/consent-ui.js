@@ -72,7 +72,7 @@ export const displayScreens = {
         const backScreenList = Array(...document.getElementsByClassName('backScreen'));
 
         const dialogBtnList = Array(...document.getElementsByClassName('dialog--open'));
-        const dialogBtnClose = Array(...document.getElementsByClassName('dialog__btn'));
+        const dialogBtnClose = Array(...document.getElementsByClassName('dialog__btn--close'));
 
         const consentBtn = document.getElementById('consentBtn');
         const doNotConsentBtn = document.getElementById('doNotConsentBtn');
@@ -82,12 +82,14 @@ export const displayScreens = {
 
         const showAllVendors = document.getElementById('allVendors');
 
+        const accordion = Array(...document.getElementsByClassName('content__accordion-label_txt'));
+
         this.attachCollapsible();
 
-        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
-        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors);
+        this.removeListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors, accordion);
+        this.addListener(manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors, accordion);
     },
-    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
+    removeListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors, accordion) {
         manageOptions.removeEventListener('click', this.showScreenTwo, true);
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
         backScreenList.forEach(item => item.removeEventListener('click', this.backToPreviousScreen, true));
@@ -103,9 +105,11 @@ export const displayScreens = {
 
         vendorPreferences.removeEventListener('click', this.showScreenThree, true);
 
-        showAllVendors.removeEventListener('click', this.showAllVendors(), true);
+        showAllVendors.removeEventListener('click', this.showAllVendors, true);
+
+        accordion.forEach(item => item.removeEventListener('click', this.accordion, true));
     },
-    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors) {
+    addListener: function (manageOptions, vendorPreferences, backScreenList, dialogBtnList, dialogBtnClose, consentBtn, doNotConsentBtn, confirmChoices, acceptAll, showAllVendors, accordion) {
         manageOptions.addEventListener('click', this.showScreenTwo.bind(this), true);
         vendorPreferences.addEventListener('click', this.showScreenThree.bind(this), true);
         backScreenList.forEach(item => item.addEventListener('click', this.backToPreviousScreen, true));
@@ -120,6 +124,8 @@ export const displayScreens = {
         acceptAll.forEach(item => item.addEventListener('click', this.acceptAllFn.bind(this, item), true));
 
         showAllVendors.addEventListener('click', this.showAllVendors.bind(this), true);
+
+        accordion.forEach(item => item.addEventListener('click', this.accordion.bind(this, item), true));
     },
     hideAllScreens: function () {
         try {
@@ -142,7 +148,6 @@ export const displayScreens = {
         catch(error) {
             this.throwErrorObject(error)
         }
-
     },
     showScreenTwo: function () {
         try {
@@ -239,10 +244,15 @@ export const displayScreens = {
     },
     showDialog: function (dialog) {
         try {
-            const child = [...dialog.children].find(item => item.className === 'dialog');
-            child.id = 'dialogId';
-            child.showModal();
-            displayScreens.scrollToTopDialog(child.id);
+            const dialogInfo = document.querySelector('.dialog-info');
+            const dialogContent = document.querySelector('.dialog-info .dialog__content');
+
+            dialogContent.innerHTML += dialog.nextElementSibling.innerHTML;
+
+            dialogInfo.id = 'dialogId';
+            dialogInfo.showModal();
+
+            displayScreens.scrollToTopDialog(dialogInfo.id);
         }
         catch(error) {
             this.throwErrorObject(error)
@@ -250,15 +260,13 @@ export const displayScreens = {
     },
     closeDialog: function (dialog) {
         try {
-            if (dialog.parentNode.classList.value === 'dialog__footer') {
-                let parent = dialog.parentElement.parentNode;
-                parent.removeAttribute('id');
-                parent.close();
-            } else {
-                let parent = dialog.parentNode;
-                parent.removeAttribute('id');
-                parent.close();
-            }
+            let info = document.querySelector('.dialog-info');
+            let content = document.querySelector('.dialog-info .dialog__content');
+
+            info.close();
+            info.removeAttribute('id');
+
+            content.innerHTML = '';
         }
         catch(error) {
             this.throwErrorObject(error)
@@ -373,6 +381,15 @@ export const displayScreens = {
             description: error.message
         }
         window.cmp.rejectFormFinished(currentError);
+    },
+    accordion: function (item) {
+        const header = item.parentElement;
+
+        if (header.hasAttribute('open')) {
+            header.removeAttribute('open');
+        } else {
+            header.setAttribute('open', '');
+        }
     }
 }
 
@@ -606,17 +623,13 @@ function buildLegIntPurposesSwitcher(tcf, vendor) {
         ? `<div class="switch-control">
                 <div class="switch-control__label">
                     Legitimate interest
-                    <i class="icn dialog--open icn-help">
-                        <dialog class="dialog">
-                            <h4 class="dialog__title">How does legitimate interest work?</h4>
-                            <div class="dialog__content">
-                                <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
-                            </div>
-                            <div class="dialog__footer">
-                                <button class="button button-primary-inverted dialog__btn">Close</button>
-                            </div>
-                        </dialog>
-                    </i>
+                    <i class="icn dialog--open icn-help"></i>
+                    <div style="display: none">
+                        <h4 class="dialog__title">How does legitimate interest work?</h4>
+                        <div class="dialog__content">
+                            <span>Some vendors are not asking for you consent, but are using personal data on the basis of their legitimate interest.</span>
+                        </div>
+                    </div>
                 </div>
                 <label class="switch-control" for="${'vendorLegitimate_' + vendor.id}">
                     <input type="checkbox"
@@ -741,7 +754,7 @@ export function createPreferences(title, body) {
 export function createTitlePreferences(title, dialogBody) {
     return `<h3>
                 ${title}
-                ${dialogBody ? `<i class="icn dialog--open icn-help"><dialog class="dialog">${dialogBody}</dialog></i>` : ''}
+                ${dialogBody ? `<i class="icn dialog--open icn-help"></i><div style="display: none">${dialogBody}</div>` : ''}
             </h3>`;
 }
 
