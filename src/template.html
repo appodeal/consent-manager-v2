@@ -120,6 +120,11 @@
                     <button id="consentBtn" type="button" class="button button-primary">Consent</button>
                     <button id="doNotConsentBtn" type="button" class="button button-primary">Do not consent</button>
                     <button id="manageOptions" type="button" class="button button-link">Manage Options</button>
+
+                    <div style="display: flex; align-items: center; justify-content: center; padding: 10px 10px 15px; gap: 10px">
+                        <button id="onShowLog">Show log</button>
+                        <button id="onShowException">Show Exception</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -240,7 +245,6 @@
         </div>
     </div>
 
-
     <dialog class="dialog dialog-storage">
         <h2 class="dialog__title">Storage Details</h2>
         <div class="dialog__content dialog__content--storage"></div>
@@ -248,7 +252,6 @@
             <button class="button button-primary-inverted dialog__btn storage-dialog-close-btn">Close</button>
         </div>
     </dialog>
-
     <dialog class="dialog dialog-info">
         <div class="dialog__content"></div>
         <div class="dialog__footer">

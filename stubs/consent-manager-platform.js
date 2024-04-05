@@ -75,12 +75,23 @@ export class ConsentManagerPlatform {
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
         }
-
     }
 
     onUpdateConsent(tcf, consent) {
-        console.log('Version:', tcf, 'Consent:', consent);
+        this.onLog(tcf, consent);
     };
+
+    onConsentFormDismissed(result) {
+        this.onLog('onConsentFormDismissed', result);
+    }
+
+    onLog(tag, message) {
+        console.log('TAG:', tag, 'MESSAGE:', message);
+    }
+
+    onException(message) {
+        console.error(new Error(message));
+    }
 
     async show() {
         return new Promise((resolve, reject) => {

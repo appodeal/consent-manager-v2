@@ -126,6 +126,10 @@ export const displayScreens = {
         showAllVendors.addEventListener('click', this.showAllVendors.bind(this), true);
 
         accordion.forEach(item => item.addEventListener('click', this.accordion.bind(this, item), true));
+
+        // after test should be removed
+        document.getElementById('onShowLog').addEventListener('click', this.onClickLog.bind(this), true);
+        document.getElementById('onShowException').addEventListener('click', this.onClickException.bind(this), true);
     },
     hideAllScreens: function () {
         try {
@@ -282,8 +286,9 @@ export const displayScreens = {
     },
     doNotConsentFn: function () {
         try {
-            console.log('do not consent');
+            console.log('Do not consent');
             this.confirmChoicesFn();
+            window.cmp.onConsentFormDismissed(true);
         }
         catch(error) {
             this.throwErrorObject(error)
@@ -380,6 +385,8 @@ export const displayScreens = {
             errorName: error.name,
             description: error.message
         }
+
+        window.cmp.onException(error);
         window.cmp.rejectFormFinished(currentError);
     },
     accordion: function (item) {
@@ -390,6 +397,12 @@ export const displayScreens = {
         } else {
             header.setAttribute('open', '');
         }
+    },
+    onClickLog() {
+        window.cmp.onLog('Log name', 'Show message log for test');
+    },
+    onClickException() {
+        this.throwErrorObject(new Error('Show error message for test'));
     }
 }
 
