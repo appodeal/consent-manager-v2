@@ -81,10 +81,6 @@ export class ConsentManagerPlatform {
         this.onLog(tcf, consent);
     };
 
-    onConsentFormDismissed(result) {
-        this.onLog('onConsentFormDismissed', result);
-    }
-
     onLog(tag, message) {
         console.log('TAG:', tag, 'MESSAGE:', message);
     }

@@ -145,7 +145,7 @@ export const displayScreens = {
             if (!vendors || !Array.isArray(vendors)) {
                 return;
             }
-            console.log('Show all vendors in dialog');
+            window.cmp.onLog('showAllVendors', 'Show all vendors in dialog');
             const list = vendors.map(vendor => `<li>${vendor.name}</li>`).join('');
             document.getElementById('allVendors').innerHTML += `${list}`;
         }
@@ -286,9 +286,8 @@ export const displayScreens = {
     },
     doNotConsentFn: function () {
         try {
-            console.log('Do not consent');
+            window.cmp.onLog('doNotConsentFn', 'Do not consent');
             this.confirmChoicesFn();
-            window.cmp.onConsentFormDismissed(true);
         }
         catch(error) {
             this.throwErrorObject(error)
@@ -296,7 +295,7 @@ export const displayScreens = {
     },
     confirmChoicesFn: function () {
         try {
-            console.log('confirm Choices');
+            window.cmp.onLog('confirmChoicesFn', 'Confirm choices vendors');
             const selectedItems = this.buildChecked();
             [...state.allVendorList.keys()].forEach(async tcf => {
                 await selectChoices(
@@ -313,9 +312,8 @@ export const displayScreens = {
     },
     acceptAllFn: function () {
         try {
-            console.log('accept All');
-
             if (!state.allVendorList.size) {
+                window.cmp.onLog('acceptAllFn', 'VendorList is empty');
                 window.cmp.rejectFormFinished('VendorList is empty');
                 return;
             }
@@ -329,6 +327,7 @@ export const displayScreens = {
                 await selectAll(tcf, state.allVendorList.get(tcf));
             });
 
+            window.cmp.onLog('acceptAllFn', 'Accepted all vendors');
             this.hideCmp();
         }
         catch(error) {
@@ -372,7 +371,7 @@ export const displayScreens = {
     },
     hideCmp: function () {
         try {
-            console.log('hideCmp')
+            window.cmp.onLog('hideCmp', 'Form is finished');
             window.cmp.resolveFormFinished(true);
         }
         catch(error) {
@@ -412,7 +411,7 @@ function checkHasOwnProp(vendorList, prop) {
 
 function saveVendorsAndRender(tcf, vendorList) {
     state.allVendorList.set(tcf, vendorList);
-    console.log('Display all vendors list:', state.allVendorList);
+    window.cmp.onLog('Display all vendors list:', state.allVendorList);
     renderVendors(tcf, vendorList);
 }
 
