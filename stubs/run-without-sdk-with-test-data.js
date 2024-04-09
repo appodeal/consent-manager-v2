@@ -50,6 +50,9 @@ if (window.cmp !== undefined) {
     };
     window.cmp.setConsent("GOOGLE_PRIVACY", consentGoogleV2);
 
+    const consentApdPrivacyV2 = {};
+    window.cmp.setConsent("APD_PRIVACY_V2", consentApdPrivacyV2);
+
     // In 1 second set authorization status to authorized
     window.cmp.onRequestAuthorizationStatusIOS = () => {
         return new Promise((resolve) => {

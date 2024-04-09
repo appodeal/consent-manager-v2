@@ -71,7 +71,7 @@ export class ConsentManagerPlatform {
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case TypesTCF.APD_PRIVACY_V2:
-                state.decodedPreviouslyVendor.set(tcf, decodeApdPrivacyV2Consent(consent.IABTCF_ApdPrivacyConsent));
+                state.decodedPreviouslyVendor.set(tcf, decodeApdPrivacyV2Consent(consent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
         }

@@ -3,11 +3,11 @@ import {state} from '../../state';
 import {TypesTCF} from '../../helpers';
 
 export function decodeIABTCFConsent(consentString) {
-    if (!consentString || !Object.keys(consentString).length) {
+    if (!consentString || !Object.keys(consentString).length || !consentString.IABTCF_TCString) {
         return;
     }
 
-    const myTcModel = new TCString.decode(consentString.IABTCF_TCString ?? '');
+    const myTcModel = new TCString.decode(consentString.IABTCF_TCString);
 
     return {
         ...consentString,
