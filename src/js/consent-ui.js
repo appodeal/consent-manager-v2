@@ -379,14 +379,13 @@ export const displayScreens = {
         }
     },
     throwErrorObject: function(error) {
-        const currentError = {
-            errorCode: undefined,
-            errorName: error.name,
-            description: error.message
-        }
-
-        window.cmp.onException(error);
-        window.cmp.rejectFormFinished(currentError);
+        window.cmp.onException(
+            'Error name: ', error.name,
+            'Error code:', error.code,
+            'Error description:', error.message,
+            'Error stack:', error.stack,
+        );
+        window.cmp.rejectFormFinished(error);
     },
     accordion: function (item) {
         const header = item.parentElement;

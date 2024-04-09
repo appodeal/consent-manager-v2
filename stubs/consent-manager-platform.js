@@ -86,7 +86,7 @@ export class ConsentManagerPlatform {
     }
 
     onException(message) {
-        console.error(new Error(message));
+        console.error(message);
     }
 
     async show() {
