@@ -1,13 +1,12 @@
 import {state} from "../../state";
-import {TypesTCF} from '../../helpers';
 
 export function decodeGooglePrivacyConsent(consent) {
-    let encoded = consent.IABTCF_AddtlConsent.split('~');
-    const decoded = encoded[encoded.length - 1].split('.');
+    let encoded = consent && consent?.IABTCF_AddtlConsent?.includes('~') ? consent.IABTCF_AddtlConsent.split('~') : '';
+    const decoded = encoded[encoded.length - 1]?.split('.') ?? [];
 
     return {
-        cmpId: encoded[0],
-        cmpVersion: '',
+        cmpId:  state.cmpId,
+        cmpVersion: encoded[0],
         policyVersion: '',
         consentLanguage: '',
         purposeOneTreatment: '',
@@ -32,20 +31,16 @@ function buildIABTCF_AddtlConsent(vendors) {
     let selectedMap = vendors.get('selected');
     let unSelectedMap = vendors.get('unselected');  // disclosed Google Ad Tech Provider (ATP) IDs
 
-    let selected = '';
+    let selected = selectedMap.length ? currentVersion() + '~' + selectedMap.join('.') : currentVersion();
     let unselected = '';
-
-    if (selectedMap.length) {
-        if (Number(state.currentVersion) === 2) {
-            selected = "2~" + selectedMap.join('.');
-        } else {
-            return "1~" + selectedMap.join('.');
-        }
-    }
 
     if (unSelectedMap.length) {
         unselected = "~dv." + unSelectedMap.join('.');
     }
 
     return selected + unselected;
+}
+
+function currentVersion() {
+    return Number(state.currentVersion) === 2 ? '2' : '1';
 }

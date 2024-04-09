@@ -11,7 +11,7 @@ export function decodeIABTCFConsent(consentString) {
 
     return {
         ...consentString,
-        cmpId: '432',
+        cmpId: state.cmpId,
         cmpVersion: myTcModel.cmpVersion_,
         policyVersion: myTcModel.policyVersion_,
         consentLanguage: myTcModel.consentLanguage_,
@@ -40,7 +40,7 @@ export function buildIABTCF(tcModel, vendorList) {
     const tcf = TypesTCF.IAB_TCF_V2;
     const prevVendor = state.decodedPreviouslyVendor.get(tcf);
     return {
-        IABTCF_CmpSdkID: "432", // For certification we should implement our TCF IAB ID. Id number is 432
+        IABTCF_CmpSdkID: state.cmpId, // For certification we should implement our TCF IAB ID. Id number is 432
         IABTCF_CmpSdkVersion: tcModel.cmpVersion_,
         IABTCF_PolicyVersion: tcModel.policyVersion_,
 

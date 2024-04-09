@@ -1,8 +1,8 @@
 import {state} from "../../state";
 
 export function decodeApdPrivacyV2Consent(consent) {
-    let encoded = consent.split('~');
-    const decoded = encoded[encoded.length - 1].split('.');
+    let encoded = consent && consent.includes('~') ? consent.split('~') : '';
+    const decoded = encoded[encoded.length - 1].split('.') ?? [];
 
     const findSelectedIds = Object.values(state.appodealsVendorList).map(apd => {
         const idx = decoded.findIndex(status => apd.status === status);
@@ -10,8 +10,8 @@ export function decodeApdPrivacyV2Consent(consent) {
     }).filter(Boolean);
 
     return {
-        cmpId: encoded[0],
-        cmpVersion: '',
+        cmpId: state.cmpId,
+        cmpVersion: encoded[0],
         policyVersion: '',
         consentLanguage: '',
         purposeOneTreatment: '',

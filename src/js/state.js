@@ -1,4 +1,5 @@
 export const state = {
+    cmpId: '432',
     currentVersion: '2',
     currentConsent: undefined,
     consentDialogVersion: 'AcceptEverything',
