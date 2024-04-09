@@ -7,7 +7,7 @@ export function decodeIABTCFConsent(consentString) {
         return;
     }
 
-    const myTcModel = new TCString.decode(consentString.IABTCF_TCString);
+    const myTcModel = new TCString.decode(consentString.IABTCF_TCString ?? '');
 
     return {
         ...consentString,
