@@ -380,10 +380,10 @@ export const displayScreens = {
     },
     throwErrorObject: function(error) {
         window.cmp.onException(
-            'Error name: ', error.name,
-            'Error code:', error.code,
-            'Error description:', error.message,
-            'Error stack:', error.stack,
+            'Error name: ' + error.name + '; ' +
+            'Error code: ' + error.code + '; ' +
+            'Error description: ' + error.message + '; ' +
+            'Error stack: ' + error.stack + ';'
         );
         window.cmp.rejectFormFinished(error);
     },
