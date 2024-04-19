@@ -26,9 +26,9 @@ export function decodeGooglePrivacyConsent(consent) {
 
 export function buildGooglePrivacyConsent(vendorList, prevTcModel) {
    return {
-       IABTCF_idfaFlowControl: prevTcModel ? prevTcModel.IABTCF_idfaFlowControl : undefined,
+       IABTCF_idfaFlowControl: prevTcModel ? prevTcModel.IABTCF_idfaFlowControl : 2,
        IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
-       IABTCF_UserConsentRecordId: prevTcModel ? prevTcModel.IABTCF_UserConsentRecordId : undefined,
+       IABTCF_UserConsentRecordId: prevTcModel ? prevTcModel.IABTCF_UserConsentRecordId : 0,
     };
 }
 

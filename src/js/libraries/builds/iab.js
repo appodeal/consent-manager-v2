@@ -25,7 +25,7 @@ export function decodeIABTCFConsent(consentString) {
 
         specialFeatureOptins: myTcModel.specialFeatureOptins.set_,
 
-        IABTCF_gdprApplies: consentString.IABTCF_gdprApplies !== undefined ? consentString.IABTCF_gdprApplies : 0,
+        IABTCF_gdprApplies: consentString.IABTCF_gdprApplies,
 
         IABTCF_PublisherRestrictions: consentString.IABTCF_PublisherRestrictions,
         IABTCF_PublisherConsent: consentString.IABTCF_PublisherConsent,
@@ -44,7 +44,7 @@ export function buildIABTCF(tcModel, vendorList) {
         IABTCF_CmpSdkVersion: tcModel.cmpVersion_,
         IABTCF_PolicyVersion: tcModel.policyVersion_,
 
-        IABTCF_gdprApplies: prevVendor.IABTCF_gdprApplies,
+        IABTCF_gdprApplies: prevVendor !== undefined && prevVendor.IABTCF_gdprApplies !== undefined ? prevVendor.IABTCF_gdprApplies : 0,
 
         IABTCF_PublisherCC: tcModel.publisherCountryCode_,
         IABTCF_PurposeOneTreatment: getNumberFromStr(tcModel.purposeOneTreatment_),
