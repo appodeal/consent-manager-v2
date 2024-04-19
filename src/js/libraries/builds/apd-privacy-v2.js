@@ -1,7 +1,6 @@
 import {state} from "../../state";
 
 export function decodeApdPrivacyV2Consent(cons) {
-    debugger;
     let consent = cons.IABTCF_ApdPrivacyConsent;
     let encoded = cons && consent && consent.includes('~') ? consent.split('~') : '';
 
@@ -15,7 +14,7 @@ export function decodeApdPrivacyV2Consent(cons) {
 
     return {
         cmpId: state.cmpId,
-        cmpVersion: encoded[0],
+        cmpVersion: Number(encoded[0]),
         policyVersion: '',
         consentLanguage: '',
         purposeOneTreatment: '',

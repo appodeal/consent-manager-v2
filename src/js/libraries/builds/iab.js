@@ -25,7 +25,7 @@ export function decodeIABTCFConsent(consentString) {
 
         specialFeatureOptins: myTcModel.specialFeatureOptins.set_,
 
-        IABTCF_gdprApplies: consentString.IABTCF_gdprApplies,
+        IABTCF_gdprApplies: consentString.IABTCF_gdprApplies !== undefined ? consentString.IABTCF_gdprApplies : 0,
 
         IABTCF_PublisherRestrictions: consentString.IABTCF_PublisherRestrictions,
         IABTCF_PublisherConsent: consentString.IABTCF_PublisherConsent,
@@ -44,23 +44,17 @@ export function buildIABTCF(tcModel, vendorList) {
         IABTCF_CmpSdkVersion: tcModel.cmpVersion_,
         IABTCF_PolicyVersion: tcModel.policyVersion_,
 
-        IABTCF_gdprApplies: prevVendor ? prevVendor.IABTCF_gdprApplies : undefined,
+        IABTCF_gdprApplies: prevVendor.IABTCF_gdprApplies,
 
         IABTCF_PublisherCC: tcModel.publisherCountryCode_,
-        IABTCF_PurposeOneTreatment: getStringFromBool(tcModel.purposeOneTreatment_),
-        IABTCF_UseNonStandardTexts: getStringFromBool(tcModel.useNonStandardTexts_),
+        IABTCF_PurposeOneTreatment: getNumberFromStr(tcModel.purposeOneTreatment_),
+        IABTCF_UseNonStandardTexts: getNumberFromStr(tcModel.useNonStandardTexts_),
         IABTCF_TCString: TCString.encode(tcModel),
         IABTCF_VendorConsents: buildBinaryString(vendorList.vendors, tcModel.vendorConsents),
         IABTCF_VendorLegitimateInterests: buildBinaryString(vendorList.vendors, tcModel.vendorLegitimateInterests),
         IABTCF_PurposeConsents: buildBinaryString(vendorList.purposes, tcModel.purposeConsents),
         IABTCF_PurposeLegitimateInterests: buildBinaryString(vendorList.purposes, tcModel.purposeLegitimateInterests),
         IABTCF_SpecialFeaturesOptIns: buildBinaryString(vendorList.specialFeatures, tcModel.specialFeatureOptins),
-
-        IABTCF_PublisherRestrictions: '',
-        IABTCF_PublisherConsent: '',
-        IABTCF_PublisherLegitimateInterests: '',
-        IABTCF_PublisherCustomPurposesConsents: '',
-        IABTCF_PublisherCustomPurposesLegitimateInterests: '',
     }
 }
 
@@ -68,6 +62,6 @@ function buildBinaryString(list, tcModel) {
     return Object.values(list).map(v => tcModel.has(v.id) ? 1 : 0).join('');
 }
 
-function getStringFromBool(item) {
-    return item ? '1' : '0';
+function getNumberFromStr(item) {
+    return item ? 1 : 0;
 }

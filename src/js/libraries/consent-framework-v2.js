@@ -32,6 +32,7 @@ export async function selectChoices(tcf, vendorList, selected) {
             break;
 
         case TypesTCF.GOOGLE_PRIVACY:
+            const prevTcModel = state.decodedPreviouslyVendor.get(tcf);
             const getSelectedIds = [].concat(getIdFromElem(selected.vendorsGoogle)); // from server selected vendors
             const vendorsGoogle = Object.values(vendorList);
 
@@ -43,7 +44,7 @@ export async function selectChoices(tcf, vendorList, selected) {
                 getSelectedIds.find(id => v.id === id) ? map.get('selected').push(v.id) : map.get('unselected').push(v.id);
             });
 
-            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(map));
+            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(map, prevTcModel));
             break;
 
         case TypesTCF.APD_PRIVACY_V2:
@@ -84,12 +85,13 @@ export async function selectAll(tcf, vendorList) {
 
             break;
         case TypesTCF.GOOGLE_PRIVACY:
+            const prevTcModel = state.decodedPreviouslyVendor.get(tcf);
             const vendorIds = Object.keys(vendorList);
             const map = new Map();
             map.set('selected', vendorIds);
             map.set('unselected', []);
 
-            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(map));
+            window.cmp.onUpdateConsent(tcf, buildGooglePrivacyConsent(map, prevTcModel));
             break;
         case TypesTCF.APD_PRIVACY_V2:
             const statuses = Object.values(vendorList).map(v => v.status);

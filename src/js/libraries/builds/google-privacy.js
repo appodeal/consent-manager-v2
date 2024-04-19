@@ -6,7 +6,7 @@ export function decodeGooglePrivacyConsent(consent) {
 
     return {
         cmpId:  state.cmpId,
-        cmpVersion: encoded[0],
+        cmpVersion: Number(encoded[0]),
         policyVersion: '',
         consentLanguage: '',
         purposeOneTreatment: '',
@@ -18,12 +18,17 @@ export function decodeGooglePrivacyConsent(consent) {
         purposeLegitimateInterests: new Set(),
 
         specialFeatureOptins: new Set(),
+
+        IABTCF_idfaFlowControl: consent.IABTCF_idfaFlowControl,
+        IABTCF_UserConsentRecordId: consent.IABTCF_UserConsentRecordId
     };
 }
 
-export function buildGooglePrivacyConsent(vendorList) {
+export function buildGooglePrivacyConsent(vendorList, prevTcModel) {
    return {
-        IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList)
+       IABTCF_idfaFlowControl: prevTcModel ? prevTcModel.IABTCF_idfaFlowControl : undefined,
+       IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
+       IABTCF_UserConsentRecordId: prevTcModel ? prevTcModel.IABTCF_UserConsentRecordId : undefined,
     };
 }
 
