@@ -44,7 +44,7 @@ export function buildIABTCF(tcModel, vendorList) {
         IABTCF_CmpSdkVersion: tcModel.cmpVersion_,
         IABTCF_PolicyVersion: tcModel.policyVersion_,
 
-        IABTCF_gdprApplies: prevVendor !== undefined && prevVendor.IABTCF_gdprApplies !== undefined ? prevVendor.IABTCF_gdprApplies : 0,
+        IABTCF_gdprApplies: prevVendor !== undefined && prevVendor.IABTCF_gdprApplies !== undefined ? prevVendor.IABTCF_gdprApplies : 1,
 
         IABTCF_PublisherCC: tcModel.publisherCountryCode_,
         IABTCF_PurposeOneTreatment: getNumberFromStr(tcModel.purposeOneTreatment_),
