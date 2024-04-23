@@ -28,14 +28,15 @@ export function buildGooglePrivacyConsent(vendorList, prevTcModel) {
 }
 
 function buildIABTCF_AddtlConsent(vendors) {
-    let selectedMap = vendors.get('selected');
-    let unSelectedMap = vendors.get('unselected');  // disclosed Google Ad Tech Provider (ATP) IDs
+    const selectedMap = vendors.get('selected');
+    const unSelectedMap = vendors.get('unselected');  // disclosed Google Ad Tech Provider (ATP) IDs
+    const version = currentVersion() + '~';
 
-    let selected = selectedMap.length ? currentVersion() + '~' + selectedMap.join('.') : currentVersion();
-    let unselected = '';
+    let selected = selectedMap.length ? version + selectedMap.join('.') : version;
+    let unselected = '~dv.';
 
     if (unSelectedMap.length) {
-        unselected = "~dv." + unSelectedMap.join('.');
+        unselected += unSelectedMap.join('.');
     }
 
     return selected + unselected;
