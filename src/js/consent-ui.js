@@ -126,10 +126,6 @@ export const displayScreens = {
         showAllVendors.addEventListener('click', this.showAllVendors.bind(this), true);
 
         accordion.forEach(item => item.addEventListener('click', this.accordion.bind(this, item), true));
-
-        // after test should be removed
-        document.getElementById('onShowLog').addEventListener('click', this.onClickLog.bind(this), true);
-        document.getElementById('onShowException').addEventListener('click', this.onClickException.bind(this), true);
     },
     hideAllScreens: function () {
         try {
@@ -395,12 +391,6 @@ export const displayScreens = {
         } else {
             header.setAttribute('open', '');
         }
-    },
-    onClickLog() {
-        window.cmp.onLog('Log name', 'Show message log for test');
-    },
-    onClickException() {
-        this.throwErrorObject(new Error('Show error message for test'));
     }
 }
 
