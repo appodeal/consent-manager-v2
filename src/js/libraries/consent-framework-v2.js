@@ -18,7 +18,7 @@ export async function selectChoices(tcf, vendorList, selected) {
             const tcModel = new TCModel(gvl);
 
             tcModel.cmpId = state.allVendorList.get(tcf).vendorListVersion;
-            tcModel.cmpVersion = state.currentVersion;
+            tcModel.cmpVersion = state.CmpVersion;
 
             await tcModel.gvl.readyPromise.then(() => {
                 tcModel.vendorConsents.set(getIdFromElem(selected.vendorsIab));
@@ -76,7 +76,7 @@ export async function selectAll(tcf, vendorList) {
             const tcModel = new TCModel(gvl);
 
             tcModel.cmpId = state.allVendorList.get(tcf).vendorListVersion;
-            tcModel.cmpVersion = state.currentVersion;
+            tcModel.cmpVersion = state.CmpVersion;
 
             await tcModel.gvl.readyPromise.then(() => {
                 tcModel.setAll();

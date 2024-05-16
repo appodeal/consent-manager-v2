@@ -16,7 +16,7 @@ export class ConsentManagerPlatform {
 
     setApp(appName, version, icon) {
         renderAppName(appName);
-        state.currentVersion = Number(version);
+        state.currentVersion = version;
         renderLogo(icon)
     }
 
