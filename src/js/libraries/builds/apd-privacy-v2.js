@@ -31,6 +31,6 @@ export function decodeApdPrivacyV2Consent(cons) {
 
 export function buildApdPrivacyV2Consent (statuses) {
     return {
-        IABTCF_ApdPrivacyConsent: state.currentVersion + '~' + statuses.join('.')
+        IABTCF_ApdPrivacyConsent: state.CmpVersion + '~' + statuses.join('.')
     }
 }

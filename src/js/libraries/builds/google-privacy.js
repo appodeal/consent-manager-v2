@@ -30,7 +30,7 @@ export function buildGooglePrivacyConsent(vendorList, prevTcModel) {
 function buildIABTCF_AddtlConsent(vendors) {
     const selectedMap = vendors.get('selected');
     const unSelectedMap = vendors.get('unselected');  // disclosed Google Ad Tech Provider (ATP) IDs
-    const version = state.currentVersion + '~';
+    const version = state.CmpVersion + '~';
 
     let selected = selectedMap.length ? version + selectedMap.join('.') : version;
     let unselected = '~dv.';
