@@ -1,14 +1,17 @@
 import {TCString} from "../cjs";
+import {state} from '../../state';
+import {TypesTCF} from '../../helpers';
 
 export function decodeIABTCFConsent(consentString) {
-    if (!consentString) {
+    if (!consentString || !Object.keys(consentString).length || !consentString.IABTCF_TCString) {
         return;
     }
 
-    const myTcModel = new TCString.decode(consentString);
+    const myTcModel = new TCString.decode(consentString.IABTCF_TCString);
 
     return {
-        cmpId: myTcModel.cmpId_,
+        ...consentString,
+        cmpId: state.cmpId,
         cmpVersion: myTcModel.cmpVersion_,
         policyVersion: myTcModel.policyVersion_,
         consentLanguage: myTcModel.consentLanguage_,
@@ -20,31 +23,38 @@ export function decodeIABTCFConsent(consentString) {
         purposeConsents: myTcModel.purposeConsents.set_,
         purposeLegitimateInterests: myTcModel.purposeLegitimateInterests.set_,
 
-        specialFeatureOptins: myTcModel.specialFeatureOptins.set_
+        specialFeatureOptins: myTcModel.specialFeatureOptins.set_,
+
+        IABTCF_gdprApplies: consentString.IABTCF_gdprApplies,
+
+        IABTCF_PublisherRestrictions: consentString.IABTCF_PublisherRestrictions,
+        IABTCF_PublisherConsent: consentString.IABTCF_PublisherConsent,
+        IABTCF_PublisherLegitimateInterests: consentString.IABTCF_PublisherLegitimateInterests,
+        IABTCF_PublisherCustomPurposesConsents: consentString.IABTCF_PublisherCustomPurposesConsents,
+        IABTCF_PublisherCustomPurposesLegitimateInterests: consentString.IABTCF_PublisherCustomPurposesLegitimateInterests
     };
 }
 
 // build consent
 export function buildIABTCF(tcModel, vendorList) {
+    const tcf = TypesTCF.IAB_TCF_V2;
+    const prevVendor = state.decodedPreviouslyVendor.get(tcf);
     return {
-        IABTCF_CmpSdkID: tcModel.cmpId_,
+        IABTCF_CmpSdkID: state.cmpId, // For certification we should implement our TCF IAB ID. Id number is 432
         IABTCF_CmpSdkVersion: tcModel.cmpVersion_,
         IABTCF_PolicyVersion: tcModel.policyVersion_,
-        IABTCF_gdprApplies: tcModel.gdprApplies,
+
+        IABTCF_gdprApplies: prevVendor !== undefined && prevVendor.IABTCF_gdprApplies !== undefined ? prevVendor.IABTCF_gdprApplies : 1,
+
         IABTCF_PublisherCC: tcModel.publisherCountryCode_,
-        IABTCF_PurposeOneTreatment: getStringFromBool(tcModel.purposeOneTreatment_),
-        IABTCF_UseNonStandardTexts: getStringFromBool(tcModel.useNonStandardTexts_),
+        IABTCF_PurposeOneTreatment: getNumberFromStr(tcModel.purposeOneTreatment_),
+        IABTCF_UseNonStandardTexts: getNumberFromStr(tcModel.useNonStandardTexts_),
         IABTCF_TCString: TCString.encode(tcModel),
         IABTCF_VendorConsents: buildBinaryString(vendorList.vendors, tcModel.vendorConsents),
         IABTCF_VendorLegitimateInterests: buildBinaryString(vendorList.vendors, tcModel.vendorLegitimateInterests),
         IABTCF_PurposeConsents: buildBinaryString(vendorList.purposes, tcModel.purposeConsents),
         IABTCF_PurposeLegitimateInterests: buildBinaryString(vendorList.purposes, tcModel.purposeLegitimateInterests),
         IABTCF_SpecialFeaturesOptIns: buildBinaryString(vendorList.specialFeatures, tcModel.specialFeatureOptins),
-        IABTCF_PublisherRestrictions: tcModel.publisherRestrictions,
-        IABTCF_PublisherConsent: tcModel.purposeConsents,
-        IABTCF_PublisherLegitimateInterests: tcModel.publisherLegitimateInterests,
-        IABTCF_PublisherCustomPurposesConsents: tcModel.publisherCustomConsents,
-        IABTCF_PublisherCustomPurposesLegitimateInterests: tcModel.publisherCustomLegitimateInterests
     }
 }
 
@@ -52,6 +62,6 @@ function buildBinaryString(list, tcModel) {
     return Object.values(list).map(v => tcModel.has(v.id) ? 1 : 0).join('');
 }
 
-function getStringFromBool(item) {
-    return item ? '1' : '0';
+function getNumberFromStr(item) {
+    return item ? 1 : 0;
 }

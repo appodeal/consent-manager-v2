@@ -1,8 +1,11 @@
 import {state} from "../../state";
 
-export function decodeApdPrivacyV2Consent(consent) {
-    let encoded = consent.split('~');
-    const decoded = encoded[encoded.length - 1].split('.');
+export function decodeApdPrivacyV2Consent(cons) {
+    let consent = cons.IABTCF_ApdPrivacyConsent;
+    let encoded = cons && consent && consent.includes('~') ? consent.split('~') : '';
+
+    const lastElem = encoded[encoded.length - 1];
+    const decoded = lastElem ? lastElem.split('.') : [];
 
     const findSelectedIds = Object.values(state.appodealsVendorList).map(apd => {
         const idx = decoded.findIndex(status => apd.status === status);
@@ -10,8 +13,8 @@ export function decodeApdPrivacyV2Consent(consent) {
     }).filter(Boolean);
 
     return {
-        cmpId: encoded[0],
-        cmpVersion: '',
+        cmpId: state.cmpId,
+        cmpVersion: Number(encoded[0]),
         policyVersion: '',
         consentLanguage: '',
         purposeOneTreatment: '',
@@ -28,6 +31,6 @@ export function decodeApdPrivacyV2Consent(consent) {
 
 export function buildApdPrivacyV2Consent (statuses) {
     return {
-        IABTCF_ApdPrivacyConsent: state.currentVersion + '~' + statuses.join('.')
+        IABTCF_ApdPrivacyConsent: state.CmpVersion + '~' + statuses.join('.')
     }
 }

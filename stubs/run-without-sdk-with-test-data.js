@@ -13,10 +13,10 @@ if (window.cmp !== undefined) {
 
     // Set previous consent
     const consentV2 = {
-        IABTCF_CmpSdkID: "300",
-        IABTCF_CmpSdkVersion: "2",
-        IABTCF_PolicyVersion: "2",
-        IABTCF_gdprApplies: "1",
+        IABTCF_CmpSdkID: 432,
+        IABTCF_CmpSdkVersion: 2,
+        IABTCF_PolicyVersion: 2,
+        IABTCF_gdprApplies: 1,
         IABTCF_PublisherCC: "US",
         IABTCF_PurposeOneTreatment: "0",
         IABTCF_UseNonStandardTexts: "0",
@@ -26,12 +26,14 @@ if (window.cmp !== undefined) {
         IABTCF_PurposeConsents: "1111111111",
         IABTCF_PurposeLegitimateInterests: "0100001111",
         IABTCF_SpecialFeaturesOptIns: "1",
+
         IABTCF_PublisherRestrictions: {
             "1": {
                 "1": 1,
                 "2": 1
             }
         },
+
         IABTCF_PublisherConsent: "01010101",
         IABTCF_PublisherLegitimateInterests: "01010101",
         IABTCF_PublisherCustomPurposesConsents: "0000000000",
@@ -41,12 +43,15 @@ if (window.cmp !== undefined) {
     window.cmp.setConsent("IAB_TCF_V2.2", consentV2);
 
     const consentGoogleV2 = {
-        IABTCF_idfaFlowControl: "2",
-        IABTCF_UseNonStandardStacks: "0",
+        IABTCF_idfaFlowControl: 2,
+        IABTCF_UseNonStandardStacks: 0,
         IABTCF_AddtlConsent: "2~2072.70.89.93.108.122.149.196.2253.2299.259.2357.311.317.323.2373.338.358.2415.415.2506.2526.482.486.494.495.2568.2571.2575.540.574.2624.609.2677.2779.827.864.981.1029.1048.1051.1095.1097.1201.1205.1276.1301.1365.1415.1449.1570.1577.1651.1716.1735.1753.1765.1834.1870.1878.1889.1958",
         IABTCF_UserConsentRecordId: "277E81D6-5E13-4930-A0BC-4D61D60F3B29"
     };
     window.cmp.setConsent("GOOGLE_PRIVACY", consentGoogleV2);
+
+    const consentApdPrivacyV2 = {};
+    window.cmp.setConsent("APD_PRIVACY_V2", consentApdPrivacyV2);
 
     // In 1 second set authorization status to authorized
     window.cmp.onRequestAuthorizationStatusIOS = () => {
@@ -63,14 +68,6 @@ if (window.cmp !== undefined) {
 
     window.cmp.show().then(isFinished => {
         console.log('Finished interactions with form:', isFinished);
-        // const body = document.body;
-        // if (isFinished) {
-        //     body.classList.remove('show');
-        //     body.setAttribute('style', 'display: none');
-        // } else {
-        //     body.removeAttribute('style');
-        //     body.classList.add('show');
-        // }
     }).catch(error => {
         console.log('ERROR:', error);
     });

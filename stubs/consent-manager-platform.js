@@ -16,7 +16,7 @@ export class ConsentManagerPlatform {
 
     setApp(appName, version, icon) {
         renderAppName(appName);
-        state.currentVersion = Number(version);
+        state.currentVersion = version;
         renderLogo(icon)
     }
 
@@ -63,24 +63,31 @@ export class ConsentManagerPlatform {
 
         switch (tcf) {
             case TypesTCF.IAB_TCF_V2:
-                state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent.IABTCF_TCString));
+                state.decodedPreviouslyVendor.set(tcf, decodeIABTCFConsent(consent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case TypesTCF.GOOGLE_PRIVACY:
-                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent.IABTCF_AddtlConsent));
+                state.decodedPreviouslyVendor.set(tcf, decodeGooglePrivacyConsent(consent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
             case TypesTCF.APD_PRIVACY_V2:
-                state.decodedPreviouslyVendor.set(tcf, decodeApdPrivacyV2Consent(consent.IABTCF_ApdPrivacyConsent));
+                state.decodedPreviouslyVendor.set(tcf, decodeApdPrivacyV2Consent(consent));
                 checkSelectedVendors(tcf, state.decodedPreviouslyVendor.get(tcf));
                 break;
         }
-
     }
 
     onUpdateConsent(tcf, consent) {
-        console.log('Version:', tcf, 'Consent:', consent);
+        this.onLog(tcf, consent);
     };
+
+    onLog(tag, message) {
+        console.log('TAG:', tag, 'MESSAGE:', message);
+    }
+
+    onException(message) {
+        console.error(message);
+    }
 
     async show() {
         return new Promise((resolve, reject) => {

@@ -51,5 +51,9 @@
     "element-closest-polyfill": "^1.0.0",
     "polyfill-array-includes": "^2.0.0",
     "url-search-params-polyfill": "^7.0.1"
+  },
+  "engines": {
+    "node": ">=14.20.1",
+    "npm": ">=9.8.1"
   }
 }
