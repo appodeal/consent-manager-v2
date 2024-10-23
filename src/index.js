@@ -6,7 +6,6 @@ import {displayScreens} from "./js/consent-ui";
 
 
 let isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
 if (isiOS) {
     document.body.classList.add('ios');
 }
@@ -18,7 +17,6 @@ function isTabletDesktop (a) {
         )
     );
 }
-
 if (isTabletDesktop(navigator.userAgent || navigator.vendor || window.opera)) {
     document.body.classList.add('tablet-desktop');
 }
@@ -32,7 +30,6 @@ document.addEventListener('readystatechange', () => {
 });
 
 const params = new URLSearchParams(document.location.search);
-
 if ([
     'AcceptEverything', // user can only accept all or decline all
     'AcceptVendors' // user can choose vendor to give consent

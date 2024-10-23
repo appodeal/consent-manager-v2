@@ -21,9 +21,9 @@ export function decodeGooglePrivacyConsent(consent) {
     };
 }
 
-export function buildGooglePrivacyConsent(vendorList, prevTcModel) {
-   return {
-       IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
+export function buildGooglePrivacyConsent(vendorList) {
+    return {
+        IABTCF_AddtlConsent: buildIABTCF_AddtlConsent(vendorList),
     };
 }
 
