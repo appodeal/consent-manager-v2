@@ -321,6 +321,14 @@ export const displayScreens = {
 
             // for example: new Set('IAB_TCF_V2.2', state.vendor)
             [...state.allVendorList.keys()].forEach(async tcf => {
+                if (tcf === TypesTCF.IAB_US_PRIVACY) {
+                    await selectAll(tcf, {
+                        ...state.allVendorList.get(TypesTCF.IAB_TCF_V2),
+                        ...state.allVendorList.get(TypesTCF.APD_PRIVACY_V2),
+                        ...state.allVendorList.get(TypesTCF.GOOGLE_PRIVACY),
+                    });
+                    return;
+                }
                 await selectAll(tcf, state.allVendorList.get(tcf));
             });
 
