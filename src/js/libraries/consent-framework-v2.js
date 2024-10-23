@@ -5,6 +5,7 @@ import {buildGooglePrivacyConsent} from "./builds/google-privacy";
 import {buildIABTCF} from "./builds/iab";
 import {buildApdPrivacyV2Consent} from "./builds/apd-privacy-v2";
 import {normalizeId, TypesTCF} from "../helpers";
+import {buildIabUsPrivacy} from './builds/iab-us-privacy';
 
 
 export async function selectChoices(tcf, vendorList, selected) {
@@ -59,6 +60,11 @@ export async function selectChoices(tcf, vendorList, selected) {
 
             window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(selectedStatusesFromCurrentVendor));
             break;
+
+        case TypesTCF.IAB_US_PRIVACY:
+            const allSelectedVendors = [].concat(selected.vendorsIab, selected.vendorsGoogle, selected.vendorsApd);
+            window.cmp.onUpdateConsent(tcf, buildIabUsPrivacy(allSelectedVendors));
+            break;
     }
 }
 
@@ -96,6 +102,10 @@ export async function selectAll(tcf, vendorList) {
         case TypesTCF.APD_PRIVACY_V2:
             const statuses = Object.values(vendorList).map(v => v.status);
             window.cmp.onUpdateConsent(tcf, buildApdPrivacyV2Consent(statuses));
+            break;
+        case TypesTCF.IAB_US_PRIVACY:
+            const vendors = Object.keys(vendorList);
+            window.cmp.onUpdateConsent(tcf, buildIabUsPrivacy(vendors));
             break;
     }
 }

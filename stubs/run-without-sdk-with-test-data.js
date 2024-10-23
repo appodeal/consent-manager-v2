@@ -11,6 +11,8 @@ if (window.cmp !== undefined) {
     // Set authorization status to not determined
     window.cmp.setAuthorizationStatusIOS(0);
 
+
+
     // Set previous consent
     const consentV2 = {
         IABTCF_CmpSdkID: 432,
@@ -39,7 +41,6 @@ if (window.cmp !== undefined) {
         IABTCF_PublisherCustomPurposesConsents: "0000000000",
         IABTCF_PublisherCustomPurposesLegitimateInterests: "0000000000"
     };
-
     window.cmp.setConsent("IAB_TCF_V2.2", consentV2);
 
     const consentGoogleV2 = {
@@ -52,6 +53,13 @@ if (window.cmp !== undefined) {
 
     const consentApdPrivacyV2 = {};
     window.cmp.setConsent("APD_PRIVACY_V2", consentApdPrivacyV2);
+
+    const consentIabUsPrivacy = {
+        IABUSPrivacy_String: '1YNN',
+    };
+    window.cmp.setConsent("IAB_US_PRIVACY", consentIabUsPrivacy);
+
+
 
     // In 1 second set authorization status to authorized
     window.cmp.onRequestAuthorizationStatusIOS = () => {

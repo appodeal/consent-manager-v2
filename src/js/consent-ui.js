@@ -230,6 +230,7 @@ export const displayScreens = {
             saveVendorsAndRender(TypesTCF.IAB_TCF_V2, state.iabVendorList);
             saveVendorsAndRender(TypesTCF.GOOGLE_PRIVACY, state.googleVendorList);
             saveVendorsAndRender(TypesTCF.APD_PRIVACY_V2, state.appodealsVendorList);
+            saveVendorsAndRender(TypesTCF.IAB_US_PRIVACY, {});
             vendorsCountRender();
         }
         catch(error) {

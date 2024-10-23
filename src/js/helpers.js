@@ -3,6 +3,7 @@ export const TypesTCF = {
     IAB_TCF_V2: 'IAB_TCF_V2.2',
     GOOGLE_PRIVACY: 'GOOGLE_PRIVACY',
     APD_PRIVACY_V2: 'APD_PRIVACY_V2',
+    IAB_US_PRIVACY: 'IAB_US_PRIVACY',
 }
 
 export const AuthorizationStatuses = {
