@@ -2,8 +2,8 @@ process.env.RUBY_INJECT_VENDORS_CODE = '' +
     '<script>' +
         'window.iabVendorList = <%= @iab_vendors.html_safe %>;' +
         'window.googleVendorList = <%= @google_vendors.html_safe %>;' +
-        'window.appodealsVendorList = <%= @apd_vendors.html_safe %>' +
-        'window.isCcpaZone = <%= @is_ccpa_zone %>'
+        'window.appodealsVendorList = <%= @apd_vendors.html_safe %>;' +
+        'window.isCcpaZone = <%= @is_ccpa_zone %>'+
     '</script>'
 
 const webpack = require('webpack');
