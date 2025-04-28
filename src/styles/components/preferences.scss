@@ -44,6 +44,10 @@
     margin: var(--gap) 0;
     border-bottom: 0;
   }
+
+  b {
+    font-family: var(--font-family-bold);
+  }
 }
 
 .preferences__illustrations-accordion {
