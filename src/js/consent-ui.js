@@ -434,7 +434,7 @@ export function renderVendors(tcf, vList) {
         specialPurposes: [],
         features: [],
         specialFeatures: [],
-        vendors: [],
+        vendors: vList ? Object.values(vList) : [],
     };
     currentVendorList = Object.assign({}, vendorList);
 
