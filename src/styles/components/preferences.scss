@@ -128,3 +128,26 @@
     margin-left: calc(var(--gap) / 4);
   }
 }
+
+.preferences__categories {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  margin-bottom: var(--gap);
+  white-space: nowrap;
+  color: var(--gray-light);
+
+  .preferences__link span {
+    padding: 0 6px;
+    line-height: 20px;
+  }
+}
+
+.preferences__categories-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 80%;
+  margin-left: calc(var(--gap) / 4);
+}

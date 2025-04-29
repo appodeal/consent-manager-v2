@@ -422,7 +422,7 @@ export function renderVendors(tcf, vList) {
     const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures'];
 
     currentVendorList = {};
-    const vendorList = vendors?.length ? {
+    const vendorList = vendors.length ? {
         ...vList,
         purposes,
         specialPurposes,
@@ -462,6 +462,7 @@ export function renderVendors(tcf, vList) {
             createPreferences(
                 `${vendorTitle(vendor)}`,
                 `
+                ${buildDataCategories(vendor, vendorList.dataCategories)}
                 ${buildListSelectedPurposes(vendor, subSettingsOfVendors)}
                 ${buildDetails(vendor)}
                 ${buildConsentSwitcher(tcf, vendor)}
@@ -492,7 +493,10 @@ export function renderVendors(tcf, vList) {
     }
     setVendorsToTemplate(vendorListSelector, htmlVendorList);
 
-    setTimeout(() => initStorageDisclosureDialog(vendorList, storageDialog));
+    setTimeout(() => {
+        initStorageDisclosureDialog(vendorList, storageDialog);
+        buildDataCategoriesDialog(vendorList, storageDialog);
+    });
 }
 
 function initStorageDisclosureButton(vendor) {
@@ -500,9 +504,9 @@ function initStorageDisclosureButton(vendor) {
         return '';
     }
     return `
-    <div class="preferences__link" id="vendorStorageDetails_${vendor.id}">
-        <span>Storage details</span>
-    </div>
+        <div class="preferences__link" id="vendorStorageDetails_${vendor.id}">
+            <span>Storage details</span>
+        </div>
     `;
 }
 
@@ -521,10 +525,15 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
                     const dialogConent = document.querySelector('.dialog__content--storage');
 
                     if(vendor.deviceStorageDisclosure.disclosures?.length) {
+                        let title = document.createElement('h2');
+                        title.classList.add('dialog__title');
+                        title.innerHTML = `Storage Details`;
+                        dialogConent.appendChild(title);
+
                         vendor.deviceStorageDisclosure.disclosures.forEach(disclosure => {
                             const name = disclosure.identifier || '';
                             const type = disclosure.type || '';
-                            const duration = Math.round(disclosure.maxAgeSeconds/3600/24) || 0;
+                            const duration = Math.round(disclosure.maxAgeSeconds / 3600 / 24) || 0;
                             const domains = disclosure.domains || [];
                             const purposes = disclosure.purposes.map(purposeId => vendorList.purposes[purposeId]?.name);
                             const cookieRefresh = disclosure.cookieRefresh || false;
@@ -538,10 +547,10 @@ function initStorageDisclosureDialog(vendorList, storageDialog) {
                                 <b>Refreshes Cookies:</b><span> ${cookieRefresh}</span>
                                 </br></br>`;
 
-                            if(dialogConent) {
+                            if (dialogConent) {
                                 dialogConent.innerHTML += dialogHtml;
                             }
-                        })
+                        });
                     }
 
                 });
@@ -716,6 +725,57 @@ function buildPurposesList(selector, list, type, vendors) {
                       </div>`
             )}
         ).join('');
+}
+
+function buildDataCategories(vendor, dataCategories) {
+    if (!vendor.dataDeclaration || !vendor.dataDeclaration.length) {
+        return '';
+    }
+
+    let categories = buildListDataCategories(vendor.dataDeclaration, dataCategories);
+    let titles = categories.map(category => category.name).join(', ');
+
+    return `<div class="preferences__categories">
+                Data collected and processed:
+                <div class="preferences__categories-name">${titles}</div> <div class="preferences__link" id="infoDataCategories_${vendor.id}"><span>more</span></div>
+            </div>`;
+}
+
+function buildDataCategoriesDialog(vendorList, dialog) {
+    vendorList.vendors.forEach(vendor => {
+
+        const infoDataCategoriesLink = document.getElementById('infoDataCategories_' + vendor.id);
+
+        if(infoDataCategoriesLink) {
+            infoDataCategoriesLink.addEventListener("click", () => {
+                if(dialog) {
+                    dialog.showModal();
+                }
+
+                const dialogContent = document.querySelector('.dialog__content--storage');
+
+                const list = vendor.dataDeclaration.map(declaration => {
+                    const category = vendorList.dataCategories[declaration];
+                    return `<li><b>${category.name}</b>: ${category.description}</li>`
+                }).join('\n');
+
+                const dialogHtml = `
+                    <div class="dialog__content--categories">
+                        <h3>Data collected and processed</h3>
+                        <ul>${list}</ul>         
+                    </div>  
+                `;
+
+                if(dialogContent) {
+                    dialogContent.innerHTML += dialogHtml;
+                }
+            });
+        }
+    });
+}
+
+function buildListDataCategories(dataDeclaration, dataCategories) {
+    return dataDeclaration.map(declaration => dataCategories[declaration])
 }
 
 function buildListSelectedPurposes(vendor, subSettings) {

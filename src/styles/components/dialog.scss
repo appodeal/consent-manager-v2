@@ -47,6 +47,22 @@
   font: 12px/18px var(--font-family-base);
   color: var(--title-color);
   margin-bottom: 0;
+
+  &--categories {
+
+    h3 {
+      margin-top: 0;
+    }
+
+    ul {
+      padding-left: 14px;
+      margin-top: 0;
+    }
+
+    li:not(:last-of-type) {
+      margin-bottom: calc(var(--gap) / 2);
+    }
+  }
 }
 
 .dialog__list-title {
