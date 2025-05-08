@@ -36,7 +36,7 @@ https://github.com/appodeal/AppODeal/blob/master/app/views/ads/consent/form.html
 
 
 ## where find form?
-form supposed to be available by url https://yourStagingNumber.appodeal.com/consent/form
+form supposed to be available by url https://yourStagingNumber.appodeal.com/consent_manager/form
 
 #query params which available
 consent/form?consentDialogVersion=AcceptVendors
