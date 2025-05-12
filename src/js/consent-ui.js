@@ -582,10 +582,21 @@ function vendorPolicyUrl(vendor) {
             </a>`;
 }
 
+//  --------------------- find Legitimate Interests link by current lang ---------------------
+function vendorLegIntClaimUrl(vendor) {
+    if (!vendor.urls[0].legIntClaim) {
+        return '';
+    }
+    return `<a href="${vendor.urls[0].legIntClaim}" target="_blank" class="preferences__link">
+                <span>Legitimate Interests claim</span>
+            </a>`;
+}
+
 function buildDetails(vendor) {
     return `<div class="preferences__list-link">
                 ${initStorageDisclosureButton(vendor)}
                 ${vendorPolicyUrl(vendor)}
+                ${vendorLegIntClaimUrl(vendor)}
             </div>`
 }
 
