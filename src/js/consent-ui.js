@@ -419,7 +419,7 @@ export function renderVendors(tcf, vList) {
     const specialPurposes = checkHasOwnProp(vList, 'specialPurposes');
     const specialFeatures = checkHasOwnProp(vList, 'specialFeatures');
 
-    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures'];
+    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures', 'legIntPurposes'];
 
     currentVendorList = {};
     const vendorList = vendors.length ? {
@@ -790,10 +790,16 @@ function buildListDataCategories(dataDeclaration, dataCategories) {
 }
 
 function buildListSelectedPurposes(vendor, subSettings) {
-
     return subSettings.map(key => {
         if (!vendor[key] || !vendor[key].length) {
             return;
+        }
+
+        if (key === 'legIntPurposes') {
+            return `
+                <h4>${buildTitlePurposes(key)}</h4>
+                <ul>${vendor[key].map(p => `<li>${currentVendorList['purposes'].find(item => item.id === p).name}</li>`).join('')}</ul>
+            `;
         }
 
         return `
@@ -813,6 +819,8 @@ function buildTitlePurposes(key) {
             return 'Features';
         case 'specialFeatures':
             return 'Special features';
+        case 'legIntPurposes':
+            return 'Legitimate Interests';
     }
 }
 
