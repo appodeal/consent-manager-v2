@@ -419,7 +419,7 @@ export function renderVendors(tcf, vList) {
     const specialPurposes = checkHasOwnProp(vList, 'specialPurposes');
     const specialFeatures = checkHasOwnProp(vList, 'specialFeatures');
 
-    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures'];
+    const subSettingsOfVendors = ['purposes', 'specialPurposes', 'features', 'specialFeatures', 'legIntPurposes'];
 
     currentVendorList = {};
     const vendorList = vendors.length ? {
@@ -582,10 +582,21 @@ function vendorPolicyUrl(vendor) {
             </a>`;
 }
 
+//  --------------------- find Legitimate Interests link by current lang ---------------------
+function vendorLegIntClaimUrl(vendor) {
+    if (!vendor.urls[0].legIntClaim) {
+        return '';
+    }
+    return `<a href="${vendor.urls[0].legIntClaim}" target="_blank" class="preferences__link">
+                <span>Legitimate Interests claim</span>
+            </a>`;
+}
+
 function buildDetails(vendor) {
     return `<div class="preferences__list-link">
                 ${initStorageDisclosureButton(vendor)}
                 ${vendorPolicyUrl(vendor)}
+                ${vendorLegIntClaimUrl(vendor)}
             </div>`
 }
 
@@ -779,10 +790,16 @@ function buildListDataCategories(dataDeclaration, dataCategories) {
 }
 
 function buildListSelectedPurposes(vendor, subSettings) {
-
     return subSettings.map(key => {
         if (!vendor[key] || !vendor[key].length) {
             return;
+        }
+
+        if (key === 'legIntPurposes') {
+            return `
+                <h4>${buildTitlePurposes(key)}</h4>
+                <ul>${vendor[key].map(p => `<li>${currentVendorList['purposes'].find(item => item.id === p).name}</li>`).join('')}</ul>
+            `;
         }
 
         return `
@@ -802,6 +819,8 @@ function buildTitlePurposes(key) {
             return 'Features';
         case 'specialFeatures':
             return 'Special features';
+        case 'legIntPurposes':
+            return 'Legitimate Interests';
     }
 }
 
